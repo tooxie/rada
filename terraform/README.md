@@ -5,8 +5,12 @@ Backend
 -------
 
 1. Create a user in IAM with programmatic access and the following policies:
-  * AmazonS3FullAccess
-  * AmazonDynamoDBFullAccess
+  * AmazonS3FullAccess: To create the state bucket.
+  * AmazonDynamoDBFullAccess: To create the locks DynamoDB table.
+  * IAMFullAccess: To create the gawshi user.
+
+You can also manually add the necessary permissions if you are not comfortable
+with providing full access to any service.
 
 2. Add your credentials to the `~/.aws/credentials` file:
 
@@ -25,9 +29,18 @@ AWS_PROFILE=gawshi-backend-resources terraform plan
 
 You will be prompted for the region in which to create the resources.
 
-4. Delete the new user.
+4. Find the "gawshi" user in IAM and click on "Create access key".
+5. Download the credentials and add them to the `~/.aws/credentials` file.
+
+This guide will assume the name "gawshi" for the new profile.
+
+Note: Both profiles must run under the same account for this to work.
 
 Resources
 ---------
 
-To be continued...
+To create the application resources, from the `terraform/` directory, run:
+```
+AWS_PROFILE=gawshi terraform init -backend-config="bucket=<BUCKET_COPIED_FROM_OUTPUT>"
+AWS_PROFILE=gawshi terraform apply
+```

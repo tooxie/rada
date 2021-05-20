@@ -1,0 +1,231 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Mutation {
+  createAlbum(input: CreateAlbumInput!): Album
+  updateAlbum(id: ID!, input: UpdateAlbumInput!): Album
+  deleteAlbum(id: ID!): Album
+
+  createArtist(input: CreateArtistInput!): Artist
+  updateArtist(id: ID!, input: UpdateArtistInput!): Artist
+  deleteArtist(id: ID!): Artist
+
+  createPlaylist(input: CreatePlaylistInput!): Playlist
+  updatePlaylist(id: ID!, input: UpdatePlaylistInput!): Playlist
+  deletePlaylist(id: ID!): Playlist
+
+  createTrack(input: CreateTrackInput!): Track
+  updateTrack(id: ID!, input: UpdateTrackInput!): Track
+  deleteTrack(id: ID!): Track
+}
+
+type Query {
+  getAlbum(id: ID!): Album
+  listAlbums(filter: TableAlbumFilterInput, limit: Int, nextToken: String): AlbumConnection
+
+  getArtist(id: ID!): Artist
+  listArtists(filter: TableArtistFilterInput, limit: Int, nextToken: String): ArtistConnection
+
+  getPlaylist(id: ID!): Playlist
+  listPlaylists(filter: TablePlaylistFilterInput, limit: Int, nextToken: String): PlaylistConnection
+
+  getTrack(id: ID!): Track
+  listTracks(filter: TableTrackFilterInput, limit: Int, nextToken: String): TrackConnection
+}
+
+type Subscription {
+  onCreateAlbum(id: ID, title: String): Album
+    @aws_subscribe(mutations: ["createAlbum"])
+  onUpdateAlbum(id: ID, title: String): Album
+    @aws_subscribe(mutations: ["updateAlbum"])
+  onDeleteAlbum(id: ID, title: String): Album
+    @aws_subscribe(mutations: ["deleteAlbum"])
+
+  onCreateArtist(id: ID, name: String): Artist
+    @aws_subscribe(mutations: ["createArtist"])
+  onUpdateArtist(id: ID, name: String): Artist
+    @aws_subscribe(mutations: ["updateArtist"])
+  onDeleteArtist(id: ID, name: String): Artist
+    @aws_subscribe(mutations: ["deleteArtist"])
+
+  onCreatePlaylist(id: ID, name: String): Playlist
+    @aws_subscribe(mutations: ["createPlaylist"])
+  onUpdatePlaylist(id: ID, name: String): Playlist
+    @aws_subscribe(mutations: ["updatePlaylist"])
+  onDeletePlaylist(id: ID, name: String): Playlist
+    @aws_subscribe(mutations: ["deletePlaylist"])
+
+  onCreateTrack(id: ID, title: String): Track
+    @aws_subscribe(mutations: ["createTrack"])
+  onUpdateTrack(id: ID, title: String): Track
+    @aws_subscribe(mutations: ["updateTrack"])
+  onDeleteTrack(id: ID, title: String): Track
+    @aws_subscribe(mutations: ["deleteTrack"])
+}
+
+input TableBooleanFilterInput {
+  ne: Boolean
+  eq: Boolean
+}
+
+input TableFloatFilterInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  contains: Float
+  notContains: Float
+  between: [Float]
+}
+
+input TableIDFilterInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+}
+
+input TableIntFilterInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  contains: Int
+  notContains: Int
+  between: [Int]
+}
+
+input TableStringFilterInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+}
+
+# --- Album
+input TableAlbumFilterInput {
+  title: TableStringFilterInput
+}
+
+type Album {
+  id: ID!
+  artists: [Artist!]
+  title: String
+  coverUrl: String
+}
+
+type AlbumConnection {
+  items: [Album!]
+  nextToken: String
+}
+
+input CreateAlbumInput {
+  artists: [CreateArtistInput!]
+  title: String!
+  coverUrl: String
+}
+
+input UpdateAlbumInput {
+  artists: [UpdateArtistInput!]
+  title: String
+  coverUrl: String
+}
+
+# --- Artist
+input TableArtistFilterInput {
+  name: TableStringFilterInput
+}
+
+type Artist {
+  id: ID!
+  name: String
+  imageUrl: String
+}
+
+type ArtistConnection {
+  items: [Artist!]
+  nextToken: String
+}
+
+input CreateArtistInput {
+  name: String!
+  imageUrl: String
+}
+
+input UpdateArtistInput {
+  name: String
+  imageUrl: String
+}
+
+# --- Playlist
+input TablePlaylistFilterInput {
+  name: TableStringFilterInput
+}
+
+type Playlist {
+  id: ID!
+  name: String!
+  imageUrl: String
+}
+
+type PlaylistConnection {
+  items: [Playlist!]
+  nextToken: String
+}
+
+input CreatePlaylistInput {
+  name: String!
+  imageUrl: String
+}
+
+input UpdatePlaylistInput {
+  name: String
+  imageUrl: String
+}
+
+# --- Track
+input TableTrackFilterInput {
+  title: TableStringFilterInput
+}
+
+type Track {
+  id: ID!
+  albumId: ID!
+  title: String
+  lengthInSeconds: Int
+}
+
+type TrackConnection {
+  items: [Track!]
+  nextToken: String
+}
+
+input CreateTrackInput {
+  albumId: ID!
+  title: String!
+  lengthInSeconds: Int
+}
+
+input UpdateTrackInput {
+  albumId: ID!
+  title: String!
+  lengthInSeconds: Int
+}
