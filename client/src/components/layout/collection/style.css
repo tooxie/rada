@@ -1,0 +1,23 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  background-color: #4158D0;
+  background-image: linear-gradient(180deg, #742e12 0%, #d28a2d 61%, #ffcc00 100%);
+  padding-bottom: 2rem;
+}
+
+.collections {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 1rem 1rem 0;
+}
+
+.collections a {
+  text-decoration: none;
+  color: black;
+}
+
+a.active {
+  color: white;
+}

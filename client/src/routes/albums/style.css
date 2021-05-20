@@ -1,0 +1,9 @@
+.albumgrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.albumgrid img {
+  max-width: 100%;
+  border-radius: 1rem;
+}

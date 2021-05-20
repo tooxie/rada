@@ -13,7 +13,7 @@ resource "aws_appsync_graphql_api" "gawshi" {
   }
 }
 
-resource "null_resource" "codegen" {
+resource "null_resource" "codegen_exec" {
   triggers = {
     appsync_id = aws_appsync_graphql_api.gawshi.schema
   }
@@ -21,19 +21,31 @@ resource "null_resource" "codegen" {
   provisioner "local-exec" {
     command = "./../client/scripts/codegen.sh"
   }
+
+  depends_on = [
+    null_resource.codegen_config
+  ]
 }
 
 resource "aws_appsync_api_key" "gawshi" {
   api_id = aws_appsync_graphql_api.gawshi.id
 }
 
-resource "null_resource" "config_amplify" {
+resource "null_resource" "codegen_config" {
   triggers = {
     appsync_id = aws_appsync_graphql_api.gawshi.id
   }
 
   provisioner "local-exec" {
-    command = "./../client/scripts/amplify.sh ${aws_appsync_graphql_api.gawshi.id}"
+    command = join(" ", [
+      "./../client/scripts/config.sh",
+      "--api-id", aws_appsync_graphql_api.gawshi.id,
+      "--region", var.region,
+      "--api-key", aws_appsync_api_key.gawshi.key,
+      "--api-url", lookup(aws_appsync_graphql_api.gawshi.uris, "GRAPHQL"),
+      "--auth-mode", aws_appsync_graphql_api.gawshi.authentication_type,
+      "--graphql-schema", "${abspath(path.module)}/schema.gql",
+    ])
   }
 }
 

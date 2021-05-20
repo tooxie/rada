@@ -1,23 +1,17 @@
-import { FunctionalComponent, h } from 'preact';
-import { Route, Router } from 'preact-router';
+import { FunctionalComponent, h } from "preact";
+import { IntlProvider } from "preact-i18n";
 
-import Home from '../routes/home';
-import Profile from '../routes/profile';
-import NotFoundPage from '../routes/notfound';
-import Header from './header';
+import definition from "../i18n/es.json";
+import Router from "./router";
 
 const App: FunctionalComponent = () => {
-    return (
-        <div id="preact_root">
-            <Header />
-            <Router>
-                <Route path="/" component={Home} />
-                <Route path="/profile/" component={Profile} user="me" />
-                <Route path="/profile/:user" component={Profile} />
-                <NotFoundPage default />
-            </Router>
-        </div>
-    );
+  return (
+    <IntlProvider definition={definition}>
+      <div id="preact_root">
+        <Router />
+      </div>
+    </IntlProvider>
+  );
 };
 
 export default App;

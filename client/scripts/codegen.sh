@@ -1,3 +1,5 @@
 #!/bin/bash
-# TODO: Call "npx amplify"
-echo "Regenerating Graphql types... [ OK ]"
+set -euf -o pipefail
+
+cd "`dirname "${BASH_SOURCE[0]}"`/.."
+npx amplify codegen
