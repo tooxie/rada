@@ -37,3 +37,12 @@ resource "aws_iam_role_policy" "gawshi_dynamodb" {
     ]
   })
 }
+
+data "aws_iam_policy" "appsync_push_to_cloudwatch" {
+  arn = "arn:aws:iam::aws:policy/service-role/AWSAppSyncPushToCloudWatchLogs"
+}
+
+resource "aws_iam_role_policy_attachment" "appsync_push_to_cloudwatch" {
+  role = aws_iam_role.appsync.name
+  policy_arn = data.aws_iam_policy.appsync_push_to_cloudwatch.arn
+}

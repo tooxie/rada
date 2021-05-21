@@ -30,7 +30,6 @@ resource "aws_s3_bucket" "terraform_state" {
   }
 }
 
-// --- IAM
 resource "aws_iam_policy" "terraform_state" {
   name = "GawshiTerraformState"
   path = "/"
@@ -88,9 +87,24 @@ resource "aws_iam_policy" "gawshi" {
         Resource = "arn:aws:iam::${data.aws_caller_identity.gawshi.account_id}:role/Gawshi*"
       },
       {
+        Action = [
+          "iam:ListPolicies",
+        ]
+        Effect = "Allow"
+        Resource = "*"
+      },
+      {
+        Action = [
+          "iam:GetPolicy",
+          "iam:GetPolicyVersion",
+        ]
+        Effect = "Allow"
+        Resource = "arn:aws:iam::aws:policy/service-role/AWSAppSyncPushToCloudWatchLogs"
+      },
+      {
         Effect = "Allow",
         Action = [
-            "iam:PassRole"
+            "iam:PassRole",
         ],
         Resource = "*",
         Condition = {

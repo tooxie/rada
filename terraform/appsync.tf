@@ -2,6 +2,15 @@ resource "aws_appsync_graphql_api" "gawshi" {
   authentication_type = "API_KEY"
   name = "Gawshi"
   schema = file("./schema.gql")
+
+  log_config {
+    cloudwatch_logs_role_arn = aws_iam_role.appsync.arn
+    field_log_level = "ALL"
+  }
+
+  tags = {
+    Gawshi = "1"
+  }
 }
 
 resource "aws_appsync_api_key" "gawshi" {
