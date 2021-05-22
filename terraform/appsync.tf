@@ -264,3 +264,13 @@ resource "aws_appsync_resolver" "delete_track" {
   request_template = file("./resolvers/request/deleteitem.tpl")
   response_template = file("./resolvers/response/getitem.tpl")
 }
+
+// --- Outputs
+output "graphql_api_uris" {
+  value = aws_appsync_graphql_api.gawshi.uris
+}
+
+output "graphql_api_key" {
+  value = aws_appsync_api_key.gawshi.key
+  sensitive = true
+}

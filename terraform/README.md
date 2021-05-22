@@ -44,3 +44,8 @@ To create the application resources, from the `terraform/` directory, run:
 AWS_PROFILE=gawshi terraform init -backend-config="bucket=<BUCKET_COPIED_FROM_OUTPUT>"
 AWS_PROFILE=gawshi terraform apply
 ```
+
+Get the AppSync API KEY:
+```
+AWS_PROFILE=gawshi terraform state pull | jq -r '.resources[] | select(.type == "aws_appsync_api_key") | .instances[0].attributes.key'
+```
