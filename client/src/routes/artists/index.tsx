@@ -39,14 +39,24 @@ const ArtistThumb: FunctionalComponent<Artist> = props => {
 
 const ArtistList: FunctionalComponent = () => {
   const [artists, setArtists] = useState([] as Artist[]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!artists.length) {
-      getArtists().then(data => setArtists(data));
+    if (loading) {
+      getArtists().then(data => {
+        setArtists(data);
+        setLoading(false);
+      });
     }
   });
 
-  if (!artists.length) return <Spinner />;
+  if (loading) {
+    return <Spinner />;
+  } else {
+    if (!artists.length) {
+      return <p>No Artists</p>;
+    }
+  }
 
   return (
     <div class={style.artistgrid}>

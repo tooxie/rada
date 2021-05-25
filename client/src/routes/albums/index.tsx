@@ -50,7 +50,13 @@ const AlbumList: FunctionalComponent = () => {
     }
   });
 
-  if (loading) return <Spinner />;
+  if (loading) {
+    return <Spinner />;
+  } else {
+    if (!albums.length) {
+      return <p>No Albums</p>;
+    }
+  }
 
   return (
     <div class={style.albumgrid}>
