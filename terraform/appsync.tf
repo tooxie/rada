@@ -13,8 +13,28 @@ resource "aws_appsync_graphql_api" "gawshi" {
   }
 }
 
+resource "null_resource" "codegen" {
+  triggers = {
+    appsync_id = aws_appsync_graphql_api.gawshi.schema
+  }
+
+  provisioner "local-exec" {
+    command = "./../client/scripts/codegen.sh"
+  }
+}
+
 resource "aws_appsync_api_key" "gawshi" {
   api_id = aws_appsync_graphql_api.gawshi.id
+}
+
+resource "null_resource" "config_amplify" {
+  triggers = {
+    appsync_id = aws_appsync_graphql_api.gawshi.id
+  }
+
+  provisioner "local-exec" {
+    command = "./../client/scripts/amplify.sh ${aws_appsync_graphql_api.gawshi.id}"
+  }
 }
 
 // --- Album
@@ -273,4 +293,8 @@ output "graphql_api_uris" {
 output "graphql_api_key" {
   value = aws_appsync_api_key.gawshi.key
   sensitive = true
+}
+
+output "graphql_api_id" {
+  value = aws_appsync_graphql_api.gawshi.id
 }
