@@ -7,6 +7,17 @@ resource "aws_dynamodb_table" "albums" {
     name = "id"
     type = "S"
   }
+
+  attribute {
+    name = "artistId"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name = "ArtistIdIndex"
+    hash_key = "artistId"
+    projection_type = "ALL"
+  }
 }
 
 resource "aws_dynamodb_table" "artists" {
@@ -39,5 +50,16 @@ resource "aws_dynamodb_table" "tracks" {
   attribute {
     name = "id"
     type = "S"
+  }
+
+  attribute {
+    name = "albumId"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name = "AlbumIdIndex"
+    hash_key = "albumId"
+    projection_type = "ALL"
   }
 }

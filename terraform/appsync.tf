@@ -99,6 +99,20 @@ resource "aws_appsync_resolver" "delete_album" {
   response_template = file("./resolvers/response/getitem.tpl")
 }
 
+resource "aws_appsync_resolver" "album_connection" {
+  api_id = aws_appsync_graphql_api.gawshi.id
+  type = "Artist"
+  field = "albums"
+  data_source = aws_appsync_datasource.gawshi_albums.name
+
+  request_template = templatefile("./resolvers/request/connection.tpl",
+  {
+    index_name = element(tolist(aws_dynamodb_table.albums.global_secondary_index), 0).name,
+    index_key = element(tolist(aws_dynamodb_table.albums.global_secondary_index), 0).hash_key,
+  })
+  response_template = file("./resolvers/response/connection.tpl")
+}
+
 // --- Artist
 resource "aws_appsync_datasource" "gawshi_artists" {
   api_id = aws_appsync_graphql_api.gawshi.id
@@ -283,6 +297,20 @@ resource "aws_appsync_resolver" "delete_track" {
 
   request_template = file("./resolvers/request/deleteitem.tpl")
   response_template = file("./resolvers/response/getitem.tpl")
+}
+
+resource "aws_appsync_resolver" "track_connection" {
+  api_id = aws_appsync_graphql_api.gawshi.id
+  type = "Album"
+  field = "tracks"
+  data_source = aws_appsync_datasource.gawshi_tracks.name
+
+  request_template = templatefile("./resolvers/request/connection.tpl",
+  {
+    index_name = element(tolist(aws_dynamodb_table.tracks.global_secondary_index), 0).name,
+    index_key = element(tolist(aws_dynamodb_table.tracks.global_secondary_index), 0).hash_key,
+  })
+  response_template = file("./resolvers/response/connection.tpl")
 }
 
 // --- Outputs

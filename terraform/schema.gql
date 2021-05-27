@@ -130,6 +130,7 @@ type Album {
   artists: [Artist!]
   title: String
   coverUrl: String
+  tracks(nextToken: String): TrackConnection
 }
 
 type AlbumConnection {
@@ -158,6 +159,7 @@ type Artist {
   id: ID!
   name: String
   imageUrl: String
+  albums(nextToken: String): AlbumConnection
 }
 
 type ArtistConnection {

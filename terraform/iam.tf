@@ -28,10 +28,17 @@ resource "aws_iam_role_policy" "gawshi_dynamodb" {
         ],
         Effect = "Allow",
         Resource = [
-          aws_dynamodb_table.albums.arn,
-          aws_dynamodb_table.artists.arn,
-          aws_dynamodb_table.playlists.arn,
-          aws_dynamodb_table.tracks.arn,
+          "${aws_dynamodb_table.albums.arn}",
+          "${aws_dynamodb_table.albums.arn}/*",
+
+          "${aws_dynamodb_table.artists.arn}",
+          "${aws_dynamodb_table.artists.arn}/*",
+
+          "${aws_dynamodb_table.playlists.arn}",
+          "${aws_dynamodb_table.playlists.arn}/*",
+
+          "${aws_dynamodb_table.tracks.arn}",
+          "${aws_dynamodb_table.tracks.arn}/*",
         ]
       }
     ]
