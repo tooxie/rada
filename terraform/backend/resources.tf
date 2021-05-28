@@ -77,7 +77,7 @@ resource "aws_iam_policy" "gawshi" {
           "dynamodb:*",
         ]
         Effect = "Allow"
-        Resource = "arn:aws:dynamodb:*:${data.aws_caller_identity.gawshi.account_id}:table/Gawshi*"
+        Resource = "arn:aws:dynamodb:${var.region}:${data.aws_caller_identity.gawshi.account_id}:table/Gawshi*"
       },
       {
         Action = [
