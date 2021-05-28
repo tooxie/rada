@@ -160,7 +160,7 @@ resource "aws_iam_role" "gawshi" {
 }
 
 // --- Outputs
-output "iam_user_arn" {
+output "gawshi_user_arn" {
   value = aws_iam_user.gawshi.arn
 }
 
@@ -168,6 +168,6 @@ output "terraform_state_bucket" {
   value = aws_s3_bucket.terraform_state.bucket
 }
 
-output "iam_account_id" {
+output "gawshi_account_id" {
   value = data.aws_caller_identity.gawshi.id
 }
