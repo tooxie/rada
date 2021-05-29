@@ -2,26 +2,12 @@ import { FunctionalComponent, h } from "preact";
 import { Link } from "preact-router";
 import { useState, useEffect } from "preact/hooks";
 
-import { getAlbums } from "./graphql";
 import { Album } from "../../graphql/api";
 import Spinner from "../../components/spinner";
 import style from "./style.css";
+import { getAlbums } from "./graphql";
 
 const DEFAULT_ALBUM_COVER = "/assets/icons/svg/music_note.svg";
-
-interface AlbumsProps {
-  id?: string;
-}
-
-const Albums: FunctionalComponent<AlbumsProps> = props => {
-  const { id } = props;
-
-  return id ? <AlbumDetail id={id} /> : <AlbumList />;
-};
-
-const AlbumDetail: FunctionalComponent<AlbumsProps> = props => {
-  return <h1>{props.id}</h1>;
-};
 
 const AlbumThumb: FunctionalComponent<Album> = props => {
   const cover = props.coverUrl || DEFAULT_ALBUM_COVER;
@@ -67,4 +53,4 @@ const AlbumList: FunctionalComponent = () => {
   );
 };
 
-export default Albums;
+export default AlbumList;

@@ -1,22 +1,28 @@
 import { FunctionalComponent, h } from "preact";
 import { Route, Router } from "preact-router";
 
-import Albums from "../routes/albums";
-import Artists from "../routes/artists";
-import Playlists from "../routes/playlists";
 import Redirect from "./redirect";
-import NotFoundPage from "../routes/notfound";
 import Collection from "./layout/collection";
 import Detail from "./layout/detail";
 
-export default (() => {
-  const ArtistCollection = Collection(Artists);
-  const AlbumCollection = Collection(Albums);
-  const PlaylistCollection = Collection(Playlists);
+import NotFoundPage from "../routes/notfound";
+import Album from "../routes/albums/detail";
+import AlbumList from "../routes/albums/list";
+import AlbumHeader from "../routes/albums/header";
+import Artist from "../routes/artists/detail";
+import ArtistList from "../routes/artists/list";
+import ArtistHeader from "../routes/artists/header";
+import Playlist from "../routes/playlists/detail";
+import PlaylistList from "../routes/playlists/list";
 
-  const ArtistDetail = Detail(Artists);
-  const AlbumDetail = Detail(Albums);
-  const PlaylistDetail = Detail(Playlists);
+export default (() => {
+  const ArtistCollection = Collection(ArtistList);
+  const AlbumCollection = Collection(AlbumList);
+  const PlaylistCollection = Collection(PlaylistList);
+
+  const ArtistDetail = Detail(Artist, ArtistHeader);
+  const AlbumDetail = Detail(Album, AlbumHeader);
+  const PlaylistDetail = Detail(Playlist);
 
   return (
     <Router>
@@ -28,7 +34,7 @@ export default (() => {
       <Route path="/albums/:id" component={AlbumDetail} />
       <Route path="/playlists/:id" component={PlaylistDetail} />
 
-      <Redirect path="/" to="/albums" />
+      <Redirect path="/" to="/artists" />
       <NotFoundPage default />
     </Router>
   );

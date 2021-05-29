@@ -1,13 +1,21 @@
-import { FunctionalComponent, h } from "preact";
-import Navigation from "../../navigation";
-import style from "./style.css";
+import { FunctionComponent, h } from "preact";
+import DefaultHeader from "../../header";
+import Shoulder from "../shoulder";
 
-export default (Component: FunctionalComponent): FunctionalComponent => {
+const Detail = (
+  Component: FunctionComponent<any>,
+  header?: FunctionComponent<any>
+): FunctionComponent => {
+  const Header = header || DefaultHeader;
+
   return props => (
-    <div class={style.header}>
-      <Navigation />
-      <p>-- Detail</p>
-      <Component {...props} />
+    <div>
+      <Header {...props} />
+      <Shoulder>
+        <Component {...props} />
+      </Shoulder>
     </div>
   );
 };
+
+export default Detail;

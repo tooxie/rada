@@ -2,27 +2,13 @@ import { FunctionalComponent, h } from "preact";
 import { Link } from "preact-router";
 import { useState, useEffect } from "preact/hooks";
 
-import style from "./style.css";
 import { getArtists } from "./graphql";
-import { Artist } from "../../graphql/api";
+import style from "./style.css";
 import Spinner from "../../components/spinner";
+import { Artist } from "../../graphql/api";
 
 const DEFAULT_ARTIST_IMAGE =
   "https://www.proaudioland.com/wp/wp-content/uploads/2017/01/generic-band-e1483736893335.jpg";
-
-interface ArtistsProps {
-  id?: string;
-}
-
-const Artists: FunctionalComponent<ArtistsProps> = props => {
-  const { id } = props;
-
-  return id ? <ArtistDetail id={id} /> : <ArtistList />;
-};
-
-const ArtistDetail: FunctionalComponent<ArtistsProps> = props => {
-  return <h1>{props.id}</h1>;
-};
 
 const ArtistThumb: FunctionalComponent<Artist> = props => {
   const image = props.imageUrl || DEFAULT_ARTIST_IMAGE;
@@ -67,4 +53,4 @@ const ArtistList: FunctionalComponent = () => {
   );
 };
 
-export default Artists;
+export default ArtistList;
