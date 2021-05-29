@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from "preact";
+import { FunctionComponent, h } from "preact";
 import { Link } from "preact-router";
 import { useState, useEffect } from "preact/hooks";
 
@@ -9,7 +9,7 @@ import { getAlbums } from "./graphql";
 
 const DEFAULT_ALBUM_COVER = "/assets/icons/svg/music_note.svg";
 
-const AlbumThumb: FunctionalComponent<Album> = props => {
+const AlbumThumb: FunctionComponent<Album> = props => {
   const cover = props.coverUrl || DEFAULT_ALBUM_COVER;
 
   return (
@@ -23,7 +23,7 @@ const AlbumThumb: FunctionalComponent<Album> = props => {
   );
 };
 
-const AlbumList: FunctionalComponent = () => {
+const AlbumList: FunctionComponent = () => {
   const [albums, setAlbums] = useState([] as Album[]);
   const [loading, setLoading] = useState(true);
 

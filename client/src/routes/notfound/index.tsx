@@ -1,8 +1,8 @@
-import { FunctionalComponent, h } from "preact";
+import { FunctionComponent, h } from "preact";
 import { Link } from "preact-router/match";
 import style from "./style.css";
 
-const Notfound: FunctionalComponent = () => {
+const Notfound: FunctionComponent = () => {
   return (
     <div class={style.notfound}>
       <h1>Error 404</h1>

@@ -1,8 +1,8 @@
-import { FunctionalComponent, h } from "preact";
+import { FunctionComponent, h } from "preact";
 import Shoulder from "../shoulder";
 import Header from "../../header";
 
-export default (Component: FunctionalComponent): FunctionalComponent => {
+export default (Component: FunctionComponent): FunctionComponent => {
   return props => (
     <div>
       <Header />

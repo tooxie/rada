@@ -1,9 +1,9 @@
-import { FunctionalComponent, h } from "preact";
+import { FunctionComponent, h } from "preact";
 import { Link } from "preact-router/match";
 import style from "./style.css";
 import BackLink from "../backlink";
 
-const Navigation: FunctionalComponent = () => {
+const Navigation: FunctionComponent = () => {
   return (
     <section class={style.navigation}>
       <div class={style.back}>

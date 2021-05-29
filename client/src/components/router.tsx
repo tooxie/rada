@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from "preact";
+import { FunctionComponent, h } from "preact";
 import { Route, Router } from "preact-router";
 
 import Redirect from "./redirect";
@@ -38,4 +38,4 @@ export default (() => {
       <NotFoundPage default />
     </Router>
   );
-}) as FunctionalComponent;
+}) as FunctionComponent;

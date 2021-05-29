@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from "preact";
+import { FunctionComponent, h } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import style from "./style.css";
 
@@ -6,7 +6,7 @@ interface Props {
   user: string;
 }
 
-const Profile: FunctionalComponent<Props> = (props: Props) => {
+const Profile: FunctionComponent<Props> = (props: Props) => {
   const { user } = props;
   const [time, setTime] = useState<number>(Date.now());
   const [count, setCount] = useState<number>(0);
