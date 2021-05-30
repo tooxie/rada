@@ -1,8 +1,9 @@
+import gql from 'graphql-tag';
 /* tslint:disable */
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getAlbum = /* GraphQL */ `
+export const getAlbum = gql`
   query GetAlbum($id: ID!) {
     getAlbum(id: $id) {
       id
@@ -19,7 +20,7 @@ export const getAlbum = /* GraphQL */ `
     }
   }
 `;
-export const listAlbums = /* GraphQL */ `
+export const listAlbums = gql`
   query ListAlbums(
     $filter: TableAlbumFilterInput
     $limit: Int
@@ -35,7 +36,7 @@ export const listAlbums = /* GraphQL */ `
     }
   }
 `;
-export const getArtist = /* GraphQL */ `
+export const getArtist = gql`
   query GetArtist($id: ID!) {
     getArtist(id: $id) {
       id
@@ -47,7 +48,7 @@ export const getArtist = /* GraphQL */ `
     }
   }
 `;
-export const listArtists = /* GraphQL */ `
+export const listArtists = gql`
   query ListArtists(
     $filter: TableArtistFilterInput
     $limit: Int
@@ -63,7 +64,7 @@ export const listArtists = /* GraphQL */ `
     }
   }
 `;
-export const getPlaylist = /* GraphQL */ `
+export const getPlaylist = gql`
   query GetPlaylist($id: ID!) {
     getPlaylist(id: $id) {
       id
@@ -72,7 +73,7 @@ export const getPlaylist = /* GraphQL */ `
     }
   }
 `;
-export const listPlaylists = /* GraphQL */ `
+export const listPlaylists = gql`
   query ListPlaylists(
     $filter: TablePlaylistFilterInput
     $limit: Int
@@ -88,7 +89,7 @@ export const listPlaylists = /* GraphQL */ `
     }
   }
 `;
-export const getTrack = /* GraphQL */ `
+export const getTrack = gql`
   query GetTrack($id: ID!) {
     getTrack(id: $id) {
       id
@@ -98,7 +99,7 @@ export const getTrack = /* GraphQL */ `
     }
   }
 `;
-export const listTracks = /* GraphQL */ `
+export const listTracks = gql`
   query ListTracks(
     $filter: TableTrackFilterInput
     $limit: Int

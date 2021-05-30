@@ -11,6 +11,10 @@ export default {
    * @param {object} options - this is mainly relevant for plugins (will always be empty in the config), default to an empty object
    **/
   webpack(config, env, helpers, options) {
+    let { rule } = helpers.getLoadersByName(config, 'babel-loader')[0];
+    let babelConfig = rule.options;
+    babelConfig.plugins.push(['babel-plugin-graphql-tag', {'strip': true}]);
+
     config.plugins.push(new QRcodeWebpackPlugin())
   }
 }

@@ -1,8 +1,9 @@
+import gql from 'graphql-tag';
 /* tslint:disable */
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createAlbum = /* GraphQL */ `
+export const createAlbum = gql`
   mutation CreateAlbum($input: CreateAlbumInput!) {
     createAlbum(input: $input) {
       id
@@ -19,7 +20,7 @@ export const createAlbum = /* GraphQL */ `
     }
   }
 `;
-export const updateAlbum = /* GraphQL */ `
+export const updateAlbum = gql`
   mutation UpdateAlbum($id: ID!, $input: UpdateAlbumInput!) {
     updateAlbum(id: $id, input: $input) {
       id
@@ -36,7 +37,7 @@ export const updateAlbum = /* GraphQL */ `
     }
   }
 `;
-export const deleteAlbum = /* GraphQL */ `
+export const deleteAlbum = gql`
   mutation DeleteAlbum($id: ID!) {
     deleteAlbum(id: $id) {
       id
@@ -53,7 +54,7 @@ export const deleteAlbum = /* GraphQL */ `
     }
   }
 `;
-export const createArtist = /* GraphQL */ `
+export const createArtist = gql`
   mutation CreateArtist($input: CreateArtistInput!) {
     createArtist(input: $input) {
       id
@@ -65,7 +66,7 @@ export const createArtist = /* GraphQL */ `
     }
   }
 `;
-export const updateArtist = /* GraphQL */ `
+export const updateArtist = gql`
   mutation UpdateArtist($id: ID!, $input: UpdateArtistInput!) {
     updateArtist(id: $id, input: $input) {
       id
@@ -77,7 +78,7 @@ export const updateArtist = /* GraphQL */ `
     }
   }
 `;
-export const deleteArtist = /* GraphQL */ `
+export const deleteArtist = gql`
   mutation DeleteArtist($id: ID!) {
     deleteArtist(id: $id) {
       id
@@ -89,7 +90,7 @@ export const deleteArtist = /* GraphQL */ `
     }
   }
 `;
-export const createPlaylist = /* GraphQL */ `
+export const createPlaylist = gql`
   mutation CreatePlaylist($input: CreatePlaylistInput!) {
     createPlaylist(input: $input) {
       id
@@ -98,7 +99,7 @@ export const createPlaylist = /* GraphQL */ `
     }
   }
 `;
-export const updatePlaylist = /* GraphQL */ `
+export const updatePlaylist = gql`
   mutation UpdatePlaylist($id: ID!, $input: UpdatePlaylistInput!) {
     updatePlaylist(id: $id, input: $input) {
       id
@@ -107,7 +108,7 @@ export const updatePlaylist = /* GraphQL */ `
     }
   }
 `;
-export const deletePlaylist = /* GraphQL */ `
+export const deletePlaylist = gql`
   mutation DeletePlaylist($id: ID!) {
     deletePlaylist(id: $id) {
       id
@@ -116,7 +117,7 @@ export const deletePlaylist = /* GraphQL */ `
     }
   }
 `;
-export const createTrack = /* GraphQL */ `
+export const createTrack = gql`
   mutation CreateTrack($input: CreateTrackInput!) {
     createTrack(input: $input) {
       id
@@ -126,7 +127,7 @@ export const createTrack = /* GraphQL */ `
     }
   }
 `;
-export const updateTrack = /* GraphQL */ `
+export const updateTrack = gql`
   mutation UpdateTrack($id: ID!, $input: UpdateTrackInput!) {
     updateTrack(id: $id, input: $input) {
       id
@@ -136,7 +137,7 @@ export const updateTrack = /* GraphQL */ `
     }
   }
 `;
-export const deleteTrack = /* GraphQL */ `
+export const deleteTrack = gql`
   mutation DeleteTrack($id: ID!) {
     deleteTrack(id: $id) {
       id
