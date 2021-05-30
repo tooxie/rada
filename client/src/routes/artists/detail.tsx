@@ -1,9 +1,6 @@
 import { FunctionComponent, h } from "preact";
+import { DetailProps } from "../../components/layout/detail/types";
 
-interface Props {
-  id: string;
-}
-
-const Artist: FunctionComponent<Props> = (props: Props) => <h1>{props.id}</h1>;
+const Artist: FunctionComponent<DetailProps> = props => <h1>{props.id}</h1>;
 
 export default Artist;
