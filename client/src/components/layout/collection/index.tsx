@@ -7,7 +7,7 @@ import Spinner from "../../spinner";
 
 export default (Component: FunctionComponent): FunctionComponent => {
   return props => (
-    <div>
+    <div class="collection">
       <Header />
       <Shoulder>
         <Suspense fallback={<Spinner />}>

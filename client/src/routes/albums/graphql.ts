@@ -7,11 +7,12 @@ import {
   getAlbum as getAlbumQuery
 } from "../../graphql/queries";
 
-export const listAlbums = async (): Promise<Album[]> => {
+export const listAlbums = async (nextToken?: string): Promise<Album[]> => {
   const result = (await client.query({
-    query: listAlbumsQuery
+    query: listAlbumsQuery,
+    variables: { nextToken }
   })) as ApolloQueryResult<ListAlbumsQuery>;
-  const items = result.data?.listAlbums?.items;
+  const items = result.data?.listAlbums?.items as Album[];
 
   return items || [];
 };

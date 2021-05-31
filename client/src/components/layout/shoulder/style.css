@@ -1,4 +1,4 @@
-.shoulder {
+.collection .shoulder {
   background-color: white;
   border-radius: 14px;
   position: relative;
@@ -7,7 +7,7 @@
   min-height: 2rem;
 }
 
-.shoulder.Artist {
+.detail .shoulder {
   top: -3em;
   padding: 1em;
   background-color: rgba(255, 255, 255, 0.6);
