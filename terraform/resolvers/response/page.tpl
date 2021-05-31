@@ -1,4 +1,4 @@
 {
-    "items": $util.toJson($ctx.result.items),
+    "items": $util.toJson($context.result.items),
     "nextToken": $util.toJson($util.defaultIfNullOrBlank($context.result.nextToken, null))
 }
