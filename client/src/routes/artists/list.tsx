@@ -1,11 +1,11 @@
 import { FunctionComponent, h } from "preact";
 import { Link } from "preact-router";
-import { useState, useEffect } from "preact/hooks";
 
-import { listArtists } from "./graphql";
 import style from "./style.css";
 import Spinner from "../../components/spinner";
 import { Artist } from "../../graphql/api";
+import { useListArtists } from "./hooks";
+import { listArtists } from "./graphql";
 
 const DEFAULT_ARTIST_IMAGE =
   "https://www.proaudioland.com/wp/wp-content/uploads/2017/01/generic-band-e1483736893335.jpg";
@@ -24,24 +24,18 @@ const ArtistThumb: FunctionComponent<Artist> = props => {
 };
 
 const ArtistList: FunctionComponent = () => {
-  const [artists, setArtists] = useState([] as Artist[]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (loading) {
-      listArtists().then(data => {
-        setArtists(data);
-        setLoading(false);
-      });
-    }
-  });
+  console.log(`ArtistList (${typeof ArtistList})`);
+  const { loading, error, artists } = listArtists();
+  // const { loading, error, artists } = useListArtists();
+  console.log("ArtistList.useListArtists:");
+  console.log({ loading, error, artists });
+  if (error) console.error(error);
 
   if (loading) {
     return <Spinner />;
   } else {
-    if (!artists.length) {
-      return <p>No Artists</p>;
-    }
+    if (error) return <p>{error}</p>;
+    if (!artists) return <p>No Artists</p>;
   }
 
   return (

@@ -7,7 +7,7 @@ import style from "./style.css";
 import { useGetArtist } from "./hooks";
 
 const ArtistDetail: FunctionComponent<DetailProps> = props => {
-  const { loading, item: artist, error } = useGetArtist(props.id);
+  const { loading, error, artist } = useGetArtist(props.id);
 
   console.log(`loading: ${loading}`);
   console.log(`error: "${error}"`);

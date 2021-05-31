@@ -1,19 +1,25 @@
 import { ApolloQueryResult } from "@apollo/client";
 
 import client from "../../graphql/client";
-import { Artist, ListArtistsQuery, GetArtistQuery } from "../../graphql/api";
+import { Artist, GetArtistQuery, ListArtistsQuery } from "../../graphql/api";
 import {
   listArtists as listArtistsQuery,
   getArtist as getArtistQuery
 } from "../../graphql/queries";
+import { useQuery } from "../../hooks";
 
-export const listArtists = async (): Promise<Artist[]> => {
-  const result = (await client.query({
-    query: listArtistsQuery
-  })) as ApolloQueryResult<ListArtistsQuery>;
-  const items = result.data?.listArtists?.items;
+export const listArtists = (nextToken?: string) => {
+  console.log("listArtists");
+  const { loading, error, data } = useQuery<ListArtistsQuery, any>(
+    client,
+    listArtistsQuery,
+    { nextToken }
+  );
+  const artists = (data?.listArtists?.items || []) as Artist[];
 
-  return items || [];
+  console.log("listArtists.return:");
+  console.log({ loading, error, artists });
+  return { loading, error, artists };
 };
 
 export const getArtist = async (id: string): Promise<Artist | null> => {
