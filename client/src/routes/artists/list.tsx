@@ -2,7 +2,7 @@ import { FunctionComponent, h } from "preact";
 import { Link } from "preact-router";
 import { useState, useEffect } from "preact/hooks";
 
-import { getArtists } from "./graphql";
+import { listArtists } from "./graphql";
 import style from "./style.css";
 import Spinner from "../../components/spinner";
 import { Artist } from "../../graphql/api";
@@ -29,7 +29,7 @@ const ArtistList: FunctionComponent = () => {
 
   useEffect(() => {
     if (loading) {
-      getArtists().then(data => {
+      listArtists().then(data => {
         setArtists(data);
         setLoading(false);
       });

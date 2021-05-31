@@ -22,9 +22,9 @@ export default (() => {
   const AlbumCollection = Collection(AlbumList);
   const PlaylistCollection = Collection(PlaylistList);
 
-  const ArtistDetail = Detail(Artist, ArtistHeader);
-  const AlbumDetail = Detail(Album, AlbumHeader);
-  const PlaylistDetail = Detail(Playlist);
+  const ArtistDetail = Detail("Artist", Artist, ArtistHeader);
+  const AlbumDetail = Detail("Album", Album, AlbumHeader);
+  const PlaylistDetail = Detail("Playlist", Playlist);
 
   return (
     <Router>

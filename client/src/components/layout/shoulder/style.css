@@ -3,6 +3,12 @@
   border-radius: 14px;
   position: relative;
   top: -1em;
-  padding: 1em 1em 0;
+  padding: 1em;
   min-height: 2rem;
+}
+
+.shoulder.Artist {
+  top: -3em;
+  padding: 1em;
+  background-color: rgba(255, 255, 255, 0.6);
 }

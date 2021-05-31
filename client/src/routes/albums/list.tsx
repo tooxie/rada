@@ -4,8 +4,9 @@ import { useState, useEffect } from "preact/hooks";
 
 import { Album } from "../../graphql/api";
 import Spinner from "../../components/spinner";
+
 import style from "./style.css";
-import { getAlbums } from "./graphql";
+import { listAlbums } from "./graphql";
 
 const DEFAULT_ALBUM_COVER = "/assets/icons/svg/music_note.svg";
 
@@ -29,8 +30,8 @@ const AlbumList: FunctionComponent = () => {
 
   useEffect(() => {
     if (loading) {
-      getAlbums().then(data => {
-        setAlbums(data);
+      listAlbums().then(_albums => {
+        setAlbums(_albums);
         setLoading(false);
       });
     }

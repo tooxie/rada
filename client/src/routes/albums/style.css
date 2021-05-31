@@ -7,3 +7,13 @@
   max-width: 100%;
   border-radius: 1rem;
 }
+
+.header {
+  height: 100vw;
+  background-color: black;
+}
+
+.notfound {
+  background-color: black;
+  padding-bottom: 2rem;
+}

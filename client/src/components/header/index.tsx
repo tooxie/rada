@@ -2,8 +2,9 @@ import { FunctionComponent, h } from "preact";
 import { Link } from "preact-router/match";
 import Navigation from "../navigation";
 import style from "./style.css";
+import { DetailProps } from "../../components/layout/detail/types";
 
-const Header: FunctionComponent = () => {
+const Header: FunctionComponent<Partial<DetailProps>> = () => {
   return (
     <header class={style.header}>
       <Navigation />
