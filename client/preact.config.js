@@ -16,5 +16,6 @@ export default {
     babelConfig.plugins.push(['babel-plugin-graphql-tag', {'strip': true}]);
 
     config.plugins.push(new QRcodeWebpackPlugin())
+    config.devtool = 'cheap-module-eval-source-map';
   }
 }
