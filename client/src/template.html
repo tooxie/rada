@@ -8,6 +8,16 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="stylesheet" href="/assets/fonts/raleway-kit/stylesheet.css">
     <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+    <style>
+      @media (orientation: landscape) {
+        html::before {
+          content: "Landscape orientation not supported. Sorry.";
+        }
+        body {
+          display: none;
+        }
+      }
+    </style>
     <% preact.headEnd %>
   </head>
   <body>
