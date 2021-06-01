@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from "preact";
+import { h } from "preact";
 import { lazy } from "preact/compat";
 import { Route, Router } from "preact-router";
 
@@ -19,7 +19,7 @@ const ArtistList = lazy(() => import("../routes/artists/list"));
 const Playlist = lazy(() => import("../routes/playlists/detail"));
 const PlaylistList = lazy(() => import("../routes/playlists/list"));
 
-export default (() => {
+export default () => {
   const ArtistCollection = Collection(ArtistList);
   const AlbumCollection = Collection(AlbumList);
   const PlaylistCollection = Collection(PlaylistList);
@@ -30,16 +30,20 @@ export default (() => {
 
   return (
     <Router>
-      <Route path="/artists/" component={ArtistCollection} />
-      <Route path="/albums/" component={AlbumCollection} />
-      <Route path="/playlists/" component={PlaylistCollection} />
+      <Route path="/artists/" key="artists" component={ArtistCollection} />
+      <Route path="/albums/" key="albums" component={AlbumCollection} />
+      <Route
+        path="/playlists/"
+        key="playlists"
+        component={PlaylistCollection}
+      />
 
-      <Route path="/artists/:id" component={ArtistDetail} />
-      <Route path="/albums/:id" component={AlbumDetail} />
-      <Route path="/playlists/:id" component={PlaylistDetail} />
+      <Route path="/artists/:id" key="artist" component={ArtistDetail} />
+      <Route path="/albums/:id" key="album" component={AlbumDetail} />
+      <Route path="/playlists/:id" key="playlist" component={PlaylistDetail} />
 
       <Redirect path="/" to="/artists" />
       <NotFoundPage default />
     </Router>
   );
-}) as FunctionComponent;
+};
