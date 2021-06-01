@@ -1,32 +1,38 @@
-import { FunctionComponent, h } from "preact";
-import { useState, useEffect } from "preact/hooks";
+import { Fragment, FunctionComponent, h } from "preact";
 
 import { DetailProps } from "../../components/layout/detail/types";
 import Spinner from "../../components/spinner";
-import { Album } from "../../graphql/api";
 
-import { getAlbum } from "./graphql";
+import useGetAlbum from "./hooks/usegetalbum";
+import style from "./style.css";
 
 const AlbumDetail: FunctionComponent<DetailProps> = ({ id }) => {
-  const [album, setAlbum] = useState<Album | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { loading, error, album } = useGetAlbum(id);
 
-  useEffect(() => {
-    if (loading) {
-      getAlbum(id).then(album => {
-        setAlbum(album);
-        setLoading(false);
-      });
-    }
-  });
-
+  console.log(`loading: ${loading}`);
+  console.log(`error: "${error}"`);
   if (loading) {
-    return <Spinner />;
+    return (
+      <div class={style.spinner}>
+        <Spinner />
+      </div>
+    );
   } else if (!album) {
-    return <p>Album not found</p>;
+    return error ? <p>{error}</p> : <p>Album not found</p>;
   }
 
-  return <h1>{album.title}</h1>;
+  const tracks = album.tracks?.items || [];
+
+  return (
+    <Fragment>
+      <h1>{album.title}</h1>
+      <div class={style.tracklist}>
+        {tracks.map(track => (
+          <h2>{track.title}</h2>
+        ))}
+      </div>
+    </Fragment>
+  );
 };
 
 export default AlbumDetail;

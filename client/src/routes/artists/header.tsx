@@ -4,7 +4,7 @@ import { DetailProps } from "../../components/layout/detail/types";
 import Navigation from "../../components/navigation";
 
 import style from "./style.css";
-import { useGetArtist } from "./hooks";
+import useGetArtist from "./hooks/usegetartist";
 
 const Header: FunctionComponent<DetailProps> = ({ id }) => {
   const { error, artist } = useGetArtist(id);

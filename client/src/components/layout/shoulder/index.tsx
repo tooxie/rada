@@ -1,6 +1,17 @@
-import { FunctionComponent, h } from "preact";
+import { h } from "preact";
+
 import style from "./style.css";
 
-export default (props => {
-  return <div class={style.shoulder}>{props.children}</div>;
-}) as FunctionComponent;
+interface Props {
+  detail?: boolean;
+  children: JSX.Element | JSX.Element[];
+}
+
+export default (props: Props) => {
+  const classes = [
+    style.shoulder,
+    props.detail ? style.detail : style.collection
+  ].join(" ");
+
+  return <div class={classes}>{props.children}</div>;
+};

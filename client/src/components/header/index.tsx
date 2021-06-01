@@ -1,8 +1,10 @@
 import { FunctionComponent, h } from "preact";
 import { Link } from "preact-router/match";
+
+import { DetailProps } from "../../components/layout/detail/types";
+
 import Navigation from "../navigation";
 import style from "./style.css";
-import { DetailProps } from "../../components/layout/detail/types";
 
 const Header: FunctionComponent<Partial<DetailProps>> = () => {
   return (

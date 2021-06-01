@@ -19,7 +19,7 @@ const Detail = (
       <Suspense fallback={<DefaultHeader />}>
         <Header {...props} />
       </Suspense>
-      <Shoulder>
+      <Shoulder detail={true}>
         <Suspense fallback={<Spinner />}>
           <Component {...props} />
         </Suspense>
