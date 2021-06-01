@@ -1,10 +1,11 @@
-import { FunctionComponent, h } from "preact";
+import { Fragment, FunctionComponent, h } from "preact";
 import { Suspense } from "preact/compat";
 
-import { DetailProps } from "./types";
 import DefaultHeader from "../../header";
 import Shoulder from "../shoulder";
 import Spinner from "../../spinner";
+
+import { DetailProps } from "./types";
 
 const Detail = (
   model: string,
@@ -14,7 +15,7 @@ const Detail = (
   const Header = HeaderComponent || DefaultHeader;
 
   return (props: DetailProps) => (
-    <div class={`detail ${model.toLowerCase()}`}>
+    <Fragment>
       <Suspense fallback={<DefaultHeader />}>
         <Header {...props} />
       </Suspense>
@@ -23,7 +24,7 @@ const Detail = (
           <Component {...props} />
         </Suspense>
       </Shoulder>
-    </div>
+    </Fragment>
   );
 };
 
