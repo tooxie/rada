@@ -47,6 +47,10 @@ resource "null_resource" "codegen_config" {
       "--graphql-schema", "${abspath(path.module)}/schema.gql",
     ])
   }
+
+  depends_on = [
+    aws_appsync_graphql_api.gawshi
+  ]
 }
 
 // --- Album

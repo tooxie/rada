@@ -1,3 +1,5 @@
+scalar AWSURL
+
 schema {
   query: Query
   mutation: Mutation
@@ -129,7 +131,7 @@ type Album {
   id: ID!
   artists: [Artist!]
   title: String
-  coverUrl: String
+  coverUrl: AWSURL
   tracks(nextToken: String): TrackConnection
 }
 
@@ -141,13 +143,13 @@ type AlbumConnection {
 input CreateAlbumInput {
   artists: [CreateArtistInput!]
   title: String!
-  coverUrl: String
+  coverUrl: AWSURL
 }
 
 input UpdateAlbumInput {
   artists: [UpdateArtistInput!]
   title: String
-  coverUrl: String
+  coverUrl: AWSURL
 }
 
 # --- Artist
@@ -158,7 +160,7 @@ input TableArtistFilterInput {
 type Artist {
   id: ID!
   name: String
-  imageUrl: String
+  imageUrl: AWSURL
   albums(nextToken: String): AlbumConnection
 }
 
@@ -169,12 +171,12 @@ type ArtistConnection {
 
 input CreateArtistInput {
   name: String!
-  imageUrl: String
+  imageUrl: AWSURL
 }
 
 input UpdateArtistInput {
   name: String
-  imageUrl: String
+  imageUrl: AWSURL
 }
 
 # --- Playlist
@@ -185,7 +187,7 @@ input TablePlaylistFilterInput {
 type Playlist {
   id: ID!
   name: String!
-  imageUrl: String
+  imageUrl: AWSURL
 }
 
 type PlaylistConnection {
@@ -195,12 +197,12 @@ type PlaylistConnection {
 
 input CreatePlaylistInput {
   name: String!
-  imageUrl: String
+  imageUrl: AWSURL
 }
 
 input UpdatePlaylistInput {
   name: String
-  imageUrl: String
+  imageUrl: AWSURL
 }
 
 # --- Track
@@ -213,6 +215,7 @@ type Track {
   albumId: ID!
   title: String
   lengthInSeconds: Int
+  year: Int
 }
 
 type TrackConnection {
