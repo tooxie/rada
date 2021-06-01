@@ -144,11 +144,22 @@ export type CreateAlbumMutation = {
       id: string,
       name?: string | null,
       imageUrl?: string | null,
+      albums?:  {
+        __typename: "AlbumConnection",
+        nextToken?: string | null,
+      } | null,
     } > | null,
     title?: string | null,
     coverUrl?: string | null,
     tracks?:  {
       __typename: "TrackConnection",
+      items?:  Array< {
+        __typename: "Track",
+        id: string,
+        albumId: string,
+        title?: string | null,
+        lengthInSeconds?: number | null,
+      } > | null,
       nextToken?: string | null,
     } | null,
   } | null,
@@ -168,11 +179,22 @@ export type UpdateAlbumMutation = {
       id: string,
       name?: string | null,
       imageUrl?: string | null,
+      albums?:  {
+        __typename: "AlbumConnection",
+        nextToken?: string | null,
+      } | null,
     } > | null,
     title?: string | null,
     coverUrl?: string | null,
     tracks?:  {
       __typename: "TrackConnection",
+      items?:  Array< {
+        __typename: "Track",
+        id: string,
+        albumId: string,
+        title?: string | null,
+        lengthInSeconds?: number | null,
+      } > | null,
       nextToken?: string | null,
     } | null,
   } | null,
@@ -191,11 +213,22 @@ export type DeleteAlbumMutation = {
       id: string,
       name?: string | null,
       imageUrl?: string | null,
+      albums?:  {
+        __typename: "AlbumConnection",
+        nextToken?: string | null,
+      } | null,
     } > | null,
     title?: string | null,
     coverUrl?: string | null,
     tracks?:  {
       __typename: "TrackConnection",
+      items?:  Array< {
+        __typename: "Track",
+        id: string,
+        albumId: string,
+        title?: string | null,
+        lengthInSeconds?: number | null,
+      } > | null,
       nextToken?: string | null,
     } | null,
   } | null,
@@ -213,6 +246,12 @@ export type CreateArtistMutation = {
     imageUrl?: string | null,
     albums?:  {
       __typename: "AlbumConnection",
+      items?:  Array< {
+        __typename: "Album",
+        id: string,
+        title?: string | null,
+        coverUrl?: string | null,
+      } > | null,
       nextToken?: string | null,
     } | null,
   } | null,
@@ -231,6 +270,12 @@ export type UpdateArtistMutation = {
     imageUrl?: string | null,
     albums?:  {
       __typename: "AlbumConnection",
+      items?:  Array< {
+        __typename: "Album",
+        id: string,
+        title?: string | null,
+        coverUrl?: string | null,
+      } > | null,
       nextToken?: string | null,
     } | null,
   } | null,
@@ -248,6 +293,12 @@ export type DeleteArtistMutation = {
     imageUrl?: string | null,
     albums?:  {
       __typename: "AlbumConnection",
+      items?:  Array< {
+        __typename: "Album",
+        id: string,
+        title?: string | null,
+        coverUrl?: string | null,
+      } > | null,
       nextToken?: string | null,
     } | null,
   } | null,
@@ -349,11 +400,22 @@ export type GetAlbumQuery = {
       id: string,
       name?: string | null,
       imageUrl?: string | null,
+      albums?:  {
+        __typename: "AlbumConnection",
+        nextToken?: string | null,
+      } | null,
     } > | null,
     title?: string | null,
     coverUrl?: string | null,
     tracks?:  {
       __typename: "TrackConnection",
+      items?:  Array< {
+        __typename: "Track",
+        id: string,
+        albumId: string,
+        title?: string | null,
+        lengthInSeconds?: number | null,
+      } > | null,
       nextToken?: string | null,
     } | null,
   } | null,
@@ -371,8 +433,18 @@ export type ListAlbumsQuery = {
     items?:  Array< {
       __typename: "Album",
       id: string,
+      artists?:  Array< {
+        __typename: "Artist",
+        id: string,
+        name?: string | null,
+        imageUrl?: string | null,
+      } > | null,
       title?: string | null,
       coverUrl?: string | null,
+      tracks?:  {
+        __typename: "TrackConnection",
+        nextToken?: string | null,
+      } | null,
     } > | null,
     nextToken?: string | null,
   } | null,
@@ -390,6 +462,12 @@ export type GetArtistQuery = {
     imageUrl?: string | null,
     albums?:  {
       __typename: "AlbumConnection",
+      items?:  Array< {
+        __typename: "Album",
+        id: string,
+        title?: string | null,
+        coverUrl?: string | null,
+      } > | null,
       nextToken?: string | null,
     } | null,
   } | null,
@@ -409,6 +487,10 @@ export type ListArtistsQuery = {
       id: string,
       name?: string | null,
       imageUrl?: string | null,
+      albums?:  {
+        __typename: "AlbumConnection",
+        nextToken?: string | null,
+      } | null,
     } > | null,
     nextToken?: string | null,
   } | null,

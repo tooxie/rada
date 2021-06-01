@@ -11,10 +11,19 @@ export const getAlbum = gql`
         id
         name
         imageUrl
+        albums {
+          nextToken
+        }
       }
       title
       coverUrl
       tracks {
+        items {
+          id
+          albumId
+          title
+          lengthInSeconds
+        }
         nextToken
       }
     }
@@ -29,8 +38,16 @@ export const listAlbums = gql`
     listAlbums(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        artists {
+          id
+          name
+          imageUrl
+        }
         title
         coverUrl
+        tracks {
+          nextToken
+        }
       }
       nextToken
     }
@@ -43,6 +60,11 @@ export const getArtist = gql`
       name
       imageUrl
       albums {
+        items {
+          id
+          title
+          coverUrl
+        }
         nextToken
       }
     }
@@ -59,6 +81,9 @@ export const listArtists = gql`
         id
         name
         imageUrl
+        albums {
+          nextToken
+        }
       }
       nextToken
     }

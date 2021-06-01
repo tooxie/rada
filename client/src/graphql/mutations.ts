@@ -11,10 +11,19 @@ export const createAlbum = gql`
         id
         name
         imageUrl
+        albums {
+          nextToken
+        }
       }
       title
       coverUrl
       tracks {
+        items {
+          id
+          albumId
+          title
+          lengthInSeconds
+        }
         nextToken
       }
     }
@@ -28,10 +37,19 @@ export const updateAlbum = gql`
         id
         name
         imageUrl
+        albums {
+          nextToken
+        }
       }
       title
       coverUrl
       tracks {
+        items {
+          id
+          albumId
+          title
+          lengthInSeconds
+        }
         nextToken
       }
     }
@@ -45,10 +63,19 @@ export const deleteAlbum = gql`
         id
         name
         imageUrl
+        albums {
+          nextToken
+        }
       }
       title
       coverUrl
       tracks {
+        items {
+          id
+          albumId
+          title
+          lengthInSeconds
+        }
         nextToken
       }
     }
@@ -61,6 +88,11 @@ export const createArtist = gql`
       name
       imageUrl
       albums {
+        items {
+          id
+          title
+          coverUrl
+        }
         nextToken
       }
     }
@@ -73,6 +105,11 @@ export const updateArtist = gql`
       name
       imageUrl
       albums {
+        items {
+          id
+          title
+          coverUrl
+        }
         nextToken
       }
     }
@@ -85,6 +122,11 @@ export const deleteArtist = gql`
       name
       imageUrl
       albums {
+        items {
+          id
+          title
+          coverUrl
+        }
         nextToken
       }
     }
