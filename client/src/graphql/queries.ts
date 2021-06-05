@@ -1,55 +1,40 @@
-import gql from 'graphql-tag';
+import gql from "graphql-tag";
 /* tslint:disable */
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
 export const getAlbum = gql`
-  query GetAlbum($id: ID!) {
-    getAlbum(id: $id) {
+  query GetAlbum($id: ID!, $artistId: ID!) {
+    getAlbum(id: $id, artistId: $artistId) {
       id
-      artists {
-        id
-        name
-        imageUrl
-        albums {
-          nextToken
-        }
-      }
+      artistId
       title
       coverUrl
-      tracks {
-        items {
-          id
-          albumId
-          title
-          lengthInSeconds
-        }
-        nextToken
-      }
+      year
+    }
+  }
+`;
+export const getAlbumsForArtist = gql`
+  query GetAlbumsForArtist($artistId: ID!) {
+    getAlbumsForArtist(artistId: $artistId) {
+      id
+      artistId
+      title
+      coverUrl
+      year
     }
   }
 `;
 export const listAlbums = gql`
-  query ListAlbums(
-    $filter: TableAlbumFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listAlbums(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  query ListAlbums($filter: TableAlbumFilterInput) {
+    listAlbums(filter: $filter) {
       items {
         id
-        artists {
-          id
-          name
-          imageUrl
-        }
+        artistId
         title
         coverUrl
-        tracks {
-          nextToken
-        }
+        year
       }
-      nextToken
     }
   }
 `;
@@ -59,33 +44,17 @@ export const getArtist = gql`
       id
       name
       imageUrl
-      albums {
-        items {
-          id
-          title
-          coverUrl
-        }
-        nextToken
-      }
     }
   }
 `;
 export const listArtists = gql`
-  query ListArtists(
-    $filter: TableArtistFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listArtists(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  query ListArtists($filter: TableArtistFilterInput) {
+    listArtists(filter: $filter) {
       items {
         id
         name
         imageUrl
-        albums {
-          nextToken
-        }
       }
-      nextToken
     }
   }
 `;
@@ -99,18 +68,13 @@ export const getPlaylist = gql`
   }
 `;
 export const listPlaylists = gql`
-  query ListPlaylists(
-    $filter: TablePlaylistFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listPlaylists(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  query ListPlaylists($filter: TablePlaylistFilterInput) {
+    listPlaylists(filter: $filter) {
       items {
         id
         name
         imageUrl
       }
-      nextToken
     }
   }
 `;
@@ -125,19 +89,14 @@ export const getTrack = gql`
   }
 `;
 export const listTracks = gql`
-  query ListTracks(
-    $filter: TableTrackFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listTracks(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  query ListTracks($filter: TableTrackFilterInput) {
+    listTracks(filter: $filter) {
       items {
         id
         albumId
         title
         lengthInSeconds
       }
-      nextToken
     }
   }
 `;

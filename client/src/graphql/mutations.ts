@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import gql from "graphql-tag";
 /* tslint:disable */
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
@@ -7,77 +7,32 @@ export const createAlbum = gql`
   mutation CreateAlbum($input: CreateAlbumInput!) {
     createAlbum(input: $input) {
       id
-      artists {
-        id
-        name
-        imageUrl
-        albums {
-          nextToken
-        }
-      }
+      artistId
       title
       coverUrl
-      tracks {
-        items {
-          id
-          albumId
-          title
-          lengthInSeconds
-        }
-        nextToken
-      }
+      year
     }
   }
 `;
 export const updateAlbum = gql`
-  mutation UpdateAlbum($id: ID!, $input: UpdateAlbumInput!) {
-    updateAlbum(id: $id, input: $input) {
+  mutation UpdateAlbum($id: ID!, $artistId: ID!, $input: UpdateAlbumInput!) {
+    updateAlbum(id: $id, artistId: $artistId, input: $input) {
       id
-      artists {
-        id
-        name
-        imageUrl
-        albums {
-          nextToken
-        }
-      }
+      artistId
       title
       coverUrl
-      tracks {
-        items {
-          id
-          albumId
-          title
-          lengthInSeconds
-        }
-        nextToken
-      }
+      year
     }
   }
 `;
 export const deleteAlbum = gql`
-  mutation DeleteAlbum($id: ID!) {
-    deleteAlbum(id: $id) {
+  mutation DeleteAlbum($id: ID!, $artistId: ID!) {
+    deleteAlbum(id: $id, artistId: $artistId) {
       id
-      artists {
-        id
-        name
-        imageUrl
-        albums {
-          nextToken
-        }
-      }
+      artistId
       title
       coverUrl
-      tracks {
-        items {
-          id
-          albumId
-          title
-          lengthInSeconds
-        }
-        nextToken
-      }
+      year
     }
   }
 `;
@@ -87,14 +42,6 @@ export const createArtist = gql`
       id
       name
       imageUrl
-      albums {
-        items {
-          id
-          title
-          coverUrl
-        }
-        nextToken
-      }
     }
   }
 `;
@@ -104,14 +51,6 @@ export const updateArtist = gql`
       id
       name
       imageUrl
-      albums {
-        items {
-          id
-          title
-          coverUrl
-        }
-        nextToken
-      }
     }
   }
 `;
@@ -121,14 +60,6 @@ export const deleteArtist = gql`
       id
       name
       imageUrl
-      albums {
-        items {
-          id
-          title
-          coverUrl
-        }
-        nextToken
-      }
     }
   }
 `;
