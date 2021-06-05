@@ -1,4 +1,5 @@
-import QRcodeWebpackPlugin from './qrcode-webpack-plugin';
+import QRcodeWebpackPlugin from "./webpack/qrcode-webpack-plugin";
+import vConsoleWebpackPlugin from "./webpack/vconsole-webpack-plugin";
 
 export default {
   /**
@@ -11,15 +12,16 @@ export default {
    * @param {object} options - this is mainly relevant for plugins (will always be empty in the config), default to an empty object
    **/
   webpack(config, env, helpers, options) {
-    if (config.mode === 'development') {
-      config.devtool = 'cheap-module-eval-source-map';
+    if (config.mode === "development") {
+      config.devtool = "cheap-module-eval-source-map";
       config.plugins.push(new QRcodeWebpackPlugin());
+      // config.plugins.push(new vConsoleWebpackPlugin());
     }
 
-    if (config.mode === 'production') {
-      let { rule } = helpers.getLoadersByName(config, 'babel-loader')[0];
+    if (config.mode === "production") {
+      let { rule } = helpers.getLoadersByName(config, "babel-loader")[0];
       let babelConfig = rule.options;
-      babelConfig.plugins.push(['babel-plugin-graphql-tag', {'strip': true}]);
+      babelConfig.plugins.push(["babel-plugin-graphql-tag", { strip: true }]);
     }
-  }
-}
+  },
+};
