@@ -7,31 +7,43 @@ export const createAlbum = gql`
   mutation CreateAlbum($input: CreateAlbumInput!) {
     createAlbum(input: $input) {
       id
-      artistId
-      title
-      coverUrl
+      artists {
+        id
+        name
+        imageUrl
+      }
+      name
+      imageUrl
       year
     }
   }
 `;
 export const updateAlbum = gql`
-  mutation UpdateAlbum($id: ID!, $artistId: ID!, $input: UpdateAlbumInput!) {
-    updateAlbum(id: $id, artistId: $artistId, input: $input) {
+  mutation UpdateAlbum($id: ID!, $input: UpdateAlbumInput!) {
+    updateAlbum(id: $id, input: $input) {
       id
-      artistId
-      title
-      coverUrl
+      artists {
+        id
+        name
+        imageUrl
+      }
+      name
+      imageUrl
       year
     }
   }
 `;
 export const deleteAlbum = gql`
-  mutation DeleteAlbum($id: ID!, $artistId: ID!) {
-    deleteAlbum(id: $id, artistId: $artistId) {
+  mutation DeleteAlbum($id: ID!) {
+    deleteAlbum(id: $id) {
       id
-      artistId
-      title
-      coverUrl
+      artists {
+        id
+        name
+        imageUrl
+      }
+      name
+      imageUrl
       year
     }
   }
@@ -42,6 +54,12 @@ export const createArtist = gql`
       id
       name
       imageUrl
+      albums {
+        id
+        name
+        imageUrl
+        year
+      }
     }
   }
 `;
@@ -51,6 +69,12 @@ export const updateArtist = gql`
       id
       name
       imageUrl
+      albums {
+        id
+        name
+        imageUrl
+        year
+      }
     }
   }
 `;
@@ -60,6 +84,12 @@ export const deleteArtist = gql`
       id
       name
       imageUrl
+      albums {
+        id
+        name
+        imageUrl
+        year
+      }
     }
   }
 `;

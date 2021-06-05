@@ -1,7 +1,8 @@
-resource "aws_dynamodb_table" "albums" {
-  name = "GawshiAlbums"
+resource "aws_dynamodb_table" "artists_albums" {
+  name = "GawshiArtistsAlbums_${local.suffix}"
   billing_mode = "PAY_PER_REQUEST"
   hash_key = "id"
+  range_key = "sk"
 
   attribute {
     name = "id"
@@ -9,30 +10,27 @@ resource "aws_dynamodb_table" "albums" {
   }
 
   attribute {
-    name = "artistId"
+    name = "sk"
     type = "S"
   }
-
-  global_secondary_index {
-    name = "ArtistIdIndex"
-    hash_key = "artistId"
-    projection_type = "ALL"
-  }
-}
-
-resource "aws_dynamodb_table" "artists" {
-  name = "GawshiArtists"
-  billing_mode = "PAY_PER_REQUEST"
-  hash_key = "id"
 
   attribute {
-    name = "id"
-    type = "S"
+    name = "year"
+    type = "N"
+  }
+
+  local_secondary_index {
+    name = "ByYear"
+    range_key = "year"
+    projection_type = "INCLUDE"
+    non_key_attributes = [
+      "name"
+    ]
   }
 }
 
 resource "aws_dynamodb_table" "playlists" {
-  name = "GawshiPlaylists"
+  name = "GawshiPlaylists_${local.suffix}"
   billing_mode = "PAY_PER_REQUEST"
   hash_key = "id"
 
@@ -40,10 +38,21 @@ resource "aws_dynamodb_table" "playlists" {
     name = "id"
     type = "S"
   }
+
+  attribute {
+    name = "addedAt"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name = "AddedAtIndex"
+    hash_key = "addedAt"
+    projection_type = "ALL"
+  }
 }
 
 resource "aws_dynamodb_table" "tracks" {
-  name = "GawshiTracks"
+  name = "GawshiTracks_${local.suffix}"
   billing_mode = "PAY_PER_REQUEST"
   hash_key = "id"
 
@@ -61,5 +70,16 @@ resource "aws_dynamodb_table" "tracks" {
     name = "AlbumIdIndex"
     hash_key = "albumId"
     projection_type = "ALL"
+  }
+}
+
+resource "aws_dynamodb_table" "favourites" {
+  name = "GawshiFavs_${local.suffix}"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key = "trackId"
+
+  attribute {
+    name = "trackId"
+    type = "S"
   }
 }

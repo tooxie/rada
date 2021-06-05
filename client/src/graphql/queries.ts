@@ -4,23 +4,16 @@ import gql from "graphql-tag";
 // this is an auto generated file. This will be overwritten
 
 export const getAlbum = gql`
-  query GetAlbum($id: ID!, $artistId: ID!) {
-    getAlbum(id: $id, artistId: $artistId) {
+  query GetAlbum($id: ID!) {
+    getAlbum(id: $id) {
       id
-      artistId
-      title
-      coverUrl
-      year
-    }
-  }
-`;
-export const getAlbumsForArtist = gql`
-  query GetAlbumsForArtist($artistId: ID!) {
-    getAlbumsForArtist(artistId: $artistId) {
-      id
-      artistId
-      title
-      coverUrl
+      artists {
+        id
+        name
+        imageUrl
+      }
+      name
+      imageUrl
       year
     }
   }
@@ -30,9 +23,8 @@ export const listAlbums = gql`
     listAlbums(filter: $filter) {
       items {
         id
-        artistId
-        title
-        coverUrl
+        name
+        imageUrl
         year
       }
     }
@@ -44,6 +36,12 @@ export const getArtist = gql`
       id
       name
       imageUrl
+      albums {
+        id
+        name
+        imageUrl
+        year
+      }
     }
   }
 `;

@@ -6,41 +6,50 @@ import Spinner from "../../components/spinner";
 
 import style from "./style.css";
 import useGetArtist from "./hooks/usegetartist";
+import useGetAlbumsForArtist from "./hooks/usegetalbumsforartist";
+import { urlize } from "../../utils/id";
 
 // https://thenounproject.com/term/cd-cover/2032601/
 const DEFAULT_ALBUM_COVER = "/assets/img/default-album-cover.svg";
 const ArtistDetail: FunctionComponent<DetailProps> = ({ id }) => {
   const { loading, error, artist } = useGetArtist(id);
 
-  console.log(`loading: ${loading}`);
-  console.log(`error: "${error}"`);
   if (loading) {
     return (
       <div class={style.spinner}>
         <Spinner />
       </div>
     );
-  } else if (!artist) {
-    return error ? <p>{error}</p> : <p>Artist not found</p>;
+  }
+  if (!artist) {
+    return error ? <p>{error.message}</p> : <p>Artist not found</p>;
   }
 
-  const albums = artist.albums?.items || [];
+  const albums = artist.albums || [];
 
   return (
-    <div class={style.artist}>
+    <div class={style.artist} key={id}>
       <h1 class={style.name}>{artist.name}</h1>
       <div class={style.albums}>
-        {albums.map(album => (
-          <div class={style.album}>
-            <Link href={`/albums/${album.id}`}>
-              <img src={album.coverUrl || DEFAULT_ALBUM_COVER} />
-              <h2>{album.title}</h2>
+        {albums.map((album) => (
+          <div class={style.album} key={album.id}>
+            <Link href={`/album/${urlize(album.id)}`}>
+              <img src={album.imageUrl || DEFAULT_ALBUM_COVER} />
+              <h2>{album.name}</h2>
+              <h3 class={style.year}>{album.year}</h3>
             </Link>
           </div>
         ))}
       </div>
     </div>
   );
+};
+
+const getAlbums = (artistId: string) => {
+  console.log(`getAlbums(${JSON.stringify(artistId)})`);
+  const { loading, error, albums } = useGetAlbumsForArtist(artistId);
+
+  return { loading, error, albums };
 };
 
 export default ArtistDetail;

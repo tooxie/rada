@@ -1,19 +1,23 @@
 import { FunctionComponent, h } from "preact";
 import { Link } from "preact-router";
 
-import style from "./style.css";
 import Spinner from "../../components/spinner";
 import { Artist } from "../../graphql/api";
+import compareNames from "../../utils/comparenames";
+
 import useListArtists from "./hooks/uselistartists";
+import style from "./style.css";
 
 const DEFAULT_ARTIST_IMAGE = "/assets/img/default-artist-image.jpeg";
-const ArtistThumb: FunctionComponent<Artist> = props => {
+const ArtistThumb: FunctionComponent<Artist> = (props) => {
   const image = props.imageUrl || DEFAULT_ARTIST_IMAGE;
 
+  if (!props.id) throw new Error("Invalid artist");
+
   return (
-    <Link href={"/artists/" + props.id}>
+    <Link href={"/artist/" + props.id.split(":")[1]}>
       <div class={style.artist}>
-        <img src={image} />
+        <img src={image} loading="lazy" />
         <div class={style.name}>{props.name}</div>
       </div>
     </Link>
@@ -30,14 +34,16 @@ const ArtistList: FunctionComponent = () => {
   if (loading) {
     return <Spinner />;
   } else {
-    if (error) return <p>{error}</p>;
-    if (!artists) return <p>No Artists</p>;
+    if (error) return <p>{error.message}</p>;
+    if (!artists || artists.length < 1) return <p>No Artists</p>;
   }
+
+  const _artists = artists.map((el) => el).sort(compareNames);
 
   return (
     <div class={style.artistgrid}>
-      {artists.map((artist: Artist) => (
-        <ArtistThumb {...artist} />
+      {_artists.map((artist: Artist) => (
+        <ArtistThumb key={artist.id} {...artist} />
       ))}
     </div>
   );

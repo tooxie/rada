@@ -1,11 +1,12 @@
 {
   "name": "Gawshi",
   "short_name": "Gawshi",
-  "start_url": "/",
+  "start_url": "/artists",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#fff",
   "theme_color": "#673ab8",
+  "lang": "en-US",
   "icons": [
     {
       "src": "/assets/icons/android-chrome-192x192.png",
@@ -22,5 +23,16 @@
       "type": "image/png",
       "sizes": "512x512"
     }
-  ]
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+gawshi",
+      "url": "/boh?foo=%s"
+    },
+    {
+      "protocol": "gawshi",
+      "url": "/boh?foo=%s"
+    }
+  ],
+  "screenshots": []
 }

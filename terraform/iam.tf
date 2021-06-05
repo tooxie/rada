@@ -1,5 +1,5 @@
 resource "aws_iam_role" "appsync" {
-  name = "GawshiAppsync"
+  name = "GawshiAppsync_${local.suffix}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -16,7 +16,7 @@ resource "aws_iam_role" "appsync" {
 }
 
 resource "aws_iam_role_policy" "gawshi_dynamodb" {
-  name = "GawshiDynamodb"
+  name = "GawshiDynamodb_${local.suffix}"
   role = aws_iam_role.appsync.id
 
   policy = jsonencode({
@@ -28,17 +28,17 @@ resource "aws_iam_role_policy" "gawshi_dynamodb" {
         ],
         Effect = "Allow",
         Resource = [
-          "${aws_dynamodb_table.albums.arn}",
-          "${aws_dynamodb_table.albums.arn}/*",
-
-          "${aws_dynamodb_table.artists.arn}",
-          "${aws_dynamodb_table.artists.arn}/*",
+          "${aws_dynamodb_table.artists_albums.arn}",
+          "${aws_dynamodb_table.artists_albums.arn}/*",
 
           "${aws_dynamodb_table.playlists.arn}",
           "${aws_dynamodb_table.playlists.arn}/*",
 
           "${aws_dynamodb_table.tracks.arn}",
           "${aws_dynamodb_table.tracks.arn}/*",
+
+          "${aws_dynamodb_table.favourites.arn}",
+          "${aws_dynamodb_table.favourites.arn}/*",
         ]
       }
     ]

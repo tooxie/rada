@@ -3,5 +3,6 @@
   "operation": "GetItem",
   "key": {
     "id": $util.dynamodb.toDynamoDBJson($ctx.args.id),
+    "sk": $util.dynamodb.toDynamoDBJson($ctx.args.id),
   }
 }

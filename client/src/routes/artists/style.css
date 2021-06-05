@@ -4,6 +4,10 @@
   width: 100%;
 }
 
+.artistgrid a {
+  display: inline-block;
+}
+
 .artistgrid .artist {
   overflow: hidden;
   margin-bottom: -.5rem;
@@ -11,7 +15,8 @@
 
 .artistgrid .artist img {
   width: 100%;
-  border-radius: 14px;
+  border-radius: 1rem;
+  min-height: 1.5rem;
 }
 
 .artistgrid .artist .name {
@@ -30,10 +35,10 @@
 /* -- Detail -- */
 .header {
   height: 50vw;
-  background-color: black;
+  background-color: white;
   background-size: cover;
   border-radius: 0 0 1rem 1rem;
-  transition: background 2s linear;
+  /* transition: background 2s linear; */
 }
 
 /* TODO: Fade background-image in:
@@ -52,13 +57,25 @@
   margin-top: 2rem;
 }
 
-.albums {
+.artist .albums {
   margin-top: 2rem;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  column-gap: 1rem;
+  row-gap: 1rem;
 }
 
-.albums .album img {
+.artist .albums .album a {
+  color: black;
+  display: block;
+}
+
+.artist .albums .album a .year {
+  color: #742e12;
+  font-size: 0.8rem;
+}
+
+.artist .albums .album img {
   max-width: 100%;
-  border-radius: 1rem;
+  border-radius: 1rem 1rem 1rem 0;
 }

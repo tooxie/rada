@@ -8,10 +8,7 @@ interface Props {
 }
 
 export default (props: Props) => {
-  const classes = [
-    style.shoulder,
-    props.detail ? style.detail : style.collection
-  ].join(" ");
+  const classes = [style.shoulder, props.detail ? style.detail : style.collection];
 
-  return <div class={classes}>{props.children}</div>;
+  return <div class={classes.join(" ")}>{props.children}</div>;
 };

@@ -4,7 +4,7 @@ import {
   DocumentNode,
   TypedDocumentNode,
   ApolloClient,
-  NormalizedCacheObject
+  NormalizedCacheObject,
 } from "@apollo/client";
 
 type C = ApolloClient<NormalizedCacheObject>;
@@ -18,16 +18,17 @@ export default <T, V>(client: C, query: Q, variables: V) => {
   client
     .query({
       query,
-      variables
+      variables,
     })
-    .then(data => {
+    .then((data) => {
       console.log(`useQuery got data:`);
-      console.log(data);
+      console.dir(data);
       setData((data as ApolloQueryResult<T>).data);
       setLoading(false);
     })
-    .catch(error => {
-      console.log(`useQuery got error: ${error}`);
+    .catch((error) => {
+      console.log("useQuery got error:");
+      console.error(error);
       setError(error);
       setLoading(false);
     });

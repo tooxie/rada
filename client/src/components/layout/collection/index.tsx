@@ -5,13 +5,13 @@ import Shoulder from "../shoulder";
 import Header from "../../header";
 import Spinner from "../../spinner";
 
-export default (Component: FunctionComponent): FunctionComponent => {
-  return props => (
+export default (model: string, Component: FunctionComponent): FunctionComponent => {
+  return (props) => (
     <Fragment>
-      <Header />
+      <Header key={`collection-header-${model}`} />
       <Shoulder>
         <Suspense fallback={<Spinner />}>
-          <Component {...props} />
+          <Component key={`collection-shoulder-${model}`} {...props} />
         </Suspense>
       </Shoulder>
     </Fragment>

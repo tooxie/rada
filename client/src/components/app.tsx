@@ -8,7 +8,7 @@ const App: FunctionComponent = () => {
   return (
     <IntlProvider definition={definition}>
       <div id="preact_root">
-        <Router />
+        <Router key="router" />
       </div>
     </IntlProvider>
   );

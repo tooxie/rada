@@ -38,7 +38,7 @@ fi
 AMPLIFY_CONFIG_FILE="./.graphqlconfig.yml"
 AMPLIFY_CONFIG="projects:
   Gawshi:
-    schemaPath: src/graphql/schema.json
+    schemaPath: ./schema.graphql
     includes:
       - src/graphql/**/*.ts
     excludes:

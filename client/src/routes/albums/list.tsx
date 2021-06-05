@@ -4,22 +4,27 @@ import { useState, useEffect } from "preact/hooks";
 
 import { Album } from "../../graphql/api";
 import Spinner from "../../components/spinner";
+import { urlize } from "../../utils/id";
+import compareNames from "../../utils/comparenames";
 
 import style from "./style.css";
 import { listAlbums } from "./graphql";
 
-const DEFAULT_ALBUM_COVER = "/assets/icons/svg/music_note.svg";
+// https://thenounproject.com/term/cd-cover/2032601/
+const DEFAULT_ALBUM_COVER = "/assets/img/default-album-cover.svg";
 
-const AlbumThumb: FunctionComponent<Album> = props => {
-  const cover = props.coverUrl || DEFAULT_ALBUM_COVER;
+interface AlbumThumbProps {
+  album: Album;
+}
+
+const AlbumThumb: FunctionComponent<AlbumThumbProps> = ({ album }) => {
+  const cover = album.imageUrl || DEFAULT_ALBUM_COVER;
 
   return (
-    <Link href={"/albums/" + props.id}>
-      <div class={style.album}>
-        <img src={cover} />
-        <div class={style.artist}>{props.artists}</div>
-        <div class={style.name}>{props.title}</div>
-      </div>
+    <Link href={`/album/${urlize(album.id)}`} class={style.album}>
+      <img src={cover} />
+      <div class={style.name}>{album.name}</div>
+      <div class={style.year}>{album.year}</div>
     </Link>
   );
 };
@@ -30,8 +35,8 @@ const AlbumList: FunctionComponent = () => {
 
   useEffect(() => {
     if (loading) {
-      listAlbums().then(_albums => {
-        setAlbums(_albums);
+      listAlbums().then((albums) => {
+        setAlbums(albums);
         setLoading(false);
       });
     }
@@ -45,10 +50,12 @@ const AlbumList: FunctionComponent = () => {
     }
   }
 
+  const _albums = albums.map((el) => el).sort(compareNames);
+
   return (
     <div class={style.albumgrid}>
-      {albums.map(album => (
-        <AlbumThumb {...album} />
+      {_albums.map((album) => (
+        <AlbumThumb key={album.id} album={album} />
       ))}
     </div>
   );

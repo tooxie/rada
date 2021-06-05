@@ -6,17 +6,18 @@ import Navigation from "../../components/navigation";
 import style from "./style.css";
 import useGetArtist from "./hooks/usegetartist";
 
+const DEFAULT_ARTIST_IMAGE = "/assets/img/default-artist-image.jpeg";
 const Header: FunctionComponent<DetailProps> = ({ id }) => {
-  const { error, artist } = useGetArtist(id);
-  // if (loading || !artist) return <div />;
+  const { loading, error, artist } = useGetArtist(id);
 
-  // console.log("loading:", loading);
-  const backgroundImage = artist?.imageUrl ? `url(${artist.imageUrl})` : "none";
-  // console.log(backgroundImage);
+  let backgroundImage: string = "none";
+  if (!loading) {
+    backgroundImage = `url("${artist?.imageUrl || DEFAULT_ARTIST_IMAGE}")`;
+  }
   if (error) console.error(error);
 
   return (
-    <header class={style.header} style={{ backgroundImage }}>
+    <header key={id} class={style.header} style={{ backgroundImage }}>
       <Navigation />
     </header>
   );

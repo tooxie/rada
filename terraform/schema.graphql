@@ -1,5 +1,3 @@
-scalar AWSURL
-
 schema {
   query: Query
   mutation: Mutation
@@ -25,24 +23,24 @@ type Mutation {
 
 type Query {
   getAlbum(id: ID!): Album
-  listAlbums(filter: TableAlbumFilterInput, limit: Int, nextToken: String): AlbumConnection
+  listAlbums(filter: TableAlbumFilterInput): AlbumConnection
 
   getArtist(id: ID!): Artist
-  listArtists(filter: TableArtistFilterInput, limit: Int, nextToken: String): ArtistConnection
+  listArtists(filter: TableArtistFilterInput): ArtistConnection
 
   getPlaylist(id: ID!): Playlist
-  listPlaylists(filter: TablePlaylistFilterInput, limit: Int, nextToken: String): PlaylistConnection
+  listPlaylists(filter: TablePlaylistFilterInput): PlaylistConnection
 
   getTrack(id: ID!): Track
-  listTracks(filter: TableTrackFilterInput, limit: Int, nextToken: String): TrackConnection
+  listTracks(filter: TableTrackFilterInput): TrackConnection
 }
 
 type Subscription {
-  onCreateAlbum(id: ID, title: String): Album
+  onCreateAlbum(id: ID, name: String): Album
     @aws_subscribe(mutations: ["createAlbum"])
-  onUpdateAlbum(id: ID, title: String): Album
+  onUpdateAlbum(id: ID, name: String): Album
     @aws_subscribe(mutations: ["updateAlbum"])
-  onDeleteAlbum(id: ID, title: String): Album
+  onDeleteAlbum(id: ID, name: String): Album
     @aws_subscribe(mutations: ["deleteAlbum"])
 
   onCreateArtist(id: ID, name: String): Artist
@@ -122,36 +120,6 @@ input TableStringFilterInput {
   beginsWith: String
 }
 
-# --- Album
-input TableAlbumFilterInput {
-  title: TableStringFilterInput
-}
-
-type Album {
-  id: ID!
-  artists: [Artist!]
-  title: String
-  coverUrl: AWSURL
-  tracks(nextToken: String): TrackConnection
-}
-
-type AlbumConnection {
-  items: [Album!]
-  nextToken: String
-}
-
-input CreateAlbumInput {
-  artists: [CreateArtistInput!]
-  title: String!
-  coverUrl: AWSURL
-}
-
-input UpdateAlbumInput {
-  artists: [UpdateArtistInput!]
-  title: String
-  coverUrl: AWSURL
-}
-
 # --- Artist
 input TableArtistFilterInput {
   name: TableStringFilterInput
@@ -161,12 +129,11 @@ type Artist {
   id: ID!
   name: String
   imageUrl: AWSURL
-  albums(nextToken: String): AlbumConnection
+  albums: [Album!]
 }
 
 type ArtistConnection {
   items: [Artist!]
-  nextToken: String
 }
 
 input CreateArtistInput {
@@ -177,6 +144,37 @@ input CreateArtistInput {
 input UpdateArtistInput {
   name: String
   imageUrl: AWSURL
+}
+
+# --- Album
+input TableAlbumFilterInput {
+  name: TableStringFilterInput
+}
+
+type Album {
+  id: ID!
+  artists: [Artist!]
+  name: String
+  imageUrl: AWSURL
+  year: Int
+  tracks: TrackConnection
+}
+
+type AlbumConnection {
+  items: [Album!]
+}
+
+input CreateAlbumInput {
+  artists: [ID!]
+  name: String!
+  imageUrl: AWSURL
+  year: Int
+}
+
+input UpdateAlbumInput {
+  name: String
+  imageUrl: AWSURL
+  year: Int
 }
 
 # --- Playlist
@@ -192,7 +190,6 @@ type Playlist {
 
 type PlaylistConnection {
   items: [Playlist!]
-  nextToken: String
 }
 
 input CreatePlaylistInput {
@@ -215,12 +212,10 @@ type Track {
   albumId: ID!
   title: String
   lengthInSeconds: Int
-  year: Int
 }
 
 type TrackConnection {
   items: [Track!]
-  nextToken: String
 }
 
 input CreateTrackInput {

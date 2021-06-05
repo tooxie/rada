@@ -1,16 +1,30 @@
 .albumgrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  column-gap: 1rem;
+  row-gap: 1rem;
+}
+
+.albumgrid a {
+  color: black;
+  display: block;
+}
+
+.albumgrid a.album .year {
+  color: #742e12;
+  font-size: 0.8rem;
 }
 
 .albumgrid img {
   max-width: 100%;
-  border-radius: 1rem;
+  border-radius: 1rem 1rem 1rem 0;
 }
 
 .header {
   height: 100vw;
   background-color: black;
+  background-size: cover;
+  border-radius: 0 0 1rem 1rem;
 }
 
 .notfound {

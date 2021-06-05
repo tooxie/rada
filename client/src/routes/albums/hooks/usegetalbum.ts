@@ -5,11 +5,12 @@ import client from "../../../graphql/client";
 import useGet from "../../../hooks/useget";
 import { GetAlbumQuery } from "../../../graphql/api";
 import { getAlbum } from "../../../graphql/queries";
+import { toDbId } from "../../../utils/id";
 
-const doGetAlbum = async (id: string) => {
+const doGetAlbum = async (variables: object) => {
   const result = (await client.query({
     query: getAlbum,
-    variables: { id }
+    variables,
   })) as ApolloQueryResult<GetAlbumQuery>;
   const item = result.data?.getAlbum as Album;
 
@@ -17,14 +18,16 @@ const doGetAlbum = async (id: string) => {
 };
 
 export const useGetAlbum = (id: string) => {
-  console.log("useGetAlbum");
-  const { loading, error, item: album } = useGet<Album>(id, doGetAlbum);
+  console.log(`useGetAlbum("${id}")`);
+  const _id = toDbId("album", id);
+  const pk = { id: _id, sk: _id };
+  const { loading, error, item: album } = useGet<Album>(doGetAlbum, pk);
 
   console.log({ loading, error, album });
   return {
     loading,
     error,
-    album
+    album,
   };
 };
 

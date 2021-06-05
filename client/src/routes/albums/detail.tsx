@@ -9,8 +9,6 @@ import style from "./style.css";
 const AlbumDetail: FunctionComponent<DetailProps> = ({ id }) => {
   const { loading, error, album } = useGetAlbum(id);
 
-  console.log(`loading: ${loading}`);
-  console.log(`error: "${error}"`);
   if (loading) {
     return (
       <div class={style.spinner}>
@@ -18,16 +16,16 @@ const AlbumDetail: FunctionComponent<DetailProps> = ({ id }) => {
       </div>
     );
   } else if (!album) {
-    return error ? <p>{error}</p> : <p>Album not found</p>;
+    return error ? <p>{error.message}</p> : <p>Album not found</p>;
   }
 
   const tracks = album.tracks?.items || [];
 
   return (
     <Fragment>
-      <h1>{album.title}</h1>
+      <h1>{album.name}</h1>
       <div class={style.tracklist}>
-        {tracks.map(track => (
+        {tracks.map((track) => (
           <h2>{track.title}</h2>
         ))}
       </div>

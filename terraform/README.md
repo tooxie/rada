@@ -49,3 +49,15 @@ Get the AppSync API KEY:
 ```
 AWS_PROFILE=gawshi terraform state pull | jq -r '.resources[] | select(.type == "aws_appsync_api_key") | .instances[0].attributes.key'
 ```
+
+### Suffix
+
+All resources will be suffixed with a random string to:
+* Add an extra layer of caution to prevent clashing with existing resources.
+* Enable for multiple instances of the system to run in the same account.
+
+You can define your own suffix if you need to:
+
+```
+AWS_PROFILE=gawshi terraform apply -var="suffix=fffuuuuuu"
+```

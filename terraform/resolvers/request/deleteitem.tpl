@@ -1,7 +1,7 @@
 {
-    "version": "2017-02-28",
-    "operation": "DeleteItem",
-    "key": {
-        "id": { "S": "${ctx.args.id}" }
-    }
+  "version": "2017-02-28",
+  "operation": "DeleteItem",
+  "key": {
+    "id": { "S": "${ctx.args.id}" }
+  }
 }

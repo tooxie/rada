@@ -6,6 +6,7 @@ import Shoulder from "../shoulder";
 import Spinner from "../../spinner";
 
 import { DetailProps } from "./types";
+import style from "./style.css";
 
 const Detail = (
   model: string,
@@ -13,15 +14,20 @@ const Detail = (
   HeaderComponent?: FunctionComponent<DetailProps>
 ) => {
   const Header = HeaderComponent || DefaultHeader;
+  const spinner = (
+    <div class={style.spinner}>
+      <Spinner />
+    </div>
+  );
 
   return (props: DetailProps) => (
     <Fragment>
       <Suspense fallback={<DefaultHeader />}>
-        <Header {...props} />
+        <Header key={`detail-header-${props.id}`} {...props} />
       </Suspense>
-      <Shoulder detail={true}>
-        <Suspense fallback={<Spinner />}>
-          <Component {...props} />
+      <Shoulder detail={true} key="detshoulder">
+        <Suspense fallback={spinner}>
+          <Component key={`detail-shoulder-${props.id}`} {...props} />
         </Suspense>
       </Shoulder>
     </Fragment>

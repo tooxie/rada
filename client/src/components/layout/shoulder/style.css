@@ -1,8 +1,9 @@
 .shoulder {
   border-radius: 1rem;
-  min-height: 2rem;
+  min-height: 4rem;
   padding: 1em;
   position: relative;
+  padding: 1rem 1rem 0;
 }
 
 .collection {
@@ -11,6 +12,6 @@
 }
 
 .detail {
-  background-color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.8);
   top: -3em;
 }

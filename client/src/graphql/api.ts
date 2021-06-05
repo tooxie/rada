@@ -3,20 +3,28 @@
 //  This file was automatically generated and should not be edited.
 
 export type CreateAlbumInput = {
-  artistId: string;
-  title: string;
-  coverUrl?: string | null;
+  artists?: Array<string> | null;
+  name: string;
+  imageUrl?: string | null;
   year?: number | null;
 };
 
 export type Album = {
   __typename: "Album";
   id?: string;
-  artistId?: string;
-  title?: string | null;
-  coverUrl?: string | null;
+  artists?: Array<Artist> | null;
+  name?: string | null;
+  imageUrl?: string | null;
   year?: number | null;
   tracks?: TrackConnection;
+};
+
+export type Artist = {
+  __typename: "Artist";
+  id?: string;
+  name?: string | null;
+  imageUrl?: string | null;
+  albums?: Array<Album> | null;
 };
 
 export type TrackConnection = {
@@ -33,27 +41,14 @@ export type Track = {
 };
 
 export type UpdateAlbumInput = {
-  title?: string | null;
-  coverUrl?: string | null;
+  name?: string | null;
+  imageUrl?: string | null;
   year?: number | null;
 };
 
 export type CreateArtistInput = {
   name: string;
   imageUrl?: string | null;
-};
-
-export type Artist = {
-  __typename: "Artist";
-  id?: string;
-  name?: string | null;
-  imageUrl?: string | null;
-  albums?: AlbumConnection;
-};
-
-export type AlbumConnection = {
-  __typename: "AlbumConnection";
-  items?: Array<Album> | null;
 };
 
 export type UpdateArtistInput = {
@@ -91,7 +86,7 @@ export type UpdateTrackInput = {
 };
 
 export type TableAlbumFilterInput = {
-  title?: TableStringFilterInput | null;
+  name?: TableStringFilterInput | null;
 };
 
 export type TableStringFilterInput = {
@@ -105,6 +100,11 @@ export type TableStringFilterInput = {
   notContains?: string | null;
   between?: Array<string | null> | null;
   beginsWith?: string | null;
+};
+
+export type AlbumConnection = {
+  __typename: "AlbumConnection";
+  items?: Array<Album> | null;
 };
 
 export type TableArtistFilterInput = {
@@ -137,16 +137,20 @@ export type CreateAlbumMutation = {
   createAlbum?: {
     __typename: "Album";
     id: string;
-    artistId: string;
-    title?: string | null;
-    coverUrl?: string | null;
+    artists?: Array<{
+      __typename: "Artist";
+      id: string;
+      name?: string | null;
+      imageUrl?: string | null;
+    }> | null;
+    name?: string | null;
+    imageUrl?: string | null;
     year?: number | null;
   } | null;
 };
 
 export type UpdateAlbumMutationVariables = {
   id?: string;
-  artistId?: string;
   input?: UpdateAlbumInput;
 };
 
@@ -154,25 +158,34 @@ export type UpdateAlbumMutation = {
   updateAlbum?: {
     __typename: "Album";
     id: string;
-    artistId: string;
-    title?: string | null;
-    coverUrl?: string | null;
+    artists?: Array<{
+      __typename: "Artist";
+      id: string;
+      name?: string | null;
+      imageUrl?: string | null;
+    }> | null;
+    name?: string | null;
+    imageUrl?: string | null;
     year?: number | null;
   } | null;
 };
 
 export type DeleteAlbumMutationVariables = {
   id?: string;
-  artistId?: string;
 };
 
 export type DeleteAlbumMutation = {
   deleteAlbum?: {
     __typename: "Album";
     id: string;
-    artistId: string;
-    title?: string | null;
-    coverUrl?: string | null;
+    artists?: Array<{
+      __typename: "Artist";
+      id: string;
+      name?: string | null;
+      imageUrl?: string | null;
+    }> | null;
+    name?: string | null;
+    imageUrl?: string | null;
     year?: number | null;
   } | null;
 };
@@ -187,6 +200,13 @@ export type CreateArtistMutation = {
     id: string;
     name?: string | null;
     imageUrl?: string | null;
+    albums?: Array<{
+      __typename: "Album";
+      id: string;
+      name?: string | null;
+      imageUrl?: string | null;
+      year?: number | null;
+    }> | null;
   } | null;
 };
 
@@ -201,6 +221,13 @@ export type UpdateArtistMutation = {
     id: string;
     name?: string | null;
     imageUrl?: string | null;
+    albums?: Array<{
+      __typename: "Album";
+      id: string;
+      name?: string | null;
+      imageUrl?: string | null;
+      year?: number | null;
+    }> | null;
   } | null;
 };
 
@@ -214,6 +241,13 @@ export type DeleteArtistMutation = {
     id: string;
     name?: string | null;
     imageUrl?: string | null;
+    albums?: Array<{
+      __typename: "Album";
+      id: string;
+      name?: string | null;
+      imageUrl?: string | null;
+      year?: number | null;
+    }> | null;
   } | null;
 };
 
@@ -302,33 +336,22 @@ export type DeleteTrackMutation = {
 
 export type GetAlbumQueryVariables = {
   id?: string;
-  artistId?: string;
 };
 
 export type GetAlbumQuery = {
   getAlbum?: {
     __typename: "Album";
     id: string;
-    artistId: string;
-    title?: string | null;
-    coverUrl?: string | null;
+    artists?: Array<{
+      __typename: "Artist";
+      id: string;
+      name?: string | null;
+      imageUrl?: string | null;
+    }> | null;
+    name?: string | null;
+    imageUrl?: string | null;
     year?: number | null;
   } | null;
-};
-
-export type GetAlbumsForArtistQueryVariables = {
-  artistId?: string;
-};
-
-export type GetAlbumsForArtistQuery = {
-  getAlbumsForArtist: Array<{
-    __typename: "Album";
-    id: string;
-    artistId: string;
-    title?: string | null;
-    coverUrl?: string | null;
-    year?: number | null;
-  } | null>;
 };
 
 export type ListAlbumsQueryVariables = {
@@ -341,9 +364,8 @@ export type ListAlbumsQuery = {
     items?: Array<{
       __typename: "Album";
       id: string;
-      artistId: string;
-      title?: string | null;
-      coverUrl?: string | null;
+      name?: string | null;
+      imageUrl?: string | null;
       year?: number | null;
     }> | null;
   } | null;
@@ -359,6 +381,13 @@ export type GetArtistQuery = {
     id: string;
     name?: string | null;
     imageUrl?: string | null;
+    albums?: Array<{
+      __typename: "Album";
+      id: string;
+      name?: string | null;
+      imageUrl?: string | null;
+      year?: number | null;
+    }> | null;
   } | null;
 };
 

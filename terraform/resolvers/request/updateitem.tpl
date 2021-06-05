@@ -3,6 +3,7 @@
   "operation": "UpdateItem",
   "key": {
     "id": $util.dynamodb.toDynamoDBJson($ctx.args.id)
+    "sk": $util.dynamodb.toDynamoDBJson($ctx.args.id)
   },
 
   ## Set up some space to keep track of things we're updating **

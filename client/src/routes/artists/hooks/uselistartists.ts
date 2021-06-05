@@ -3,12 +3,12 @@ import { Artist, ListArtistsQuery } from "../../../graphql/api";
 import { listArtists } from "../../../graphql/queries";
 import useQuery from "../../../hooks/usequery";
 
-const useListArtists = (nextToken?: string) => {
+const useListArtists = () => {
   console.log("useListArtists");
   const { loading, error, data } = useQuery<ListArtistsQuery, any>(
     client,
     listArtists,
-    { nextToken }
+    {}
   );
   const artists = (data?.listArtists?.items || []) as Artist[];
 

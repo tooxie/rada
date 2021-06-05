@@ -7,12 +7,14 @@ import useGetAlbum from "./hooks/usegetalbum";
 import style from "./style.css";
 
 const Header: FunctionComponent<DetailProps> = ({ id }) => {
+  console.log(`albums.Header("${id}")`);
   const { album } = useGetAlbum(id);
+  const bgImg = album?.imageUrl ? `url("${album.imageUrl}")` : "none";
 
   return (
     <header
       class={album ? style.header : style.notfound}
-      style={{ backgroundImage: album?.coverUrl }}
+      style={{ backgroundImage: bgImg }}
     >
       <Navigation />
     </header>

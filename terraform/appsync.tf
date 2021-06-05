@@ -1,7 +1,7 @@
 resource "aws_appsync_graphql_api" "gawshi" {
   authentication_type = "API_KEY"
-  name = "Gawshi"
-  schema = file("./schema.gql")
+  name = "Gawshi_${local.suffix}"
+  schema = file("./schema.graphql")
 
   log_config {
     cloudwatch_logs_role_arn = aws_iam_role.appsync.arn
@@ -15,7 +15,7 @@ resource "aws_appsync_graphql_api" "gawshi" {
 
 resource "null_resource" "codegen_exec" {
   triggers = {
-    appsync_id = aws_appsync_graphql_api.gawshi.schema
+    graphql_schema_md5 = filemd5("./schema.graphql")
   }
 
   provisioner "local-exec" {
@@ -37,6 +37,11 @@ resource "null_resource" "codegen_config" {
   }
 
   provisioner "local-exec" {
+    when = destroy
+    command = "./../client/scripts/destroy.sh"
+  }
+
+  provisioner "local-exec" {
     command = join(" ", [
       "./../client/scripts/config.sh",
       "--api-id", aws_appsync_graphql_api.gawshi.id,
@@ -44,12 +49,12 @@ resource "null_resource" "codegen_config" {
       "--api-key", aws_appsync_api_key.gawshi.key,
       "--api-url", lookup(aws_appsync_graphql_api.gawshi.uris, "GRAPHQL"),
       "--auth-mode", aws_appsync_graphql_api.gawshi.authentication_type,
-      "--graphql-schema", "${abspath(path.module)}/schema.gql",
     ])
   }
 
   depends_on = [
-    aws_appsync_graphql_api.gawshi
+    aws_appsync_graphql_api.gawshi,
+    aws_appsync_api_key.gawshi,
   ]
 }
 
@@ -61,8 +66,10 @@ resource "aws_appsync_datasource" "gawshi_albums" {
   type = "AMAZON_DYNAMODB"
 
   dynamodb_config {
-    table_name = aws_dynamodb_table.albums.name
+    table_name = aws_dynamodb_table.artists_albums.name
   }
+
+  depends_on = [ aws_dynamodb_table.artists_albums ]
 }
 
 resource "aws_appsync_resolver" "get_album" {
@@ -71,7 +78,7 @@ resource "aws_appsync_resolver" "get_album" {
   field = "getAlbum"
   data_source = aws_appsync_datasource.gawshi_albums.name
 
-  request_template = file("./resolvers/request/getitem.tpl")
+  request_template = file("./resolvers/request/getadjacent.tpl")
   response_template = file("./resolvers/response/getitem.tpl")
 }
 
@@ -81,18 +88,50 @@ resource "aws_appsync_resolver" "list_albums" {
   field = "listAlbums"
   data_source = aws_appsync_datasource.gawshi_albums.name
 
-  request_template = file("./resolvers/request/scan.tpl")
+  request_template = templatefile("./resolvers/request/scanadjacent.tpl", {
+    entity: "album"
+  })
   response_template = file("./resolvers/response/page.tpl")
+}
+
+resource "aws_appsync_function" "put_album" {
+  api_id = aws_appsync_graphql_api.gawshi.id
+  data_source = aws_appsync_datasource.gawshi_albums.name
+  name = "createAlbum"
+
+  request_mapping_template = templatefile("./resolvers/request/putalbum.tpl", {
+    table_name: aws_dynamodb_table.artists_albums.name,
+    entity: "album",
+  })
+  response_mapping_template = templatefile("./resolvers/response/putalbum.tpl", {
+    table_name: aws_dynamodb_table.artists_albums.name
+  })
+}
+
+resource "aws_appsync_function" "populate_album" {
+  api_id = aws_appsync_graphql_api.gawshi.id
+  data_source = aws_appsync_datasource.gawshi_albums.name
+  name = "populateAlbum"
+
+  request_mapping_template = file("./resolvers/request/populatealbum.tpl")
+  response_mapping_template = file("./resolvers/response/getitem.tpl")
 }
 
 resource "aws_appsync_resolver" "create_album" {
   api_id = aws_appsync_graphql_api.gawshi.id
   type = "Mutation"
   field = "createAlbum"
-  data_source = aws_appsync_datasource.gawshi_albums.name
+  kind = "PIPELINE"
 
-  request_template = file("./resolvers/request/putitem.tpl")
-  response_template = file("./resolvers/response/getitem.tpl")
+  request_template  = file("./resolvers/request/createalbum.pipe.tpl")
+  response_template = file("./resolvers/response/createalbum.pipe.tpl")
+
+  pipeline_config {
+    functions = [
+      aws_appsync_function.put_album.function_id,
+      aws_appsync_function.populate_album.function_id,
+    ]
+  }
 }
 
 resource "aws_appsync_resolver" "update_album" {
@@ -115,18 +154,47 @@ resource "aws_appsync_resolver" "delete_album" {
   response_template = file("./resolvers/response/getitem.tpl")
 }
 
+resource "aws_appsync_function" "get_albums_for_artist" {
+  api_id = aws_appsync_graphql_api.gawshi.id
+  data_source = aws_appsync_datasource.gawshi_albums.name
+  name = "getAlbumsForArtist"
+
+  request_mapping_template = templatefile("./resolvers/request/connection.tpl", {
+    entity: "album",
+  })
+  response_mapping_template = file("./resolvers/response/connection.tpl")
+}
+
+resource "aws_appsync_function" "batch_get_albums" {
+  api_id = aws_appsync_graphql_api.gawshi.id
+  data_source = aws_appsync_datasource.gawshi_albums.name
+  name = "batchGetAlbums"
+
+  request_mapping_template = templatefile("./resolvers/request/batchgetitem.tpl", {
+    table_name: aws_dynamodb_table.artists_albums.name
+  })
+  response_mapping_template = templatefile("./resolvers/response/batchgetitem.tpl", {
+    table_name: aws_dynamodb_table.artists_albums.name
+  })
+}
+
 resource "aws_appsync_resolver" "album_connection" {
   api_id = aws_appsync_graphql_api.gawshi.id
   type = "Artist"
   field = "albums"
-  data_source = aws_appsync_datasource.gawshi_albums.name
+  kind = "PIPELINE"
 
-  request_template = templatefile("./resolvers/request/connection.tpl",
-  {
-    index_name = element(tolist(aws_dynamodb_table.albums.global_secondary_index), 0).name,
-    index_key = element(tolist(aws_dynamodb_table.albums.global_secondary_index), 0).hash_key,
+  request_template = templatefile("./resolvers/request/connection.tpl", {
+    entity: "album",
   })
-  response_template = file("./resolvers/response/connection.tpl")
+  response_template = file("./resolvers/response/albumconnection.tpl")
+
+  pipeline_config {
+    functions = [
+      aws_appsync_function.get_albums_for_artist.function_id,
+      aws_appsync_function.batch_get_albums.function_id,
+    ]
+  }
 }
 
 // --- Artist
@@ -137,7 +205,7 @@ resource "aws_appsync_datasource" "gawshi_artists" {
   type = "AMAZON_DYNAMODB"
 
   dynamodb_config {
-    table_name = aws_dynamodb_table.artists.name
+    table_name = aws_dynamodb_table.artists_albums.name
   }
 }
 
@@ -147,7 +215,7 @@ resource "aws_appsync_resolver" "get_artist" {
   field = "getArtist"
   data_source = aws_appsync_datasource.gawshi_artists.name
 
-  request_template = file("./resolvers/request/getitem.tpl")
+  request_template = file("./resolvers/request/getadjacent.tpl")
   response_template = file("./resolvers/response/getitem.tpl")
 }
 
@@ -157,7 +225,9 @@ resource "aws_appsync_resolver" "list_artists" {
   field = "listArtists"
   data_source = aws_appsync_datasource.gawshi_artists.name
 
-  request_template = file("./resolvers/request/scan.tpl")
+  request_template = templatefile("./resolvers/request/scanadjacent.tpl", {
+    entity: "artist",
+  })
   response_template = file("./resolvers/response/page.tpl")
 }
 
@@ -167,7 +237,9 @@ resource "aws_appsync_resolver" "create_artist" {
   field = "createArtist"
   data_source = aws_appsync_datasource.gawshi_artists.name
 
-  request_template = file("./resolvers/request/putitem.tpl")
+  request_template = templatefile("./resolvers/request/putadjacent.tpl", {
+    entity: "artist"
+  })
   response_template = file("./resolvers/response/getitem.tpl")
 }
 
@@ -321,11 +393,7 @@ resource "aws_appsync_resolver" "track_connection" {
   field = "tracks"
   data_source = aws_appsync_datasource.gawshi_tracks.name
 
-  request_template = templatefile("./resolvers/request/connection.tpl",
-  {
-    index_name = element(tolist(aws_dynamodb_table.tracks.global_secondary_index), 0).name,
-    index_key = element(tolist(aws_dynamodb_table.tracks.global_secondary_index), 0).hash_key,
-  })
+  request_template = file("./resolvers/request/connection.tpl")
   response_template = file("./resolvers/response/connection.tpl")
 }
 

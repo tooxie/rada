@@ -20,27 +20,23 @@ const Playlist = lazy(() => import("../routes/playlists/detail"));
 const PlaylistList = lazy(() => import("../routes/playlists/list"));
 
 export default () => {
-  const ArtistCollection = Collection(ArtistList);
-  const AlbumCollection = Collection(AlbumList);
-  const PlaylistCollection = Collection(PlaylistList);
+  const ArtistCollection = Collection("Artist", ArtistList);
+  const AlbumCollection = Collection("Album", AlbumList);
+  const PlaylistCollection = Collection("Playlist", PlaylistList);
 
   const ArtistDetail = Detail("Artist", Artist, ArtistHeader);
   const AlbumDetail = Detail("Album", Album, AlbumHeader);
   const PlaylistDetail = Detail("Playlist", Playlist);
 
   return (
-    <Router>
+    <Router key="preact_router">
       <Route path="/artists/" key="artists" component={ArtistCollection} />
       <Route path="/albums/" key="albums" component={AlbumCollection} />
-      <Route
-        path="/playlists/"
-        key="playlists"
-        component={PlaylistCollection}
-      />
+      <Route path="/playlists/" key="playlists" component={PlaylistCollection} />
 
-      <Route path="/artists/:id" key="artist" component={ArtistDetail} />
-      <Route path="/albums/:id" key="album" component={AlbumDetail} />
-      <Route path="/playlists/:id" key="playlist" component={PlaylistDetail} />
+      <Route path="/album/:id" key="album" component={AlbumDetail} />
+      <Route path="/artist/:id" key="artist" component={ArtistDetail} />
+      <Route path="/playlist/:id" key="playlist" component={PlaylistDetail} />
 
       <Redirect path="/" to="/artists" />
       <NotFoundPage default />
