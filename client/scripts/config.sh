@@ -17,9 +17,6 @@ while [ "$1" != "" ]; do
     --auth-mode ) shift
       AUTH_MODE="$1"
     ;;
-    --graphql-schema ) shift
-      GRAPHQL_SCHEMA_SRC="$1"
-    ;;
     --region ) shift
       REGION="$1"
     ;;
@@ -32,15 +29,11 @@ if [ -z "$API_ID" ] ||
    [ -z "$API_KEY" ] ||
    [ -z "$API_URL" ] ||
    [ -z "$AUTH_MODE" ] ||
-   [ -z "$GRAPHQL_SCHEMA_SRC" ] ||
    [ -z "$REGION" ]
 then
   echo "Parameter missing"
   exit 1
 fi
-
-GRAPHQL_SCHEMA_DEST="./schema.graphql"
-cp "$GRAPHQL_SCHEMA_SRC" "$GRAPHQL_SCHEMA_DEST"
 
 AMPLIFY_CONFIG_FILE="./.graphqlconfig.yml"
 AMPLIFY_CONFIG="projects:
@@ -58,17 +51,17 @@ AMPLIFY_CONFIG="projects:
         region: $REGION
         apiId: $API_ID
         frontend: javascript
-        framework: none
+        framework: react
         maxDepth: 2
 "
 echo -en "$AMPLIFY_CONFIG" > "$AMPLIFY_CONFIG_FILE"
 
 GRAPHQL_CONFIG_FILE="./src/graphql/config.ts"
 GRAPHQL_CONFIG="export default {
-  AuthMode: \"$AUTH_MODE\",
-  ApiKey: \"$API_KEY\",
-  ApiUrl: \"$API_URL\",
-  Region: \"$REGION\",
+  AuthMode: \"`echo -n $AUTH_MODE | base64`\",
+  ApiKey: \"`echo -n $API_KEY | base64`\",
+  ApiUrl: \"`echo -n $API_URL | base64`\",
+  Region: \"`echo -n $REGION | base64`\",
 }
 "
 echo -en "$GRAPHQL_CONFIG" > "$GRAPHQL_CONFIG_FILE"
