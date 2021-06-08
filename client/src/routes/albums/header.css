@@ -1,0 +1,11 @@
+.header {
+  height: 100vw;
+  background-color: black;
+  background-size: cover;
+  border-radius: 0 0 1rem 1rem;
+}
+
+.notfound {
+  background-color: black;
+  padding-bottom: 2rem;
+}

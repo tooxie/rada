@@ -3,10 +3,10 @@ import { Link } from "preact-router";
 
 import Spinner from "../../components/spinner";
 import { Artist } from "../../graphql/api";
-import compareNames from "../../utils/comparenames";
+import compareName from "../../utils/comparename";
 
 import useListArtists from "./hooks/uselistartists";
-import style from "./style.css";
+import style from "./list.css";
 
 const DEFAULT_ARTIST_IMAGE = "/assets/img/default-artist-image.jpeg";
 const ArtistThumb: FunctionComponent<Artist> = (props) => {
@@ -38,7 +38,7 @@ const ArtistList: FunctionComponent = () => {
     if (!artists || artists.length < 1) return <p>No Artists</p>;
   }
 
-  const _artists = artists.map((el) => el).sort(compareNames);
+  const _artists = artists.map((el) => el).sort(compareName);
 
   return (
     <div class={style.artistgrid}>

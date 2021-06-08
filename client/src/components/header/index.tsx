@@ -11,21 +11,15 @@ const Header: FunctionComponent<Partial<DetailProps>> = () => {
     <header class={style.header}>
       <Navigation />
       <section class={style.collections}>
-        <div>
-          <Link href="/artists" activeClassName={style.active}>
-            Artists
-          </Link>
-        </div>
-        <div>
-          <Link href="/albums/" activeClassName={style.active}>
-            Albums
-          </Link>
-        </div>
-        <div>
-          <Link href="/playlists" activeClassName={style.active}>
-            Playlists
-          </Link>
-        </div>
+        <Link href="/artists" activeClassName={style.active}>
+          Artists
+        </Link>
+        <Link href="/albums/" activeClassName={style.active}>
+          Albums
+        </Link>
+        <Link href="/playlists" activeClassName={style.active}>
+          Playlists
+        </Link>
       </section>
     </header>
   );

@@ -4,7 +4,7 @@ import { DetailProps } from "../../components/layout/detail/types";
 import Spinner from "../../components/spinner";
 
 import useGetAlbum from "./hooks/usegetalbum";
-import style from "./style.css";
+import style from "./detail.css";
 
 const AlbumDetail: FunctionComponent<DetailProps> = ({ id }) => {
   const { loading, error, album } = useGetAlbum(id);
@@ -23,11 +23,14 @@ const AlbumDetail: FunctionComponent<DetailProps> = ({ id }) => {
 
   return (
     <Fragment>
-      <h1>{album.name}</h1>
-      <div class={style.tracklist}>
-        {tracks.map((track) => (
-          <h2>{track.title}</h2>
-        ))}
+      <div class={style.name}>
+        <h1>{album.name}</h1>
+        <img src="/assets/icons/svg/dots_menu_more_options.svg" />
+        <div class={style.tracklist}>
+          {tracks.map((track) => (
+            <h2>{track.title}</h2>
+          ))}
+        </div>
       </div>
     </Fragment>
   );

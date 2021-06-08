@@ -3,11 +3,12 @@ import { Link } from "preact-router";
 
 import { DetailProps } from "../../components/layout/detail/types";
 import Spinner from "../../components/spinner";
+import compareYear from "../../utils/compareyear";
+import { urlize } from "../../utils/id";
 
-import style from "./style.css";
+import style from "./detail.css";
 import useGetArtist from "./hooks/usegetartist";
 import useGetAlbumsForArtist from "./hooks/usegetalbumsforartist";
-import { urlize } from "../../utils/id";
 
 // https://thenounproject.com/term/cd-cover/2032601/
 const DEFAULT_ALBUM_COVER = "/assets/img/default-album-cover.svg";
@@ -25,7 +26,7 @@ const ArtistDetail: FunctionComponent<DetailProps> = ({ id }) => {
     return error ? <p>{error.message}</p> : <p>Artist not found</p>;
   }
 
-  const albums = artist.albums || [];
+  const albums = (artist.albums || []).map((el) => el).sort(compareYear);
 
   return (
     <div class={style.artist} key={id}>

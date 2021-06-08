@@ -5,9 +5,9 @@ import { useState, useEffect } from "preact/hooks";
 import { Album } from "../../graphql/api";
 import Spinner from "../../components/spinner";
 import { urlize } from "../../utils/id";
-import compareNames from "../../utils/comparenames";
+import compareName from "../../utils/comparename";
 
-import style from "./style.css";
+import style from "./list.css";
 import { listAlbums } from "./graphql";
 
 // https://thenounproject.com/term/cd-cover/2032601/
@@ -50,7 +50,7 @@ const AlbumList: FunctionComponent = () => {
     }
   }
 
-  const _albums = albums.map((el) => el).sort(compareNames);
+  const _albums = albums.map((el) => el).sort(compareName);
 
   return (
     <div class={style.albumgrid}>

@@ -1,0 +1,34 @@
+.artistgrid {
+  column-count: 2;
+  min-height: 100%;
+  width: 100%;
+  padding-top: 1rem;
+}
+
+.artistgrid a {
+  display: inline-block;
+}
+
+.artistgrid .artist {
+  overflow: hidden;
+  margin-bottom: -.5rem;
+}
+
+.artistgrid .artist img {
+  width: 100%;
+  border-radius: 1rem;
+  min-height: 1.5rem;
+}
+
+.artistgrid .artist .name {
+  background-color: rgba(255, 255, 255, .7);
+  box-sizing: border-box;
+  color: black;
+  line-height: 1.5rem;
+  overflow: hidden;
+  padding: 0 1rem;
+  position: relative;
+  text-overflow: ellipsis;
+  top: -1.6rem;
+  white-space: nowrap;
+}

@@ -3,7 +3,7 @@ import { FunctionComponent, h } from "preact";
 import { DetailProps } from "../../components/layout/detail/types";
 import Navigation from "../../components/navigation";
 
-import style from "./style.css";
+import style from "./header.css";
 import useGetArtist from "./hooks/usegetartist";
 
 const DEFAULT_ARTIST_IMAGE = "/assets/img/default-artist-image.jpeg";
