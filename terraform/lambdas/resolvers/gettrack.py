@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-from decimal import Decimal
 import boto3
 import json
 import os
@@ -45,15 +44,21 @@ def get_track(client, album_id, track_id):
     if "Item" not in response:
         raise TrackNotFoundError(f"Track '{track_id}' not found for album '{album_id}'")
 
-    item = response["Item"]
-    for key in item:
-        if isinstance(item[key], Decimal):
-            if item[key] == 0:
-                item[key] = None
-            else:
-                item[key] = int(item[key])
+    if "ordinal" in response["Item"]:
+        if response["Item"]["ordinal"]:
+            print("Converting ordinal to int")
+            response["Item"]["ordinal"] = int(response["Item"]["ordinal"])
+        else:
+            response["Item"]["ordinal"] = None
 
-    return item
+    if "lengthInSeconds" in response["Item"]:
+        if response["Item"]["lengthInSeconds"]:
+            print("Converting lengthInSeconds to int")
+            response["Item"]["lengthInSeconds"] = int(response["Item"]["lengthInSeconds"])
+        else:
+            response["Item"]["lengthInSeconds"] = None
+
+    return response["Item"]
 
 
 def error(e):

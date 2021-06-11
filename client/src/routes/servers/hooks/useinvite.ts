@@ -21,7 +21,7 @@ const useCreateServerInvite = (): HookReturn<Invite> => {
   log.debug("useCreateServerInvite()");
   const [invite, setInvite] = useState<Invite | null>(null);
   const [mutator, { loading, error, data }] =
-    useMutation<CreateServerInviteMutation>(createServerInvite);
+    useMutation<CreateServerInviteMutation, Record<string, never>>(createServerInvite);
 
   useEffect(() => {
     if (data?.createServerInvite) {

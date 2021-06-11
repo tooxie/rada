@@ -18,13 +18,7 @@
 
 .header {
   background-color: #4158D0;
-  background-image: url(/assets/img/bg-header.jpg);
-  background-size: cover;
-  background-position: center;
-  max-height: 10rem;
-}
-
-.song2 {
+  background-image: linear-gradient(180deg, #041628 0%, #1A61AC 40%, #D4E7F8 100%);
   display: flex;
   flex-direction: column;
   backdrop-filter: blur(4px) brightness(0.7);

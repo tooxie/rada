@@ -1,117 +1,85 @@
 import { h } from "preact";
+import { Link } from "preact-router";
 
-import type { AlbumId, ServerId } from "../../types";
-import type { Album, Track } from "../../graphql/api";
-import type { IPlayer } from "../../player/types";
-
+import { Album, Track } from "../../graphql/api";
+import { AlbumId, TrackId } from "../../types";
 import useGetAlbum from "../../routes/albums/hooks/usegetalbum";
+import useGetTrack from "../../routes/queue/hooks/usegettrack";
 import usePlayer from "../../hooks/useplayer";
-import Logger from "../../logger";
 
 import style from "./style.css";
-import icon from "./queue.svg";
+import icon from "./playlist.svg";
 import playIcon from "./play.svg";
 import pauseIcon from "./pause.svg";
 import wifiIcon from "./wifi.svg";
 import Countdown from "./countdown";
 
-interface ShellProps {
-  onClick: Function;
-  track?: Track;
-}
-
 interface PlayerProps {
-  onClick: Function;
-  track: Track;
-  player: IPlayer;
-  album?: Album;
-}
-
-interface PlayerBackgroundProps {
-  serverId: ServerId;
+  trackId: TrackId;
   albumId: AlbumId;
-  children?: JSX.Element | JSX.Element[];
 }
 
-type NoBackgroundProps = Pick<PlayerBackgroundProps, "children">;
-
-const log = new Logger(__filename);
-
-const Shell = ({ onClick }: ShellProps) => {
-  const player = usePlayer();
-  const track = player?.getCurrentTrack();
-  const emptyQ = (player?.getQueueLength() || 0) === 0;
-  const visible = !!player && !!track && !emptyQ;
-
-  return (
-    <div class={`${style.shell} ${visible ? style.visible : style.hidden}`}>
-      {player &&
-        track &&
-        (track.serverId && track.album?.id ? (
-          <PlayerBackground serverId={track.serverId} albumId={track.album?.id}>
-            <Player player={player} track={track} onClick={onClick} />
-          </PlayerBackground>
-        ) : (
-          <NoBackground>
-            <Player player={player} track={track} onClick={onClick} />
-          </NoBackground>
-        ))}
-    </div>
-  );
-};
-
-const defaultBackground = "/assets/img/black.png";
-let backgroundImage = `url(${defaultBackground})`;
+let backgroundImage = "url(none)";
 let _album: Album | null = null;
 
-const PlayerBackground = ({ serverId, albumId, children }: PlayerBackgroundProps) => {
-  const { album } = useGetAlbum(serverId, albumId);
-  const albumChanged = _album?.id !== albumId;
+const Player = (props: PlayerProps) => {
+  console.log(`[player/index.tsx] Player.render(${JSON.stringify(props)})`);
+  const { album } = useGetAlbum(props.albumId);
+  const albumChanged = _album?.id !== props.albumId;
+  const player = usePlayer();
 
+  if (!player || player.getQueueLength() === 0) return <div />;
   if (albumChanged) _album = album;
-  if (_album) backgroundImage = `url(${_album.imageUrl || defaultBackground})`;
+  if (_album) backgroundImage = `url(${_album.imageUrl || "none"})`;
 
-  return (
-    <div key="player-background" class={style.background} style={{ backgroundImage }}>
-      {children}
-    </div>
-  );
-};
+  // const dispatch = (event: Event, eventName: string) => {
+  //   doNothing(event);
+  // };
+  // const doNothing = (event: Event) => {
+  //   event.stopPropagation();
+  //   event.preventDefault();
+  // };
 
-const NoBackground = ({ children }: NoBackgroundProps) => (
-  <div key="player-background" class={style.background}>
-    {children}
-  </div>
-);
-
-const Player = ({ player, track, onClick }: PlayerProps) => {
-  log.debug(`Player.render(${track.id})`);
-
-  const title = player.getCurrentTrack()?.title;
-  const artists = player.getCurrentTrack()?.artists || [];
-  const notify = () => (onClick ? onClick() : null);
   const clickHandler = (ev: Event) => {
     ev.preventDefault();
     ev.stopPropagation();
     player.togglePlayback();
   };
+  const title = player.getCurrentTrack()?.title;
+  const artists = player.getCurrentTrack()?.artists || [];
 
   return (
-    <div key="player-background" class={style.player} onClick={notify}>
-      <div class={style.song2}>
+    <div
+      key="player-background"
+      class={style.player}
+      style={{ backgroundImage }}
+      /*
+       * Think about using touchStart instead of click. It speeds up reaction
+       * times immensely, but if may lead to some subtle usability issues that
+       * should be understood before.
+       * onTouchStart={(ev) => {
+       *   route("/queue");
+       * }}
+       */
+    >
+      <Link href={"/queue"}>
         <div class={style.icon}>
           <img src={icon} />
         </div>
         <div class={style.info}>
           <div class={style.title} key={`player-title`}>
-            {title || <span class={style.missing}>{"<no title>"}</span>}
+            {title || <span class={style.missing}>&lt;no title&gt;</span>}
           </div>
           <div class={style.artist} key={`player-artist`}>
             {artists.map((a) => a.name).join(", ")}
             &nbsp;
           </div>
         </div>
-        <div class={style.controls} onClick={clickHandler}>
+        <div
+          class={style.controls}
+          onClick={clickHandler}
+          /* onTouchStart={(ev) => dispatch(ev, playing ? "pause" : "play")} */
+        >
           <div class={style.button}>
             <img
               src={
@@ -127,9 +95,9 @@ const Player = ({ player, track, onClick }: PlayerProps) => {
             />
           </div>
         </div>
-      </div>
+      </Link>
     </div>
   );
 };
 
-export default Shell;
+export default Player;

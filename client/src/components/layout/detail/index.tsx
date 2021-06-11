@@ -1,7 +1,9 @@
 import { Fragment, FunctionComponent, h } from "preact";
 import { memo, useMemo } from "preact/compat";
 
+import { AlbumId, TrackId } from "../../../types";
 import DefaultHeader from "../../header";
+import Player from "../../player";
 import Shoulder from "../shoulder";
 import usePlayer from "../../../hooks/useplayer";
 import Logger from "../../../logger";

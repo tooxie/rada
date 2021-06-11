@@ -57,6 +57,9 @@ const AppRouter = () => {
   const NotFound = Collection(NotFoundPage);
   const Root = Collection(Home);
 
+const NotFound = Collection(NotFoundPage);
+
+const AppRouter = () => {
   return (
     <Router key="preact_router" onChange={handleRouteChange}>
       <Route path="/" component={Root} />

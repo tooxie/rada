@@ -1,4 +1,5 @@
 import { h } from "preact";
+import { route } from "preact-router";
 
 import type { AlbumId, ServerId } from "../../types";
 

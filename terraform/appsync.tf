@@ -16,17 +16,46 @@ resource "aws_appsync_graphql_api" "gawshi" {
     user_pool_id = aws_cognito_user_pool.gawshi.id
   }
 
-  lifecycle {
-    ignore_changes = [
-      additional_authentication_provider,
-    ]
+  provisioner "local-exec" {
+    command = join(" ", [
+      "cd ../client;",
+      "npm run codegen",
+    ])
+  }
+
+  depends_on = [
+    null_resource.codegen_config,
+    aws_appsync_graphql_api.gawshi,
+  ]
+}
+
+resource "null_resource" "codegen_config" {
+  triggers = {
+    appsync_id = aws_appsync_graphql_api.gawshi.id
+    appsync_url = lookup(aws_appsync_graphql_api.gawshi.uris, "GRAPHQL")
+    s3_bucket_url = aws_s3_bucket.gawshi_music.bucket_domain_name
+  }
+
+  provisioner "local-exec" {
+    when = destroy
+    command = join(" ", [
+      "cd ../client;",
+      "npm run codegen:destroy",
+    ])
+  }
+
+  provisioner "local-exec" {
+    command = join(" ", [
+      "cd ../client;",
+      "npm run codegen:config --",
+      "--api-id", aws_appsync_graphql_api.gawshi.id,
+      "--api-url", lookup(aws_appsync_graphql_api.gawshi.uris, "GRAPHQL"),
+      "--region", var.region,
+    ])
   }
 }
 
 // --- Outputs
-output "graphql" {
-  value = {
-    endpoint = lookup(aws_appsync_graphql_api.gawshi.uris, "GRAPHQL"),
-    realtime = lookup(aws_appsync_graphql_api.gawshi.uris, "REALTIME"),
-  }
+output "graphql_api_uris" {
+  value = aws_appsync_graphql_api.gawshi.uris
 }

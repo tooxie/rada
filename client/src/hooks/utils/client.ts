@@ -27,6 +27,21 @@ serverMap[home.id] = {
   id: home.id,
 };
 
+// const clients: { [key: string]: Client } = {};
+// const getClient = async (serverId?: ServerId): Promise<Client> => {
+//   // The variable `serverId` is optional because mutations cannot be applied
+//   // to any server except the home one. So in case it's not provided we use
+//   // the home server.
+//   if (!serverId) {
+//     serverId = home.id;
+//   }
+//   if (!clients[serverId]) {
+//     log.warn(`Building client for server ${serverId}`);
+//     clients[serverId] = buildClient(home.api, home.name, home.id);
+//   }
+//   return clients[serverId];
+// };
+
 const getClient = async (serverId?: ServerId): Promise<Client> => {
   // Always use home server if no serverId provided
   if (!serverId) {
@@ -83,4 +98,5 @@ const buildServerMap = async (client: Client): Promise<void> => {
   }
 };
 
+export { getClientForServer, buildServerMap };
 export default getClient;

@@ -1,7 +1,20 @@
 import { h } from "preact";
 
 import toMinutes from "../../utils/tominutes";
-import { useLayoutEffect, useRef } from "preact/hooks";
+import usePlayer from "../../hooks/useplayer";
+import { useEffect, useLayoutEffect, useRef } from "preact/hooks";
+
+const _Countdown = () => {
+  const player = usePlayer();
+  if (!player) return <div />;
+
+  const total = player.getCurrentTrack()?.lengthInSeconds;
+  const elapsed = player.getCurrentTime();
+  if (!total) return <div>{toMinutes(elapsed)}</div>;
+  if (elapsed > total) return <div>0:00</div>;
+
+  return <div>{toMinutes(total - elapsed)}</div>;
+};
 
 interface CountdownProps {
   current: number;
@@ -15,7 +28,7 @@ const Countdown = ({ current, total, playing }: CountdownProps) => {
     if (el) el.innerText = toMinutes(time > 0 ? time : 0);
   };
 
-  if (!total) return null;
+  if (!total) return <div />;
 
   let remaining = total - current;
   useLayoutEffect(() => {
@@ -23,7 +36,9 @@ const Countdown = ({ current, total, playing }: CountdownProps) => {
     if (!playing) return;
 
     const intervalId = setInterval(() => {
-      render(ref.current, --remaining);
+      remaining -= 1;
+      if (remaining < 0) remaining = 0;
+      render(ref.current, remaining);
     }, 1000);
 
     return () => clearInterval(intervalId);

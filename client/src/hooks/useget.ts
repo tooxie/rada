@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "preact/hooks";
+import { useMemo } from "preact/hooks";
 import {
   DocumentNode,
   QueryOptions,

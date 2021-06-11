@@ -18,6 +18,7 @@ section.mosaic {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   row-gap: 1rem;
+  padding-top: 1rem;
 }
 
 section.mosaic a {

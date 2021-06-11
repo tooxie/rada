@@ -1,5 +1,15 @@
 data "aws_caller_identity" "gawshi" {}
 
+variable "website_root" {
+  type = string
+  default = "../client/build"
+}
+
+variable "force_destroy_bucket" {
+  type = bool
+  default = false
+}
+
 terraform {
   required_providers {
     aws = {
