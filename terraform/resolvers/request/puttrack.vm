@@ -1,0 +1,19 @@
+#if($util.isNull($context.arguments.input.ordinal))
+  #set( $context.arguments.input.ordinal = 0 )
+#end
+
+{
+  "version": "2017-02-28",
+  "operation": "PutItem",
+  "key": {
+    "albumId": $util.dynamodb.toDynamoDBJson($context.arguments.input.albumId),
+    "id": $util.dynamodb.toDynamoDBJson("track:$util.autoId()")
+  },
+  "attributeValues": $util.dynamodb.toMapValuesJson($context.arguments.input),
+  "condition": {
+    "expression": "attribute_not_exists(#id)",
+    "expressionNames": {
+      "#id": "id"
+    }
+  }
+}

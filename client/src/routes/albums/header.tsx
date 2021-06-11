@@ -1,26 +1,31 @@
-import { FunctionComponent, h } from "preact";
+import { h } from "preact";
 
 import { DetailProps } from "../../components/layout/detail/types";
 import Navigation from "../../components/navigation";
+import { AlbumId } from "../../types";
+import { Album } from "../../graphql/api";
 
-import useGetAlbum from "./hooks/usegetalbum";
+import useGetAlbum from "./hooks/usegetalbumforheader";
 import style from "./header.css";
-import Play from "./play";
+import PlayAlbum from "./play";
 
-// Credit: https://www.reddit.com/r/pics/comments/1okjo8/youve_come_to_the_wrong_neighborhood/
-const DEFAULT_ALBUM_COVER = "/assets/img/default-album-cover.jpeg";
-const Header: FunctionComponent<DetailProps> = ({ id }) => {
-  console.log(`albums.Header("${id}")`);
-  const { album } = useGetAlbum(id);
-  const bgImg = `url("${album?.imageUrl || DEFAULT_ALBUM_COVER}")`;
+let _album: Album | null = null;
+let backgroundImage = "url(none)";
+
+const Header = (props: DetailProps) => {
+  console.log(`[albums/header.tsx] Loading album "${props.id}"`);
+  const albumId = props.id as AlbumId;
+  const { album } = useGetAlbum(albumId);
+
+  if (!_album || _album.id !== props.id) _album = album;
+
+  backgroundImage = `url("${_album?.imageUrl || "none"}")`;
 
   return (
-    <header
-      class={album ? style.header : style.notfound}
-      style={{ backgroundImage: bgImg }}
-    >
+    <header key="header" class={style.header} style={{ backgroundImage }}>
       <Navigation />
-      <Play />
+      {_album && !props.hidePlayButton && <PlayAlbum albumId={albumId} />}
+      {props.children}
     </header>
   );
 };

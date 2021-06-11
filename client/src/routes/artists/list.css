@@ -10,22 +10,31 @@
 }
 
 .artistgrid a {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 1rem;
+  border: 1px solid #C0C0C0;
+  border-bottom: none;
   display: inline-block;
+  margin-bottom: 1rem;
+  width: 100%;
 }
 
 .artistgrid .artist {
   overflow: hidden;
-  margin-bottom: -.5rem;
 }
 
 .artistgrid .artist img {
-  width: 100%;
-  border-radius: 1rem;
+  visibility: hidden;
   min-height: 1.5rem;
+  width: 100%;
 }
 
 .artistgrid .artist .name {
   background-color: rgba(255, 255, 255, .7);
+  border-bottom: 1px solid #C0C0C0;
+  border-radius: 0 0 1rem 1rem;
   box-sizing: border-box;
   color: black;
   line-height: 1.5rem;
@@ -33,6 +42,5 @@
   padding: 0 1rem;
   position: relative;
   text-overflow: ellipsis;
-  top: -1.6rem;
   white-space: nowrap;
 }

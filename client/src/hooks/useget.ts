@@ -1,11 +1,16 @@
 import use from "./use";
 
-export default <T>(fnGet: Function, pk: { [k: string]: string }) => {
-  const { loading, error, data: item } = use<T>(fnGet, pk);
+type UseReturnType = Omit<ReturnType<typeof use>, "data">;
+interface UseGetReturn<T> extends UseReturnType {
+  item: T | null;
+}
 
-  return {
-    loading,
-    error,
-    item,
-  };
+const useGet = <T, V>(fnGet: Function, pk: V): UseGetReturn<T> => {
+  const { loading, error, data: item } = use<T, V>(fnGet, pk);
+
+  const result = { loading, error, item };
+  console.log("[hooks/useget.ts] useGet.return:", result);
+  return result;
 };
+
+export default useGet;

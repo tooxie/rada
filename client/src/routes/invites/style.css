@@ -1,0 +1,79 @@
+section.invites {
+  padding-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 1rem;
+  row-gap: 1rem;
+}
+
+section.invites .stat {
+  border: 1px solid gray;
+  padding: 1rem;
+  text-align: center;
+}
+
+section.invites .stat:first-of-type {
+  border-radius: 1rem 0 0 0;
+}
+
+section.invites .stat:nth-of-type(2) {
+  border-radius: 0 1rem 0 0;
+}
+
+section.invites .stat:nth-of-type(3) {
+  border-radius: 0 0 0 1rem;
+}
+
+section.invites .stat:last-of-type {
+  border-radius: 0 0 1rem 0;
+}
+
+section.invites .number {
+  font-size: 2rem;
+}
+
+section.create {
+  padding-bottom: 1rem;
+}
+
+section.create .input .text {
+  border-radius: .5rem;
+  border-width: 1px;
+  padding: .5rem;
+  width: 100%;
+}
+
+section.create .input {
+  margin-bottom: 1rem;
+}
+
+section.create .heading {
+  font-size: 1.5rem;
+  margin: 1rem 0;
+}
+
+section.create .details {
+  color: gray;
+  font-size: 0.8rem;
+  margin: .5rem 0 0 1rem;
+}
+
+section.create .admin label {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+}
+
+section.create button {
+  border-radius: 1rem;
+  font-family: 'Raleway', arial, sans-serif;
+  margin-top: .5rem;
+  padding: 1rem 0;
+  width: 100%;
+}
+
+section.create .validity input {
+  margin: 0 .5rem;
+  text-align: center;
+  width: 2.5rem;
+}

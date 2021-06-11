@@ -1,28 +1,34 @@
-schema {
-  query: Query
-  mutation: Mutation
-}
-
 type Mutation {
   createArtist(input: CreateArtistInput!): Artist
   updateArtist(id: ID!, input: UpdateArtistInput!): Artist
   deleteArtist(id: ID!): Artist
   deleteCascadeArtist(id: ID!): Artist
-  updateOrCreateArtist(input: CreateArtistInput!): Artist
 
   createAlbum(input: CreateAlbumInput!): Album
   updateAlbum(id: ID!, input: UpdateAlbumInput!): Album
   deleteAlbum(id: ID!): Album
-  updateOrCreateAlbum(input: CreateAlbumInput!): Album
+  deleteCascadeAlbum(id: ID!): Album
 
   createTrack(input: CreateTrackInput!): Track
   updateTrack(id: ID!, input: UpdateTrackInput!): Track
   deleteTrack(id: ID!): Track
-  updateOrCreateTrack(input: CreateTrackInput!): Track
 
+  # TODO: https://docs.aws.amazon.com/appsync/latest/devguide/security-authz.html#fine-grained-access-control
   createPlaylist(input: CreatePlaylistInput!): Playlist
   updatePlaylist(id: ID!, input: UpdatePlaylistInput!): Playlist
   deletePlaylist(id: ID!): Playlist
+  addToPlaylist(id: ID!, targetId: ID!): Boolean
+  removeFromPlaylist(id: ID!, targetId: ID!): Boolean
+
+  addToFavorites(id: ID!): Boolean
+  removeFromFavorites(id: ID!): Boolean
+
+  createInvite(input: CreateInviteInput!): InviteUrl
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
+  revokeInvite(id: ID!): Boolean
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
+  markInviteUnsolicited(id: ID!): Boolean
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
 }
 
 type Query {
@@ -31,12 +37,18 @@ type Query {
 
   getArtist(id: ID!): Artist
   listArtists(filter: TableArtistFilterInput): ArtistConnection
+  listArtistsForAlbum(id: ID!): [Artist!]
 
   getPlaylist(id: ID!): Playlist
   listPlaylists(filter: TablePlaylistFilterInput): PlaylistConnection
 
-  getTrack(id: ID!): Track
+  getTrack(albumId: ID!, id: ID!): Track
   listTracks(filter: TableTrackFilterInput): TrackConnection
+
+  getInvite(id: ID!): Invite
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
+  listInvites(filter: TableInviteFilterInput): InviteConnection
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
 }
 
 type Subscription {
@@ -163,6 +175,7 @@ type Album {
   imageUrl: AWSURL
   year: Int
   tracks: [Track!]
+  isVa: Boolean
 }
 
 type AlbumConnection {
@@ -209,15 +222,19 @@ input UpdatePlaylistInput {
 
 # --- Track
 input TableTrackFilterInput {
-  title: TableStringFilterInput
+  albumId: TableStringFilterInput
 }
 
 type Track {
   id: ID!
-  albumId: ID!
+  album: Album!
+  artists: [Artist!]
+  url: AWSURL!
   title: String
   lengthInSeconds: Int
   ordinal: Int
+  hash: String!
+  features: [String!]
 }
 
 type TrackConnection {
@@ -226,14 +243,53 @@ type TrackConnection {
 
 input CreateTrackInput {
   albumId: ID!
-  title: String!
+  url: AWSURL!
+  title: String
   lengthInSeconds: Int
   ordinal: Int
+  artists: [ID!]
+  hash: String!
 }
 
 input UpdateTrackInput {
-  albumId: ID!
-  title: String!
+  albumId: ID
+  title: String
+  url: AWSURL
   lengthInSeconds: Int
   ordinal: Int
+  artists: [ID!]
+  hash: String!
+}
+
+# --- Invite
+input TableInviteFilterInput {
+  id: TableIDFilterInput
+  timestamp: TableStringFilterInput
+  note: TableStringFilterInput
+  visited: TableIntFilterInput
+  installed: TableIntFilterInput
+  unsolicited: TableIntFilterInput
+}
+
+type Invite {
+  id: ID!
+  timestamp: Int!
+  note: String
+  validity: Int
+  visited: Int
+  installed: Int
+  unsolicited: Int
+}
+
+type InviteUrl {
+  claimUrl: String!
+}
+
+type InviteConnection {
+  items: [Invite!]
+}
+
+input CreateInviteInput {
+  note: String
+  validity: Int
 }

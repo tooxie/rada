@@ -1,9 +1,9 @@
-.error {
+.empty {
   padding-top: 1rem;
 }
 
 .spinner {
-  margin-top: 2rem;
+  text-align: center;
 }
 
 .name {
@@ -36,7 +36,14 @@
   height: 100%;
 }
 
+.albums .album .albumname {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  margin: 0;
+}
+
 .albums .album .thumb {
+  border: 1px solid #C0C0C0;
   background-position: center;
   background-size: cover;
   border-radius: 1rem 1rem 1rem 0;
@@ -45,7 +52,19 @@
   width: 100%;
 }
 
-.albums .album a .year {
+.albums .album a .sub .year {
+  flex-grow: 1;
+}
+
+.albums .album a .sub {
   color: #742e12;
+  display: flex;
+  flex-direction: row;
   font-size: 0.8rem;
+  justify-content: space-between;
+  margin-bottom: .5rem;
+}
+
+.albums .album a .sub h3 {
+  display: inline;
 }

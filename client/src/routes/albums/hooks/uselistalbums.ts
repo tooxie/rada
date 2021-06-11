@@ -1,15 +1,38 @@
+import gql from "graphql-tag";
 import { Album, ListAlbumsQuery } from "../../../graphql/api";
-import { listAlbums } from "../../../graphql/queries";
 import useQuery from "../../../hooks/usequery";
 
-const useListAlbums = () => {
-  console.log("useListAlbums");
-  const { loading, error, data } = useQuery<ListAlbumsQuery, any>(listAlbums, {});
-  const albums = (data?.listAlbums?.items || []) as Album[];
+const listAlbums = gql`
+  query ListAlbums($filter: TableAlbumFilterInput) {
+    listAlbums(filter: $filter) {
+      items {
+        id
+        name
+        imageUrl
+        year
+        isVa
+        artists {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
 
-  console.log("useListAlbums.return:");
-  console.log({ loading, error, albums });
-  return { loading, error, albums };
+type UseQueryReturnType = Omit<ReturnType<typeof useQuery>, "data">;
+interface UseListAlbumsReturn extends UseQueryReturnType {
+  albums: Album[];
+}
+
+const useListAlbums = (): UseListAlbumsReturn => {
+  console.log("[albums/hooks/uselistalbums.ts] useListAlbums");
+  const { loading, error, data } = useQuery<ListAlbumsQuery>(listAlbums);
+  const albums = data?.listAlbums?.items || [];
+
+  const result = { loading, error, albums };
+  console.log("[albums/hooks/uselistalbums.ts] useListAlbums.return:", result);
+  return result;
 };
 
 export default useListAlbums;

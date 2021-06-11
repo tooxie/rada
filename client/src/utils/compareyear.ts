@@ -2,7 +2,7 @@ interface IHasYear {
   year?: number | null;
 }
 
-export default <T extends IHasYear>(a: T, b: T): number => {
+export default <T extends IHasYear>(a: T, b: T): -1 | 0 | 1 => {
   if (!a.year) return b.year ? -1 : 0;
   if (!b.year) return a.year ? 1 : 0;
 

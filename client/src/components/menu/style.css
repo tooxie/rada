@@ -1,0 +1,17 @@
+.collections {
+  align-items: flex-end;
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-between;
+  padding: 1rem 0;
+  overflow-x: scroll;
+}
+
+.collections a {
+  color: black;
+  padding: 1rem;
+}
+
+.collections a.active {
+  color: white;
+}

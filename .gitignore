@@ -1,1 +1,22 @@
+# Global
+*.bak
+*.sqlite
 .DS_Store
+__pycache__
+
+client/*.log
+client/.graphqlconfig.yml
+client/build
+client/node_modules
+client/package-lock.json
+client/schema.graphql
+client/size-plugin.json
+client/src/config.json
+client/src/rootuser.json
+client/src/userpool.json
+
+shiva/gawshi.*
+
+terraform/**/.terraform*
+terraform/**/*.tfstate*
+terraform/dist/

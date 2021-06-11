@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from "preact";
+import { Fragment, FunctionComponent, h } from "preact";
 import { Link } from "preact-router";
 
 import Options from "../../components/options";
@@ -6,44 +6,56 @@ import { DetailProps } from "../../components/layout/detail/types";
 import Spinner from "../../components/spinner";
 import compareYear from "../../utils/compareyear";
 import { urlize } from "../../utils/id";
-import { Album } from "../../graphql/api";
+import { Album, Artist } from "../../graphql/api";
+import { ArtistId } from "../../types";
 
 import style from "./detail.css";
 import useGetArtist from "./hooks/usegetartist";
 
-// Credit: https://www.reddit.com/r/pics/comments/1okjo8/youve_come_to_the_wrong_neighborhood/
-const DEFAULT_ALBUM_COVER = "/assets/img/default-album-cover.jpeg";
-const ArtistDetail: FunctionComponent<DetailProps> = (props) => {
-  const { loading, error, artist } = useGetArtist(props.id);
+let _artist: Artist | null = null;
 
-  if (loading) {
+const DEFAULT_ALBUM_COVER = "/assets/img/no-cover.jpeg";
+const ArtistDetail: FunctionComponent<DetailProps> = ({ id }) => {
+  const { loading, error, artist } = useGetArtist(id as ArtistId);
+
+  if (id !== _artist?.id) _artist = null;
+  if (!loading && artist) _artist = artist;
+
+  if (error) return <p class={style.empty}>{error.message}</p>;
+  if (!loading && !artist) return <p class={style.empty}>Artist not found</p>;
+  if (!_artist) {
     return (
-      <div class={style.spinner}>
-        <Spinner />
-      </div>
+      <Fragment>
+        <div class={style.name}>
+          <h1>&nbsp;</h1>
+        </div>
+        <div class={style.spinner}>
+          <Spinner />
+        </div>
+      </Fragment>
     );
-  } else {
-    if (!artist) {
-      return <p class={style.error}>{error ? error.message : "Artist not found"}</p>;
-    }
   }
 
-  const albums = (artist.albums || []).map((el) => el).sort(compareYear);
+  const albums = (_artist.albums || []).map((el) => el).sort(compareYear);
   const bgImg = (a: Album) => `url("${a.imageUrl || DEFAULT_ALBUM_COVER}")`;
 
   return (
-    <div key={`detail-${props.id}`}>
+    <div key={`detail-${id}`}>
       <div class={style.name}>
-        <h1>{artist.name}</h1>
-        <Options />
+        <h1>{_artist.name}</h1>
+        <Options>Hola from the artist detail options 👋🏽</Options>
       </div>
       <div class={style.albums}>
+        {albums.length === 0 && <p>No albums</p>}
         {albums.map((album) => (
           <div class={style.album} key={album.id}>
             <Link href={`/album/${urlize(album.id)}`}>
               <div class={style.thumb} style={{ backgroundImage: bgImg(album) }} />
-              <h2>{album.name}</h2>
-              <h3 class={style.year}>{album.year}</h3>
+              <div class={style.sub}>
+                {!!album.year && <h3 class={style.year}>{album.year}</h3>}
+                {(album.artists || []).length > 1 && <h3 class={style.va}>V/A</h3>}
+              </div>
+              <h2 class={style.albumname}>{album.name}</h2>
             </Link>
           </div>
         ))}

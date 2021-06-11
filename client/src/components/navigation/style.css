@@ -13,12 +13,16 @@
   line-height: 1.5em;
 }
 
-.back a, .title, .search a, .settings a {
+.title a {
+  color: white;
+}
+
+.back, .title, .servers, .search, .settings {
   padding: 1em .5em .5em;
   display: flex;
   align-items: center;
 }
 
-.back img, .search img, .settings img {
+.back img, .servers img, .search img, .settings img {
   width: 1.3em;
 }

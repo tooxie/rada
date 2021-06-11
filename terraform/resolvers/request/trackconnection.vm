@@ -1,0 +1,16 @@
+{
+  "version": "2017-02-28",
+  "operation": "Query",
+  "index": "ByOrdinal",
+  "query": {
+    "expression": "#albumId = :albumId and #ordinal > :negativeOne",
+    "expressionNames": {
+      "#albumId": "albumId",
+      "#ordinal": "ordinal"
+    },
+    "expressionValues": {
+      ":albumId": $util.dynamodb.toDynamoDBJson($context.source.id),
+      ":negativeOne": $util.dynamodb.toDynamoDBJson(-1)
+    }
+  }
+}

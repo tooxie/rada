@@ -1,11 +1,35 @@
 import { h } from "preact";
+import { route } from "preact-router";
 
+import { AlbumId } from "../../types";
 import style from "./play.css";
+import playIcon from "../../assets/icons/svg/play.svg";
+import useGetAlbum from "./hooks/usegetalbum";
+import usePlayer from "../../hooks/useplayer";
 
-const Play = () => (
-  <div class={style.play}>
-    <img src="/assets/icons/svg/play.svg" />
-  </div>
-);
+interface PlayAlbumProps {
+  albumId: AlbumId;
+}
 
-export default Play;
+const PlayAlbum = ({ albumId }: PlayAlbumProps) => {
+  const player = usePlayer();
+  const { album } = useGetAlbum(albumId as AlbumId);
+
+  const clickHandler = () => {
+    if (!album || !player) return;
+    const tracks = album.tracks || [];
+    if (tracks.length < 1) return;
+
+    player.replaceQueue(tracks);
+    player.play();
+    route("/queue");
+  };
+
+  return (
+    <div class={`${album ? style.play : style.none}`} onClick={clickHandler}>
+      <img src={playIcon} />
+    </div>
+  );
+};
+
+export default PlayAlbum;

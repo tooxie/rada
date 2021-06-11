@@ -1,3 +1,5 @@
+const { generateSw } = require("preact-cli-workbox-plugin");
+
 export default {
   /**
    * Function that mutates the original webpack config.
@@ -9,19 +11,32 @@ export default {
    * @param {object} options - this is mainly relevant for plugins (will always be empty in the config), default to an empty object
    **/
   webpack(config, env, helpers, options) {
+    var { rule } = helpers.getLoadersByName(config, "babel-loader")[0];
+    var babelConfig = rule.options;
+
+    // var vConsoleWebpackPlugin = require("./webpack/vconsole-webpack-plugin").default;
+    // config.plugins.push(new vConsoleWebpackPlugin());
+
+    // https://github.com/prateekbh/preact-cli-workbox-plugin/blob/master/README.md
+    generateSw(config, helpers, {});
+
     if (config.mode === "development") {
-      var QRcodeWebpackPlugin = require("./webpack/qrcode-webpack-plugin");
       config.devtool = "cheap-module-eval-source-map";
-      config.plugins.push(new QRcodeWebpackPlugin());
 
-      // var vConsoleWebpackPlugin = require("./webpack/vconsole-webpack-plugin");
-      // config.plugins.push(new vConsoleWebpackPlugin());
-    }
+      babelConfig.plugins.push(["@babel/plugin-transform-react-jsx-source"]);
 
-    if (config.mode === "production") {
-      var { rule } = helpers.getLoadersByName(config, "babel-loader")[0];
-      var babelConfig = rule.options;
+      // var QRcodeWebpackPlugin = require("./webpack/qrcode-webpack-plugin");
+      // config.plugins.push(new QRcodeWebpackPlugin());
+    } else if (config.mode === "production") {
       babelConfig.plugins.push(["babel-plugin-graphql-tag", { strip: true }]);
+      delete config.devtool; // Prevent sourcemaps from being generated in prod
+
+      config.module.rules = config.module.rules.concat({
+        test: /(\.js|\.json|\.ts|\.tsx)$/,
+        enforce: "pre",
+        exclude: /(node_modules|bower_components|\.spec\.js)/,
+        use: [{ loader: "webpack-strip-block" }],
+      });
     }
   },
 };

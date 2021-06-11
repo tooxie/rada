@@ -2,15 +2,12 @@
   padding-top: 1rem;
 }
 
-.artistname {
-  padding: 1rem 0 .5rem 0;
-}
-
 .albumgrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   column-gap: 1rem;
   row-gap: 1rem;
+  padding-top: 1rem;
 }
 
 .albumgrid a {
@@ -22,12 +19,22 @@
   background-position: center;
   background-size: cover;
   border-radius: 1rem 1rem 1rem 0;
+  border: 1px solid #C0C0C0;
   margin-bottom: .5rem;
   padding-top: 100%;
   width: 100%;
 }
 
-.albumgrid a.album .year {
+.albumgrid a.album .name {
+  word-break: break-word;
+}
+
+.albumgrid a.album .artistname {
   color: #742e12;
   font-size: 0.8rem;
+  margin-bottom: .5rem;
+  max-width: calc((100vw - 4rem) / 3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

@@ -1,0 +1,29 @@
+#if($context.prev.result.isEmpty())
+  #return
+#end
+
+#set( $keys = [] )
+
+#foreach( $row in $context.prev.result )
+  #set( $adjId = {} )
+  #set( $id = {} )
+  #set( $item = {} )
+
+  $util.qr( $adjId.put("S", "album:") )
+  $util.qr( $item.put("adjacentId", $adjId) )
+
+  $util.qr( $id.put("S", $row.id) )
+  $util.qr( $item.put("id", $id) )
+
+  $util.qr( $keys.add($item) )
+#end
+
+{
+  "version": "2018-05-29",
+  "operation": "BatchGetItem",
+  "tables": {
+    "${table_name}": {
+      "keys": $util.toJson($keys)
+    }
+  }
+}

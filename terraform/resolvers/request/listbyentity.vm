@@ -1,0 +1,17 @@
+{
+  "version": "2017-02-28",
+  "operation": "Query",
+  "index": "ByName",
+  "scanIndexForward": true,
+  "query": {
+    "expression": "#adjacentId = :entity and #name >= :empty",
+    "expressionNames": {
+      "#adjacentId": "adjacentId",
+      "#name": "slug",
+    },
+    "expressionValues": {
+      ":entity": $util.dynamodb.toDynamoDBJson("${entity}:"),
+      ":empty": $util.dynamodb.toDynamoDBJson(" ")
+    }
+  },
+}

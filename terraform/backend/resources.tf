@@ -6,7 +6,7 @@ provider "aws" {
 data "aws_caller_identity" "gawshi" {}
 
 resource "aws_iam_user" "gawshi" {
-  name = "gawshi-${random_string.suffix.result}"
+  name = "Gawshi-${random_string.suffix.result}"
 
   tags = {
     Gawshi = "1"
@@ -65,7 +65,7 @@ resource "aws_iam_user_policy_attachment" "gawshi_terraform_state" {
 
 // --- Gawshi resources
 resource "aws_iam_policy" "gawshi" {
-  name = "gawshi-${random_string.suffix.result}"
+  name = "Gawshi-${random_string.suffix.result}"
   path = "/"
   description = "Policy for the gawshi user that restricts access to the gawshi resources exclusively"
 
@@ -84,10 +84,38 @@ resource "aws_iam_policy" "gawshi" {
           "iam:*",
         ]
         Effect = "Allow"
-        Resource = "arn:aws:iam::${data.aws_caller_identity.gawshi.account_id}:role/Gawshi*"
+        Resource = [
+          "arn:aws:iam::${data.aws_caller_identity.gawshi.account_id}:role/Gawshi*",
+          "arn:aws:iam::${data.aws_caller_identity.gawshi.account_id}:policy/Gawshi*"
+        ]
       },
       {
         Action = [
+          "iam:GetRole",
+        ]
+        Effect = "Allow"
+        Resource = "arn:aws:iam::${data.aws_caller_identity.gawshi.account_id}:role/GawshiApiGatewayCloudwatchGlobal*"
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "cloudfront:*",
+        ],
+        Resource = "*"
+      },
+      {
+        Action = [
+          "s3:*",
+        ]
+        Effect = "Allow"
+        Resource = [
+          "arn:aws:s3:::gawshi-*",
+          "arn:aws:s3:::gawshi-*/*"
+        ]
+      },
+      {
+        Action = [
+          # "iam:CreateServiceLinkedRole",
           "iam:ListPolicies",
         ]
         Effect = "Allow"
@@ -99,7 +127,10 @@ resource "aws_iam_policy" "gawshi" {
           "iam:GetPolicyVersion",
         ]
         Effect = "Allow"
-        Resource = "arn:aws:iam::aws:policy/service-role/AWSAppSyncPushToCloudWatchLogs"
+        Resource = [
+          "arn:aws:iam::aws:policy/service-role/AWSAppSyncPushToCloudWatchLogs",
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+        ]
       },
       {
         Effect = "Allow",
@@ -114,6 +145,81 @@ resource "aws_iam_policy" "gawshi" {
             ]
           }
         }
+      },
+      {
+        Action = [
+          "apigateway:*",
+          "cloudwatch:*",
+          "lambda:*",
+        ]
+        Effect = "Allow"
+        Resource = "*"
+      },
+      {
+        Action = [
+          "cloudwatch:Delete*",
+        ]
+        Effect = "Deny"
+        Resource = "*"
+      },
+      {
+        Action = [
+          "logs:*",
+        ]
+        Effect = "Allow"
+        Resource = "arn:aws:logs:${var.region}:${data.aws_caller_identity.gawshi.account_id}:log-group:/aws/lambda/Gawshi*"
+      },
+      {
+        Action = [
+          "ssm:DescribeParameters",
+        ]
+        Effect = "Allow"
+        Resource = "arn:aws:ssm:${var.region}:${data.aws_caller_identity.gawshi.account_id}:*"
+      },
+      {
+        Action = [
+          "ssm:*",
+        ]
+        Effect = "Allow"
+        Resource = "arn:aws:ssm:${var.region}:${data.aws_caller_identity.gawshi.account_id}:parameter/Gawshi*"
+      },
+      {
+        Action = [
+          "logs:DescribeLogGroups",
+        ]
+        Effect = "Allow"
+        Resource = "arn:aws:logs:${var.region}:${data.aws_caller_identity.gawshi.account_id}:log-group:*"
+      },
+      {
+        Action = [
+          "cognito-idp:CreateUserPool",
+        ]
+        Effect = "Allow"
+        Resource = "*"
+      },
+      {
+        Action = [
+          "cognito-idp:*",
+        ]
+        Effect = "Allow"
+        Resource = "arn:aws:cognito-idp:${var.region}:${data.aws_caller_identity.gawshi.account_id}:userpool/*"
+      },
+      {
+        Action = [
+          "cognito-identity:*",
+        ]
+        Effect = "Allow"
+        Resource = "arn:aws:cognito-identity:${var.region}:${data.aws_caller_identity.gawshi.account_id}:identitypool/*"
+      },
+      {
+        Action = [
+          "kms:*",
+        ]
+        Effect = "Allow"
+        Resource = [
+          "arn:aws:kms:${var.region}:${data.aws_caller_identity}:key/*",
+          "arn:aws:kms:${var.region}:${data.aws_caller_identity}:alias/Gawshi-*",
+        ]
       },
     ]
   })
@@ -138,7 +244,7 @@ resource "aws_iam_user_policy_attachment" "gawshi_appsync_administrator" {
 }
 
 resource "aws_iam_role" "gawshi" {
-  name = "gawshi-${random_string.suffix.result}"
+  name = "Gawshi-${random_string.suffix.result}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"

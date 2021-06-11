@@ -17,11 +17,14 @@ export const getAlbum = gql`
       year
       tracks {
         id
-        albumId
+        url
         title
         lengthInSeconds
         ordinal
+        hash
+        features
       }
+      isVa
     }
   }
 `;
@@ -33,6 +36,7 @@ export const listAlbums = gql`
         name
         imageUrl
         year
+        isVa
       }
     }
   }
@@ -48,6 +52,7 @@ export const getArtist = gql`
         name
         imageUrl
         year
+        isVa
       }
     }
   }
@@ -59,6 +64,22 @@ export const listArtists = gql`
         id
         name
         imageUrl
+      }
+    }
+  }
+`;
+export const listArtistsForAlbum = gql`
+  query ListArtistsForAlbum($id: ID!) {
+    listArtistsForAlbum(id: $id) {
+      id
+      name
+      imageUrl
+      albums {
+        id
+        name
+        imageUrl
+        year
+        isVa
       }
     }
   }
@@ -84,13 +105,27 @@ export const listPlaylists = gql`
   }
 `;
 export const getTrack = gql`
-  query GetTrack($id: ID!) {
-    getTrack(id: $id) {
+  query GetTrack($albumId: ID!, $id: ID!) {
+    getTrack(albumId: $albumId, id: $id) {
       id
-      albumId
+      album {
+        id
+        name
+        imageUrl
+        year
+        isVa
+      }
+      artists {
+        id
+        name
+        imageUrl
+      }
+      url
       title
       lengthInSeconds
       ordinal
+      hash
+      features
     }
   }
 `;
@@ -99,10 +134,40 @@ export const listTracks = gql`
     listTracks(filter: $filter) {
       items {
         id
-        albumId
+        url
         title
         lengthInSeconds
         ordinal
+        hash
+        features
+      }
+    }
+  }
+`;
+export const getInvite = gql`
+  query GetInvite($id: ID!) {
+    getInvite(id: $id) {
+      id
+      timestamp
+      note
+      validity
+      visited
+      installed
+      unsolicited
+    }
+  }
+`;
+export const listInvites = gql`
+  query ListInvites($filter: TableInviteFilterInput) {
+    listInvites(filter: $filter) {
+      items {
+        id
+        timestamp
+        note
+        validity
+        visited
+        installed
+        unsolicited
       }
     }
   }

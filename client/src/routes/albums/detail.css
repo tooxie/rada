@@ -1,32 +1,46 @@
-.spinner {
-  margin-top: 2rem;
+.header {
+  align-items: center;
+  display: flex;
+  max-height: 3rem;
+  overflow-y: hidden;
+  padding: .5rem 0;
 }
 
-.name {
-  display: flex;
-  align-items: center;
-  padding: .5rem 0;
+.header .name {
+  flex-grow: 1;
   font-weight: bold;
 }
 
-.name h1 {
-  flex-grow: 1;
+.details {
+  color: #742e12;
+  display: flex;
+  flex-direction: row;
+  font-size: 0.8rem;
+  font-weight: normal;
+  margin-top: 1rem;
 }
 
-.name img {
+.details .artist a {
+  color: #742e12;
+}
+
+.header img {
   width: 2rem;
 }
 
 .tracklist {
-  margin-top: 1rem;
-  display: grid;
-  row-gap: .5rem;
+  margin-top: .75rem;
+}
+
+.tracklist .highlight {
+  color: red;
 }
 
 .tracklist .track {
   display: flex;
   flex-direction: row;
   align-items: center;
+  padding: .25rem 0;
 }
 
 .tracklist .track img {
@@ -35,6 +49,7 @@
 
 .tracklist .track .ordinal {
   width: 2rem;
+  min-width: 2rem;
   height: 2rem;
   border-radius: 1rem;
   display: flex;
@@ -45,11 +60,29 @@
   background-size: cover;
 }
 
-.tracklist .track .title {
+.stretch {
   flex-grow: 1;
   padding: 0 .5rem;
 }
 
+.tracklist .title .missing {
+  color: gray;
+  font-style: italic;
+}
+
 .tracklist .track .length {
   font-size: 0.8rem;
+}
+
+.tracklist .track .artists {
+  margin-left: 1rem;
+  color: gray;
+}
+
+.tracklist .track .features {
+  color: gray;
+}
+
+.empty {
+  padding-top: 1rem;
 }

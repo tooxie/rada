@@ -5,10 +5,10 @@ interface INamed {
 const getName = <T extends INamed>(o: T) => {
   const n = (o.name || "").trim().toLowerCase();
 
-  return n.startsWith("the ") ? n.substr(4) : n;
+  return n.startsWith("the ") ? n.substring(4) : n;
 };
 
-export default <T extends INamed>(a: T, b: T): number => {
+export default <T extends INamed>(a: T, b: T): -1 | 0 | 1 => {
   const an = getName(a);
   const bn = getName(b);
 

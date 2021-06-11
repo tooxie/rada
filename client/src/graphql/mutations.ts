@@ -14,6 +14,7 @@ export const createArtist = gql`
         name
         imageUrl
         year
+        isVa
       }
     }
   }
@@ -29,6 +30,7 @@ export const updateArtist = gql`
         name
         imageUrl
         year
+        isVa
       }
     }
   }
@@ -44,6 +46,7 @@ export const deleteArtist = gql`
         name
         imageUrl
         year
+        isVa
       }
     }
   }
@@ -59,21 +62,7 @@ export const deleteCascadeArtist = gql`
         name
         imageUrl
         year
-      }
-    }
-  }
-`;
-export const updateOrCreateArtist = gql`
-  mutation UpdateOrCreateArtist($input: CreateArtistInput!) {
-    updateOrCreateArtist(input: $input) {
-      id
-      name
-      imageUrl
-      albums {
-        id
-        name
-        imageUrl
-        year
+        isVa
       }
     }
   }
@@ -92,11 +81,14 @@ export const createAlbum = gql`
       year
       tracks {
         id
-        albumId
+        url
         title
         lengthInSeconds
         ordinal
+        hash
+        features
       }
+      isVa
     }
   }
 `;
@@ -114,11 +106,14 @@ export const updateAlbum = gql`
       year
       tracks {
         id
-        albumId
+        url
         title
         lengthInSeconds
         ordinal
+        hash
+        features
       }
+      isVa
     }
   }
 `;
@@ -136,17 +131,20 @@ export const deleteAlbum = gql`
       year
       tracks {
         id
-        albumId
+        url
         title
         lengthInSeconds
         ordinal
+        hash
+        features
       }
+      isVa
     }
   }
 `;
-export const updateOrCreateAlbum = gql`
-  mutation UpdateOrCreateAlbum($input: CreateAlbumInput!) {
-    updateOrCreateAlbum(input: $input) {
+export const deleteCascadeAlbum = gql`
+  mutation DeleteCascadeAlbum($id: ID!) {
+    deleteCascadeAlbum(id: $id) {
       id
       artists {
         id
@@ -158,11 +156,14 @@ export const updateOrCreateAlbum = gql`
       year
       tracks {
         id
-        albumId
+        url
         title
         lengthInSeconds
         ordinal
+        hash
+        features
       }
+      isVa
     }
   }
 `;
@@ -170,10 +171,24 @@ export const createTrack = gql`
   mutation CreateTrack($input: CreateTrackInput!) {
     createTrack(input: $input) {
       id
-      albumId
+      album {
+        id
+        name
+        imageUrl
+        year
+        isVa
+      }
+      artists {
+        id
+        name
+        imageUrl
+      }
+      url
       title
       lengthInSeconds
       ordinal
+      hash
+      features
     }
   }
 `;
@@ -181,10 +196,24 @@ export const updateTrack = gql`
   mutation UpdateTrack($id: ID!, $input: UpdateTrackInput!) {
     updateTrack(id: $id, input: $input) {
       id
-      albumId
+      album {
+        id
+        name
+        imageUrl
+        year
+        isVa
+      }
+      artists {
+        id
+        name
+        imageUrl
+      }
+      url
       title
       lengthInSeconds
       ordinal
+      hash
+      features
     }
   }
 `;
@@ -192,21 +221,24 @@ export const deleteTrack = gql`
   mutation DeleteTrack($id: ID!) {
     deleteTrack(id: $id) {
       id
-      albumId
+      album {
+        id
+        name
+        imageUrl
+        year
+        isVa
+      }
+      artists {
+        id
+        name
+        imageUrl
+      }
+      url
       title
       lengthInSeconds
       ordinal
-    }
-  }
-`;
-export const updateOrCreateTrack = gql`
-  mutation UpdateOrCreateTrack($input: CreateTrackInput!) {
-    updateOrCreateTrack(input: $input) {
-      id
-      albumId
-      title
-      lengthInSeconds
-      ordinal
+      hash
+      features
     }
   }
 `;
@@ -235,5 +267,42 @@ export const deletePlaylist = gql`
       name
       imageUrl
     }
+  }
+`;
+export const addToPlaylist = gql`
+  mutation AddToPlaylist($id: ID!, $targetId: ID!) {
+    addToPlaylist(id: $id, targetId: $targetId)
+  }
+`;
+export const removeFromPlaylist = gql`
+  mutation RemoveFromPlaylist($id: ID!, $targetId: ID!) {
+    removeFromPlaylist(id: $id, targetId: $targetId)
+  }
+`;
+export const addToFavorites = gql`
+  mutation AddToFavorites($id: ID!) {
+    addToFavorites(id: $id)
+  }
+`;
+export const removeFromFavorites = gql`
+  mutation RemoveFromFavorites($id: ID!) {
+    removeFromFavorites(id: $id)
+  }
+`;
+export const createInvite = gql`
+  mutation CreateInvite($input: CreateInviteInput!) {
+    createInvite(input: $input) {
+      claimUrl
+    }
+  }
+`;
+export const revokeInvite = gql`
+  mutation RevokeInvite($id: ID!) {
+    revokeInvite(id: $id)
+  }
+`;
+export const markInviteUnsolicited = gql`
+  mutation MarkInviteUnsolicited($id: ID!) {
+    markInviteUnsolicited(id: $id)
   }
 `;

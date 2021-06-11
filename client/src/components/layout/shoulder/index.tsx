@@ -1,14 +1,25 @@
-import { h } from "preact";
+import { h, ComponentChild } from "preact";
 
 import style from "./style.css";
 
-interface Props {
+interface ShoulderProps {
+  children: ComponentChild;
   detail?: boolean;
-  children: JSX.Element | JSX.Element[];
+  noPadding?: boolean;
 }
 
-export default (props: Props) => {
-  const classes = [style.shoulder, props.detail ? style.detail : style.collection];
+const Shoulder = (props: ShoulderProps) => {
+  const classes = [
+    style.shoulder,
+    props.detail ? style.detail : style.collection,
+    !props.noPadding && style.padding,
+  ];
 
-  return <div class={classes.join(" ")}>{props.children}</div>;
+  return (
+    <div key="shoulder" id="shoulder" class={classes.join(" ")}>
+      {props.children}
+    </div>
+  );
 };
+
+export default Shoulder;

@@ -1,26 +1,22 @@
-import { FunctionComponent, h } from "preact";
-import { Link } from "preact-router/match";
+import { h } from "preact";
 
-import { DetailProps } from "../../components/layout/detail/types";
+import useConf from "../../conf/hooks/useconf";
 
 import Navigation from "../navigation";
+import Menu from "../menu";
 import style from "./style.css";
 
-const Header: FunctionComponent<Partial<DetailProps>> = () => {
+interface HeaderProps {
+  hideControls?: boolean;
+}
+
+const Header = (props: HeaderProps) => {
+  const { conf } = useConf();
+
   return (
     <header class={style.header}>
-      <Navigation />
-      <section class={style.collections}>
-        <Link href="/artists" activeClassName={style.active}>
-          Artists
-        </Link>
-        <Link href="/albums/" activeClassName={style.active}>
-          Albums
-        </Link>
-        <Link href="/playlists" activeClassName={style.active}>
-          Playlists
-        </Link>
-      </section>
+      <Navigation hideControls={props.hideControls} key="navigation" />
+      <Menu hideControls={props.hideControls} isAdmin={conf.isAdmin} key="menu" />
     </header>
   );
 };

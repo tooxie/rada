@@ -1,25 +1,26 @@
+/*
+ * ┏━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+ * ┃ Blue          ┃ 70's          ┃
+ * ┣━━━━━━━━━━━━━━━╋━━━━━━━━━━━━━━━┫
+ * ┃ Black Pearl   ┃ Red           ┃
+ * ┃ #041628       ┃ #742E12       ┃
+ * ┣━━━━━━━━━━━━━━━╋━━━━━━━━━━━━━━━┫
+ * ┃ Tropical Blue ┃ Yellow        ┃
+ * ┃ #D4E7F8       ┃ #D28A2D       ┃
+ * ┣━━━━━━━━━━━━━━━╋━━━━━━━━━━━━━━━┫
+ * ┃ Cerulean      ┃ Cream         ┃
+ * ┃ #04A2D6       ┃ #BFBDA2       ┃
+ * ┣━━━━━━━━━━━━━━━╋━━━━━━━━━━━━━━━┫
+ * ┃ Fun Blue      ┃ Turquoise     ┃
+ * ┃ #1A61AC       ┃ #2F6C68       ┃
+ * ┗━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━┛
+ */
+
 .header {
   background-color: #4158D0;
-  background-image: linear-gradient(180deg, #001224 0%, #01a1d7 61%, #01a1d7 90%);
+  background-image: linear-gradient(180deg, #041628 0%, #1A61AC 40%, #D4E7F8 100%);
   display: flex;
   flex-direction: column;
   min-height: 50vw;
   padding-bottom: 2rem;
-}
-
-.collections {
-  align-items: flex-end;
-  display: flex;
-  flex-grow: 1;
-  justify-content: space-between;
-  padding: 1rem 0;
-}
-
-.collections a {
-  color: black;
-  padding: 1rem;
-}
-
-.collections a.active {
-  color: white;
 }

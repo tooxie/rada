@@ -3,22 +3,23 @@ import { FunctionComponent, h } from "preact";
 import { DetailProps } from "../../components/layout/detail/types";
 import Navigation from "../../components/navigation";
 
-import style from "./header.css";
 import useGetArtist from "./hooks/usegetartist";
+import style from "./header.css";
 
-const DEFAULT_ARTIST_IMAGE = "/assets/img/default-artist-image.jpeg";
+let currentArtist: string | null = null;
+let backgroundImage = "url(none)";
+
 const Header: FunctionComponent<DetailProps> = ({ id }) => {
-  const { loading, error, artist } = useGetArtist(id);
+  console.log(`artists.Header("${id}")`);
+  const { artist } = useGetArtist(id);
 
-  let backgroundImage: string = "none";
-  if (!loading) {
-    backgroundImage = `url("${artist?.imageUrl || DEFAULT_ARTIST_IMAGE}")`;
-  }
-  if (error) console.error(error);
+  if (currentArtist != id) backgroundImage = "url(none)";
+  if (artist) backgroundImage = `url("${artist?.imageUrl || "none"}")`;
+  currentArtist = id;
 
   return (
-    <div class={style.gradient}>
-      <header key={`header-${id}`} class={style.header} style={{ backgroundImage }}>
+    <div class={style.gradient} key="header-gradient">
+      <header key="header" class={style.header} style={{ backgroundImage }}>
         <Navigation />
       </header>
     </div>

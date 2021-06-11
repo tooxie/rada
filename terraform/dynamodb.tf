@@ -1,8 +1,13 @@
 resource "aws_dynamodb_table" "artists_albums" {
-  name = "GawshiArtistsAlbums_${local.suffix}"
+  name = "GawshiArtistsAlbums-${local.suffix}"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key = "id"
-  range_key = "sk"
+  hash_key = "adjacentId"
+  range_key = "id"
+
+  attribute {
+    name = "adjacentId"
+    type = "S"
+  }
 
   attribute {
     name = "id"
@@ -10,27 +15,26 @@ resource "aws_dynamodb_table" "artists_albums" {
   }
 
   attribute {
-    name = "sk"
+    name = "slug"
     type = "S"
   }
 
-  attribute {
-    name = "year"
-    type = "N"
+  local_secondary_index {
+    name = "ByName"
+    range_key = "slug"
+    projection_type = "ALL"
   }
 
-  local_secondary_index {
-    name = "ByYear"
-    range_key = "year"
-    projection_type = "INCLUDE"
-    non_key_attributes = [
-      "name"
-    ]
+  global_secondary_index {
+    name = "ById"
+    hash_key = "id"
+    range_key = "adjacentId"
+    projection_type = "KEYS_ONLY"
   }
 }
 
 resource "aws_dynamodb_table" "playlists" {
-  name = "GawshiPlaylists_${local.suffix}"
+  name = "GawshiPlaylists-${local.suffix}"
   billing_mode = "PAY_PER_REQUEST"
   hash_key = "id"
 
@@ -52,10 +56,15 @@ resource "aws_dynamodb_table" "playlists" {
 }
 
 resource "aws_dynamodb_table" "tracks" {
-  name = "GawshiTracks_${local.suffix}"
+  name = "GawshiTracks-${local.suffix}"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key = "id"
-  range_key = "sk"
+  hash_key = "albumId"
+  range_key = "id"
+
+  attribute {
+    name = "albumId"
+    type = "S"
+  }
 
   attribute {
     name = "id"
@@ -63,18 +72,41 @@ resource "aws_dynamodb_table" "tracks" {
   }
 
   attribute {
-    name = "sk"
-    type = "S"
+    name = "ordinal"
+    type = "N"
+  }
+
+  local_secondary_index {
+    name = "ByOrdinal"
+    range_key = "ordinal"
+    projection_type = "ALL"
   }
 }
 
 resource "aws_dynamodb_table" "favourites" {
-  name = "GawshiFavs_${local.suffix}"
+  name = "GawshiFavs-${local.suffix}"
   billing_mode = "PAY_PER_REQUEST"
   hash_key = "trackId"
 
   attribute {
     name = "trackId"
     type = "S"
+  }
+}
+
+resource "aws_dynamodb_table" "invitations" {
+  name = "GawshiInvitations-${local.suffix}"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key = "id"
+  range_key = "timestamp"
+
+  attribute {
+    name = "id"
+    type = "S"
+  }
+
+  attribute {
+    name = "timestamp"
+    type = "N"
   }
 }

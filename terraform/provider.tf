@@ -1,3 +1,5 @@
+data "aws_caller_identity" "gawshi" {}
+
 variable "region" {
   type = string
 }
@@ -7,11 +9,21 @@ variable "suffix" {
   default = ""
 }
 
+variable "website_root" {
+  type = string
+  default = "../client/build"
+}
+
+variable "force_destroy_bucket" {
+  type = bool
+  default = false
+}
+
 terraform {
   required_providers {
     aws = {
       source = "hashicorp/aws"
-      version = "~> 3.0"
+      version = "~> 4.8.0"
     }
   }
 }
@@ -36,4 +48,5 @@ resource "random_string" "suffix" {
 
 locals {
   suffix = var.suffix != "" ? var.suffix : random_string.suffix.result
+  mime_types = jsondecode(file("${path.module}/mime.json"))
 }

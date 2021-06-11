@@ -1,23 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
     <title><% preact.title %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw-esm.js');
+        });
+      }
+    </script>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/assets/icons/ios-icon-iphone-180x180.png" />
+    <link rel="apple-touch-startup-image" sizes="2048x2732" href="/assets/img/apple_splash_2048.png" />
+    <link rel="apple-touch-startup-image" sizes="1668x2224" href="/assets/img/apple_splash_1668.png" />
+    <link rel="apple-touch-startup-image" sizes="1536x2048" href="/assets/img/apple_splash_1536.png" />
+    <link rel="apple-touch-startup-image" sizes="1242x2208" href="/assets/img/apple_splash_1242.png" />
+    <link rel="apple-touch-startup-image" sizes="1125x2436" href="/assets/img/apple_splash_1125.png" />
+    <link rel="apple-touch-startup-image" sizes="750x1334" href="/assets/img/apple_splash_750.png" />
+    <link rel="apple-touch-startup-image" sizes="640x1136" href="/assets/img/apple_splash_640.png" />
     <link rel="stylesheet" href="/assets/fonts/raleway-kit/stylesheet.css">
-    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+
+    <!-- Breaks the search in mobile
     <style>
       @media (orientation: landscape) {
         html::before {
-          content: "Landscape orientation not supported. Sorry.";
+          content: "Landscape orientation not supported";
         }
         body {
           display: none;
         }
       }
     </style>
+    -->
     <% preact.headEnd %>
   </head>
   <body>

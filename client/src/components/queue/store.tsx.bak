@@ -1,0 +1,16 @@
+import { createContext } from "preact";
+
+import { QueueContextState, Action } from "./types";
+
+const initialState: QueueContextState = {
+  queue: {
+    tracks: [],
+    index: -1,
+  },
+  dispatch: () => {},
+  actions: Action,
+};
+
+const Queue = createContext(initialState);
+
+export default Queue;

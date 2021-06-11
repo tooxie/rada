@@ -1,51 +1,69 @@
-import { FunctionComponent, h } from "preact";
+import { h, FunctionComponent, Fragment } from "preact";
 import { Link } from "preact-router";
 
-import Spinner from "../../components/spinner";
 import { Artist } from "../../graphql/api";
-import compareName from "../../utils/comparename";
+import Spinner from "../../components/spinner";
+import Search from "../../components/search";
+import ScrollTop from "../../components/scrolltop";
+import useConf from "../../hooks/useconf";
 
 import useListArtists from "./hooks/uselistartists";
 import style from "./list.css";
 
-const DEFAULT_ARTIST_IMAGE = "/assets/img/default-artist-image.jpeg";
-const ArtistThumb: FunctionComponent<Artist> = (props) => {
-  const image = props.imageUrl || DEFAULT_ARTIST_IMAGE;
-
-  if (!props.id) throw new Error("Invalid artist");
+const ArtistThumb: FunctionComponent<Artist> = ({ id, name, imageUrl }) => {
+  const image = imageUrl || "none";
 
   return (
-    <Link href={"/artist/" + props.id.split(":")[1]}>
+    <Link
+      href={"/artist/" + id.split(":")[1]}
+      style={{ backgroundImage: `url(${image})` }}
+    >
       <div class={style.artist}>
         <img src={image} loading="lazy" />
-        <div class={style.name}>{props.name}</div>
+        <div class={style.name}>{name}</div>
       </div>
     </Link>
   );
 };
 
-const ArtistList = () => {
-  console.log(`ArtistList (${typeof ArtistList})`);
-  const { loading, error, artists } = useListArtists();
-  console.log("ArtistList.useListArtists:");
-  console.log({ loading, error, artists });
-  if (error) console.error(error);
+let _artists: Artist[] = [];
 
-  if (loading) {
-    return <Spinner />;
-  } else {
-    if (error) return <p>{error.message}</p>;
-    if (!artists || artists.length < 1) return <p class={style.empty}>No Artists</p>;
+const ArtistList = () => {
+  const { conf } = useConf();
+  const { loading, error, artists } = useListArtists();
+  const filterFn = (artist: Artist, s: string): boolean => {
+    const name = (artist?.name || "").toLowerCase();
+    return name.includes(s.toLowerCase());
+  };
+
+  if (!_artists.length) _artists = artists;
+
+  if (error) return <p class={style.empty}>{error.message}</p>;
+  if (loading) return <Spinner />;
+
+  if (!_artists || _artists.length < 1) {
+    return <p class={style.empty}>No Artists</p>;
   }
 
-  const _artists = artists.map((el) => el).sort(compareName);
-
   return (
-    <div class={style.artistgrid}>
-      {_artists.map((artist: Artist) => (
-        <ArtistThumb key={artist.id} {...artist} />
-      ))}
-    </div>
+    <Search
+      input={_artists}
+      key="artist-list"
+      noResultsClass={style.empty}
+      filter={filterFn}
+      enabled={conf.searchEnabled}
+    >
+      {(result: Artist[]) => (
+        <Fragment>
+          <div class={style.artistgrid}>
+            {result.map((artist: Artist) => (
+              <ArtistThumb key={artist.id} {...artist} />
+            ))}
+          </div>
+          <ScrollTop />
+        </Fragment>
+      )}
+    </Search>
   );
 };
 

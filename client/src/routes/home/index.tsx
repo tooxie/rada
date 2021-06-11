@@ -1,14 +1,12 @@
-import { FunctionComponent, h } from "preact";
+import { h } from "preact";
+import { route } from "preact-router";
 
-import style from "./style.css";
+import Spinner from "../../components/spinner";
 
-const Home: FunctionComponent = () => {
-  return (
-    <div class={style.home}>
-      <h1>Home</h1>
-      <p>This is the Home component.</p>
-    </div>
-  );
+const Home = () => {
+  route("/artists");
+
+  return <Spinner />;
 };
 
 export default Home;

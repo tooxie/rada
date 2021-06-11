@@ -1,7 +1,0 @@
-## Raise a GraphQL field error in case of a datasource invocation error
-#if($context.error)
-  $util.error($context.error.message, $context.error.type)
-#end
-
-## Pass back the result from DynamoDB. **
-$util.toJson($context.prev.result)

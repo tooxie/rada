@@ -1,0 +1,8 @@
+boto3
+docopt
+graphqlclient
+mutagen
+python-dateutil
+python-slugify
+python3-discogs-client
+sqlalchemy

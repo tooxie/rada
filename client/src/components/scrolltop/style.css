@@ -1,0 +1,16 @@
+.wrapper {
+  text-align: right;
+}
+
+.scrolltop {
+  display: inline-block;
+  clear: both;
+  color: gray;
+  font-size: 0.6rem;
+  text-align: center;
+  width: 2rem;
+}
+
+.scrolltop img {
+  width: 2rem;
+}

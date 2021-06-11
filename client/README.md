@@ -1,6 +1,8 @@
-# Gawshi Client
+Gawshi Client
+=============
 
-## CLI Commands
+CLI Commands
+------------
 *   `npm install`: Installs dependencies
 *   `npm run dev`: Run a development, HMR server
 *   `npm run serve`: Run a production-like server
@@ -12,12 +14,8 @@
 
 For detailed explanation on how things work, checkout the [CLI Readme](https://github.com/developit/preact-cli/blob/master/README.md).
 
-## To do
-* Handle pagination
-* Add a manifest file
-  * Preload the spinner using the manifest
-* Error handler
-  * What do we do on error?
-  * Do we report it anywhere?
-  * Just log to the console?
-  * Supress it?
+Credits
+-------
+* Default album cover: https://www.reddit.com/r/pics/comments/1okjo8/youve_come_to_the_wrong_neighborhood/
+* Vinyl icon: https://commons.wikimedia.org/wiki/File:LP_Vinyl_Symbol_Icon.png
+* Vinyl spinner: https://www.deviantart.com/natleyn

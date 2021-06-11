@@ -1,22 +1,69 @@
-import { Fragment, FunctionComponent, h } from "preact";
+import { ComponentChildren, Fragment, FunctionComponent, h, VNode } from "preact";
 
+import { AlbumId, TrackId } from "../../../types";
 import DefaultHeader from "../../header";
+import Player from "../../player";
 import Shoulder from "../shoulder";
+import usePlayer from "../../../hooks/useplayer";
 
 import { DetailProps } from "./types";
 
 const Detail = (
-  model: string,
   Component: FunctionComponent<DetailProps>,
   HeaderComponent?: FunctionComponent<DetailProps>
 ) => {
   const Header = HeaderComponent || DefaultHeader;
 
-  return (props: DetailProps) => (
+  return (props: DetailProps) => {
+    const player = usePlayer();
+    if (!player) return <div />;
+
+    const track = player.getCurrentTrack();
+    const getEntity = () => window.location.pathname.split("/")[1];
+    const getId = (props: DetailProps): any => `${getEntity()}:${props.id}`;
+
+    return (
+      <Fragment>
+        {!!track && (
+          <Player
+            key="player"
+            trackId={track.id as TrackId}
+            albumId={track.album.id as AlbumId}
+          />
+        )}
+        <Header key={`detail-header-${props.id}`} id={getId(props)} />
+        <Shoulder key={`detail-shoulder-${props.id}`} detail={true}>
+          <Component {...props} id={getId(props)} />
+        </Shoulder>
+      </Fragment>
+    );
+  };
+};
+
+interface Props {
+  children: ComponentChildren;
+  header?: VNode<any>;
+  id?: string;
+}
+
+const _Detail = (props: Props) => {
+  const player = usePlayer();
+  if (!player) return <div />;
+
+  const track = player.getCurrentTrack();
+
+  return (
     <Fragment>
-      <Header key={`detail-header-${props.id}`} {...props} />
-      <Shoulder detail={true} key="detshoulder">
-        <Component key={`detail-shoulder-${props.id}`} {...props} />
+      {!!track && (
+        <Player
+          key="player"
+          trackId={track.id as TrackId}
+          albumId={track.album.id as AlbumId}
+        />
+      )}
+      {props.header ? props.header : <DefaultHeader />}
+      <Shoulder key="detail-shoulder" detail={true}>
+        {props.children}
       </Shoulder>
     </Fragment>
   );

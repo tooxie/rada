@@ -1,10 +1,19 @@
+.play , .none {
+  transition: visibility 0s linear 300ms, opacity 300ms;
+}
+
 .play {
-  display: flex;
   align-items: center;
+  display: flex;
   justify-content: center;
+  opacity: 1;
 }
 
 .play img {
   width: 75vw;
   opacity: 0.3;
+}
+
+.none {
+  opacity: 0;
 }

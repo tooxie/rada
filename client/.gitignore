@@ -1,9 +1,0 @@
-.graphqlconfig.yml
-/*.log
-/build
-node_modules
-package-lock.json
-schema.graphql
-size-plugin.json
-src/graphql/config.ts
-src/graphql/schema.json

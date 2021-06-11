@@ -1,7 +1,7 @@
 {
   "name": "Gawshi",
   "short_name": "Gawshi",
-  "start_url": "/artists",
+  "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#fff",
@@ -28,11 +28,23 @@
     {
       "protocol": "web+gawshi",
       "url": "/boh?foo=%s"
-    },
-    {
-      "protocol": "gawshi",
-      "url": "/boh?foo=%s"
     }
   ],
-  "screenshots": []
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Artist list",
+      "short_name": "Artists",
+      "description": "View the list of artists",
+      "url": "/artists",
+      "icons": [{ "src": "/assets/icons/android-chrome-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Album list",
+      "short_name": "Albums",
+      "description": "View the list of albums",
+      "url": "/albums",
+      "icons": [{ "src": "/assets/icons/android-chrome-192x192.png", "sizes": "192x192" }]
+    }
+  ]
 }

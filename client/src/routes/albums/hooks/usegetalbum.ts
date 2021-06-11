@@ -1,16 +1,21 @@
 import { ApolloQueryResult } from "@apollo/client";
 
-import { Album } from "../../../graphql/api";
+import { Album, GetAlbumQuery, GetAlbumQueryVariables } from "../../../graphql/api";
 import getClient from "../../../graphql/client";
 import useGet from "../../../hooks/useget";
-import { GetAlbumQuery } from "../../../graphql/api";
-import { getAlbum } from "../../../graphql/queries";
+import { getAlbumWithTracks } from "../../../graphql/custom";
+import { AlbumId } from "../../../types";
 import { toDbId } from "../../../utils/id";
 
-const doGetAlbum = async (variables: object) => {
+type UseGetReturnType = Omit<ReturnType<typeof useGet>, "item">;
+interface UseGetAlbumReturn extends UseGetReturnType {
+  album: Album | null;
+}
+
+const doGetAlbum = async (variables: GetAlbumQueryVariables) => {
   const client = await getClient();
   const result = (await client.query({
-    query: getAlbum,
+    query: getAlbumWithTracks,
     variables,
   })) as ApolloQueryResult<GetAlbumQuery>;
   const item = result.data?.getAlbum as Album;
@@ -18,18 +23,24 @@ const doGetAlbum = async (variables: object) => {
   return item || null;
 };
 
-export const useGetAlbum = (id: string) => {
-  console.log(`useGetAlbum("${id}")`);
-  const _id = toDbId("album", id);
-  const pk = { id: _id, sk: _id };
-  const { loading, error, item: album } = useGet<Album>(doGetAlbum, pk);
-
-  console.log({ loading, error, album });
-  return {
+const useGetAlbum = (id: AlbumId): UseGetAlbumReturn => {
+  console.log(`[hooks/usegetalbum.ts] useGetAlbum("${id}")`);
+  const dbId = toDbId("album", id);
+  const pk: GetAlbumQueryVariables = { id: dbId };
+  const {
     loading,
     error,
-    album,
-  };
+    item: album,
+  } = useGet<Album, GetAlbumQueryVariables>(doGetAlbum, pk);
+
+  const NOT_FOUND = `Album '${dbId}' not found`;
+  if (error?.message === NOT_FOUND) {
+    return { loading, error: null, album: null };
+  }
+
+  const result = { loading, error, album };
+  console.log("[hooks/usegetalbum.ts] useGetAlbum.return:", result);
+  return result;
 };
 
 export default useGetAlbum;

@@ -1,0 +1,11 @@
+section.auth {
+  padding-top: 1rem;
+}
+
+section.auth input {
+  border-radius: .5rem;
+  border-width: 2px;
+  height: 2rem;
+  margin-top: .5rem;
+  width: 100%;
+}
