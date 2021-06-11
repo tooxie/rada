@@ -95,7 +95,7 @@ export const createAlbum = gql`
         albumId
         title
         lengthInSeconds
-        number
+        ordinal
       }
     }
   }
@@ -117,7 +117,7 @@ export const updateAlbum = gql`
         albumId
         title
         lengthInSeconds
-        number
+        ordinal
       }
     }
   }
@@ -139,7 +139,7 @@ export const deleteAlbum = gql`
         albumId
         title
         lengthInSeconds
-        number
+        ordinal
       }
     }
   }
@@ -161,7 +161,7 @@ export const updateOrCreateAlbum = gql`
         albumId
         title
         lengthInSeconds
-        number
+        ordinal
       }
     }
   }
@@ -173,7 +173,7 @@ export const createTrack = gql`
       albumId
       title
       lengthInSeconds
-      number
+      ordinal
     }
   }
 `;
@@ -184,7 +184,7 @@ export const updateTrack = gql`
       albumId
       title
       lengthInSeconds
-      number
+      ordinal
     }
   }
 `;
@@ -195,7 +195,7 @@ export const deleteTrack = gql`
       albumId
       title
       lengthInSeconds
-      number
+      ordinal
     }
   }
 `;
@@ -206,7 +206,7 @@ export const updateOrCreateTrack = gql`
       albumId
       title
       lengthInSeconds
-      number
+      ordinal
     }
   }
 `;

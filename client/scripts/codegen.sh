@@ -1,8 +1,6 @@
 #!/bin/bash
 set -euf -o pipefail
 
-cd "`dirname "${BASH_SOURCE[0]}"`/.."
-
 transform () {
   FILE="$1"
   HEADER='import gql from "graphql-tag";'

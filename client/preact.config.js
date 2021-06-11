@@ -1,6 +1,3 @@
-import QRcodeWebpackPlugin from "./webpack/qrcode-webpack-plugin";
-import vConsoleWebpackPlugin from "./webpack/vconsole-webpack-plugin";
-
 export default {
   /**
    * Function that mutates the original webpack config.
@@ -13,14 +10,17 @@ export default {
    **/
   webpack(config, env, helpers, options) {
     if (config.mode === "development") {
+      var QRcodeWebpackPlugin = require("./webpack/qrcode-webpack-plugin");
       config.devtool = "cheap-module-eval-source-map";
       config.plugins.push(new QRcodeWebpackPlugin());
+
+      // var vConsoleWebpackPlugin = require("./webpack/vconsole-webpack-plugin");
       // config.plugins.push(new vConsoleWebpackPlugin());
     }
 
     if (config.mode === "production") {
-      let { rule } = helpers.getLoadersByName(config, "babel-loader")[0];
-      let babelConfig = rule.options;
+      var { rule } = helpers.getLoadersByName(config, "babel-loader")[0];
+      var babelConfig = rule.options;
       babelConfig.plugins.push(["babel-plugin-graphql-tag", { strip: true }]);
     }
   },

@@ -19,7 +19,10 @@ resource "null_resource" "codegen_exec" {
   }
 
   provisioner "local-exec" {
-    command = "./../client/scripts/codegen.sh"
+    command = join(" ", [
+      "cd ../client;",
+      "npm run codegen",
+    ])
   }
 
   depends_on = [
@@ -39,12 +42,16 @@ resource "null_resource" "codegen_config" {
 
   provisioner "local-exec" {
     when = destroy
-    command = "./../client/scripts/destroy.sh"
+    command = join(" ", [
+      "cd ../client;",
+      "npm run codegen:destroy",
+    ])
   }
 
   provisioner "local-exec" {
     command = join(" ", [
-      "./../client/scripts/config.sh",
+      "cd ../client;",
+      "npm run codegen:config --",
       "--api-id", aws_appsync_graphql_api.gawshi.id,
       "--region", var.region,
       "--api-key", aws_appsync_api_key.gawshi.key,

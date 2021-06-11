@@ -217,7 +217,7 @@ type Track {
   albumId: ID!
   title: String
   lengthInSeconds: Int
-  number: Int
+  ordinal: Int
 }
 
 type TrackConnection {
@@ -228,12 +228,12 @@ input CreateTrackInput {
   albumId: ID!
   title: String!
   lengthInSeconds: Int
-  number: Int
+  ordinal: Int
 }
 
 input UpdateTrackInput {
   albumId: ID!
   title: String!
   lengthInSeconds: Int
-  number: Int
+  ordinal: Int
 }

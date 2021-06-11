@@ -20,7 +20,7 @@ export const getAlbum = gql`
         albumId
         title
         lengthInSeconds
-        number
+        ordinal
       }
     }
   }
@@ -90,7 +90,7 @@ export const getTrack = gql`
       albumId
       title
       lengthInSeconds
-      number
+      ordinal
     }
   }
 `;
@@ -102,7 +102,7 @@ export const listTracks = gql`
         albumId
         title
         lengthInSeconds
-        number
+        ordinal
       }
     }
   }

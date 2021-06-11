@@ -1,8 +1,6 @@
 #!/bin/bash
 set -ef -o pipefail
 
-cd "`dirname "${BASH_SOURCE[0]}"`/.."
-
 while [ "$1" != "" ]; do
   case $1 in
     --api-id ) shift
@@ -54,16 +52,21 @@ AMPLIFY_CONFIG="projects:
         framework: react
         maxDepth: 2
 "
-echo -en "$AMPLIFY_CONFIG" > "$AMPLIFY_CONFIG_FILE"
+echo "$AMPLIFY_CONFIG" > "$AMPLIFY_CONFIG_FILE"
+
+tobase64 () {
+  echo -n "$1" | base64 | tr -d '\n'
+}
 
 GRAPHQL_CONFIG_FILE="./src/graphql/config.ts"
 GRAPHQL_CONFIG="export default {
-  AuthMode: \"`echo -n $AUTH_MODE | base64`\",
-  ApiKey: \"`echo -n $API_KEY | base64`\",
-  ApiUrl: \"`echo -n $API_URL | base64`\",
-  Region: \"`echo -n $REGION | base64`\",
+  AuthMode: \"`tobase64 $AUTH_MODE`\",
+  ApiKey: \"`tobase64 $API_KEY`\",
+  ApiUrl: \"`tobase64 $API_URL`\",
+  Region: \"`tobase64 $REGION`\",
 }
 "
-echo -en "$GRAPHQL_CONFIG" > "$GRAPHQL_CONFIG_FILE"
+echo -e "$GRAPHQL_CONFIG" > "$GRAPHQL_CONFIG_FILE"
+
 
 # TODO: Load fixtures here

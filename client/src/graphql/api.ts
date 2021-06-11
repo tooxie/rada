@@ -39,7 +39,7 @@ export type Track = {
   albumId?: string;
   title?: string | null;
   lengthInSeconds?: number | null;
-  number?: number | null;
+  ordinal?: number | null;
 };
 
 export type UpdateArtistInput = {
@@ -57,14 +57,14 @@ export type CreateTrackInput = {
   albumId: string;
   title: string;
   lengthInSeconds?: number | null;
-  number?: number | null;
+  ordinal?: number | null;
 };
 
 export type UpdateTrackInput = {
   albumId: string;
   title: string;
   lengthInSeconds?: number | null;
-  number?: number | null;
+  ordinal?: number | null;
 };
 
 export type CreatePlaylistInput = {
@@ -257,7 +257,7 @@ export type CreateAlbumMutation = {
       albumId: string;
       title?: string | null;
       lengthInSeconds?: number | null;
-      number?: number | null;
+      ordinal?: number | null;
     }> | null;
   } | null;
 };
@@ -286,7 +286,7 @@ export type UpdateAlbumMutation = {
       albumId: string;
       title?: string | null;
       lengthInSeconds?: number | null;
-      number?: number | null;
+      ordinal?: number | null;
     }> | null;
   } | null;
 };
@@ -314,7 +314,7 @@ export type DeleteAlbumMutation = {
       albumId: string;
       title?: string | null;
       lengthInSeconds?: number | null;
-      number?: number | null;
+      ordinal?: number | null;
     }> | null;
   } | null;
 };
@@ -342,7 +342,7 @@ export type UpdateOrCreateAlbumMutation = {
       albumId: string;
       title?: string | null;
       lengthInSeconds?: number | null;
-      number?: number | null;
+      ordinal?: number | null;
     }> | null;
   } | null;
 };
@@ -358,7 +358,7 @@ export type CreateTrackMutation = {
     albumId: string;
     title?: string | null;
     lengthInSeconds?: number | null;
-    number?: number | null;
+    ordinal?: number | null;
   } | null;
 };
 
@@ -374,7 +374,7 @@ export type UpdateTrackMutation = {
     albumId: string;
     title?: string | null;
     lengthInSeconds?: number | null;
-    number?: number | null;
+    ordinal?: number | null;
   } | null;
 };
 
@@ -389,7 +389,7 @@ export type DeleteTrackMutation = {
     albumId: string;
     title?: string | null;
     lengthInSeconds?: number | null;
-    number?: number | null;
+    ordinal?: number | null;
   } | null;
 };
 
@@ -404,7 +404,7 @@ export type UpdateOrCreateTrackMutation = {
     albumId: string;
     title?: string | null;
     lengthInSeconds?: number | null;
-    number?: number | null;
+    ordinal?: number | null;
   } | null;
 };
 
@@ -471,7 +471,7 @@ export type GetAlbumQuery = {
       albumId: string;
       title?: string | null;
       lengthInSeconds?: number | null;
-      number?: number | null;
+      ordinal?: number | null;
     }> | null;
   } | null;
 };
@@ -569,7 +569,7 @@ export type GetTrackQuery = {
     albumId: string;
     title?: string | null;
     lengthInSeconds?: number | null;
-    number?: number | null;
+    ordinal?: number | null;
   } | null;
 };
 
@@ -586,7 +586,7 @@ export type ListTracksQuery = {
       albumId: string;
       title?: string | null;
       lengthInSeconds?: number | null;
-      number?: number | null;
+      ordinal?: number | null;
     }> | null;
   } | null;
 };

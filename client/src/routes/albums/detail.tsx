@@ -4,7 +4,7 @@ import Options from "../../components/options";
 import { DetailProps } from "../../components/layout/detail/types";
 import Spinner from "../../components/spinner";
 import { Track } from "../../graphql/api";
-import compareNumber from "../../utils/comparenumber";
+import compareOrdinal from "../../utils/compareordinal";
 
 import useGetAlbum from "./hooks/usegetalbum";
 import style from "./detail.css";
@@ -22,7 +22,7 @@ const AlbumDetail: FunctionComponent<DetailProps> = ({ id }) => {
     return error ? <p>{error.message}</p> : <p>Album not found</p>;
   }
 
-  const tracks = (album.tracks || []).map((el) => el).sort(compareNumber);
+  const tracks = (album.tracks || []).map((el) => el).sort(compareOrdinal);
   console.log(tracks);
 
   // TODO: Problems:
@@ -49,7 +49,7 @@ const AlbumDetail: FunctionComponent<DetailProps> = ({ id }) => {
 
 const renderTrack = (track: Track) => (
   <div class={style.track}>
-    <div class={style.number}>{track.number}</div>
+    <div class={style.ordinal}>{track.ordinal}</div>
     <div class={style.title}>
       <div>{track.title}</div>
       <div class={style.length}>{toMinutes(track.lengthInSeconds)}</div>

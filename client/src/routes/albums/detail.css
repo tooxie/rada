@@ -33,7 +33,7 @@
   width: 2rem;
 }
 
-.tracklist .track .number {
+.tracklist .track .ordinal {
   width: 2rem;
   height: 2rem;
   border-radius: 1rem;
