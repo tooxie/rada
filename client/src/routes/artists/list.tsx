@@ -24,7 +24,7 @@ const ArtistThumb: FunctionComponent<Artist> = (props) => {
   );
 };
 
-const ArtistList: FunctionComponent = () => {
+const ArtistList = () => {
   console.log(`ArtistList (${typeof ArtistList})`);
   const { loading, error, artists } = useListArtists();
   console.log("ArtistList.useListArtists:");
@@ -35,7 +35,7 @@ const ArtistList: FunctionComponent = () => {
     return <Spinner />;
   } else {
     if (error) return <p>{error.message}</p>;
-    if (!artists || artists.length < 1) return <p>No Artists</p>;
+    if (!artists || artists.length < 1) return <p class={style.empty}>No Artists</p>;
   }
 
   const _artists = artists.map((el) => el).sort(compareName);

@@ -4,21 +4,25 @@ schema {
 }
 
 type Mutation {
-  createAlbum(input: CreateAlbumInput!): Album
-  updateAlbum(id: ID!, input: UpdateAlbumInput!): Album
-  deleteAlbum(id: ID!): Album
-
   createArtist(input: CreateArtistInput!): Artist
   updateArtist(id: ID!, input: UpdateArtistInput!): Artist
   deleteArtist(id: ID!): Artist
+  deleteCascadeArtist(id: ID!): Artist
+  updateOrCreateArtist(input: CreateArtistInput!): Artist
 
-  createPlaylist(input: CreatePlaylistInput!): Playlist
-  updatePlaylist(id: ID!, input: UpdatePlaylistInput!): Playlist
-  deletePlaylist(id: ID!): Playlist
+  createAlbum(input: CreateAlbumInput!): Album
+  updateAlbum(id: ID!, input: UpdateAlbumInput!): Album
+  deleteAlbum(id: ID!): Album
+  updateOrCreateAlbum(input: CreateAlbumInput!): Album
 
   createTrack(input: CreateTrackInput!): Track
   updateTrack(id: ID!, input: UpdateTrackInput!): Track
   deleteTrack(id: ID!): Track
+  updateOrCreateTrack(input: CreateTrackInput!): Track
+
+  createPlaylist(input: CreatePlaylistInput!): Playlist
+  updatePlaylist(id: ID!, input: UpdatePlaylistInput!): Playlist
+  deletePlaylist(id: ID!): Playlist
 }
 
 type Query {
@@ -36,13 +40,6 @@ type Query {
 }
 
 type Subscription {
-  onCreateAlbum(id: ID, name: String): Album
-    @aws_subscribe(mutations: ["createAlbum"])
-  onUpdateAlbum(id: ID, name: String): Album
-    @aws_subscribe(mutations: ["updateAlbum"])
-  onDeleteAlbum(id: ID, name: String): Album
-    @aws_subscribe(mutations: ["deleteAlbum"])
-
   onCreateArtist(id: ID, name: String): Artist
     @aws_subscribe(mutations: ["createArtist"])
   onUpdateArtist(id: ID, name: String): Artist
@@ -50,12 +47,12 @@ type Subscription {
   onDeleteArtist(id: ID, name: String): Artist
     @aws_subscribe(mutations: ["deleteArtist"])
 
-  onCreatePlaylist(id: ID, name: String): Playlist
-    @aws_subscribe(mutations: ["createPlaylist"])
-  onUpdatePlaylist(id: ID, name: String): Playlist
-    @aws_subscribe(mutations: ["updatePlaylist"])
-  onDeletePlaylist(id: ID, name: String): Playlist
-    @aws_subscribe(mutations: ["deletePlaylist"])
+  onCreateAlbum(id: ID, name: String): Album
+    @aws_subscribe(mutations: ["createAlbum"])
+  onUpdateAlbum(id: ID, name: String): Album
+    @aws_subscribe(mutations: ["updateAlbum"])
+  onDeleteAlbum(id: ID, name: String): Album
+    @aws_subscribe(mutations: ["deleteAlbum"])
 
   onCreateTrack(id: ID, title: String): Track
     @aws_subscribe(mutations: ["createTrack"])
@@ -63,6 +60,13 @@ type Subscription {
     @aws_subscribe(mutations: ["updateTrack"])
   onDeleteTrack(id: ID, title: String): Track
     @aws_subscribe(mutations: ["deleteTrack"])
+
+  onCreatePlaylist(id: ID, name: String): Playlist
+    @aws_subscribe(mutations: ["createPlaylist"])
+  onUpdatePlaylist(id: ID, name: String): Playlist
+    @aws_subscribe(mutations: ["updatePlaylist"])
+  onDeletePlaylist(id: ID, name: String): Playlist
+    @aws_subscribe(mutations: ["deletePlaylist"])
 }
 
 input TableBooleanFilterInput {
@@ -139,6 +143,7 @@ type ArtistConnection {
 input CreateArtistInput {
   name: String!
   imageUrl: AWSURL
+  albums: [CreateAlbumInput]
 }
 
 input UpdateArtistInput {
@@ -157,7 +162,7 @@ type Album {
   name: String
   imageUrl: AWSURL
   year: Int
-  tracks: TrackConnection
+  tracks: [Track!]
 }
 
 type AlbumConnection {
@@ -212,6 +217,7 @@ type Track {
   albumId: ID!
   title: String
   lengthInSeconds: Int
+  number: Int
 }
 
 type TrackConnection {
@@ -222,10 +228,12 @@ input CreateTrackInput {
   albumId: ID!
   title: String!
   lengthInSeconds: Int
+  number: Int
 }
 
 input UpdateTrackInput {
   albumId: ID!
   title: String!
   lengthInSeconds: Int
+  number: Int
 }

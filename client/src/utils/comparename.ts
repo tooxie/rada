@@ -2,9 +2,15 @@ interface INamed {
   name?: string | null;
 }
 
+const getName = <T extends INamed>(o: T) => {
+  const n = (o.name || "").trim().toLowerCase();
+
+  return n.startsWith("the ") ? n.substr(4) : n;
+};
+
 export default <T extends INamed>(a: T, b: T): number => {
-  const an = (a.name || "").toLowerCase();
-  const bn = (b.name || "").toLowerCase();
+  const an = getName(a);
+  const bn = getName(b);
 
   if (!an) return bn ? -1 : 0;
   if (!bn) return an ? 1 : 0;

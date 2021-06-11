@@ -1,5 +1,4 @@
 import { h } from "preact";
-import { lazy } from "preact/compat";
 import { Route, Router } from "preact-router";
 
 import Redirect from "./redirect";
@@ -8,16 +7,16 @@ import Detail from "./layout/detail";
 
 import NotFoundPage from "../routes/notfound";
 
-const Album = lazy(() => import("../routes/albums/detail"));
-const AlbumHeader = lazy(() => import("../routes/albums/header"));
-const AlbumList = lazy(() => import("../routes/albums/list"));
+import Album from "../routes/albums/detail";
+import AlbumHeader from "../routes/albums/header";
+import AlbumList from "../routes/albums/list";
 
-const Artist = lazy(() => import("../routes/artists/detail"));
-const ArtistHeader = lazy(() => import("../routes/artists/header"));
-const ArtistList = lazy(() => import("../routes/artists/list"));
+import Artist from "../routes/artists/detail";
+import ArtistHeader from "../routes/artists/header";
+import ArtistList from "../routes/artists/list";
 
-const Playlist = lazy(() => import("../routes/playlists/detail"));
-const PlaylistList = lazy(() => import("../routes/playlists/list"));
+import Playlist from "../routes/playlists/detail";
+import PlaylistList from "../routes/playlists/list";
 
 export default () => {
   const ArtistCollection = Collection("Artist", ArtistList);

@@ -1,4 +1,4 @@
-#set( $albumId = "${entity}:" + $util.autoId() )
+#set( $albumId = "album:" + $util.autoId() )
 #set( $artists = [] )
 #set( $items = [] )
 #set( $row = {} )
@@ -19,6 +19,6 @@
   "version": "2017-02-28",
   "operation": "BatchPutItem",
   "tables": {
-    "${table_name}": $util.toJson($items)
+    "GawshiArtistsAlbums_7lwzlw": $util.toJson($items)
   }
 }

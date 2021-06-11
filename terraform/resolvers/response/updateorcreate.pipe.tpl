@@ -4,4 +4,4 @@
 #end
 
 ## Pass back the result from DynamoDB. **
-$util.toJson($context.result)
+$util.toJson($context.prev.result)

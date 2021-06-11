@@ -1,0 +1,10 @@
+.play {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.play img {
+  width: 75vw;
+  opacity: 0.3;
+}

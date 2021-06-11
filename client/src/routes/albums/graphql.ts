@@ -1,6 +1,6 @@
 import { ApolloQueryResult } from "@apollo/client";
 
-import client from "../../graphql/client";
+import getClient from "../../graphql/client";
 import { Album, ListAlbumsQuery, GetAlbumQuery } from "../../graphql/api";
 import {
   listAlbums as listAlbumsQuery,
@@ -8,6 +8,7 @@ import {
 } from "../../graphql/queries";
 
 export const listAlbums = async (): Promise<Album[]> => {
+  const client = await getClient();
   const result = (await client.query({
     query: listAlbumsQuery,
   })) as ApolloQueryResult<ListAlbumsQuery>;
@@ -17,6 +18,7 @@ export const listAlbums = async (): Promise<Album[]> => {
 };
 
 export const getAlbum = async (variables: object): Promise<Album | null> => {
+  const client = await getClient();
   const result = (await client.query({
     query: getAlbumQuery,
     variables,

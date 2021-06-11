@@ -1,3 +1,7 @@
+.empty {
+  padding-top: 1rem;
+}
+
 .artistgrid {
   column-count: 2;
   min-height: 100%;

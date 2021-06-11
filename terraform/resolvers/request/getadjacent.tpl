@@ -2,7 +2,7 @@
   "version": "2017-02-28",
   "operation": "GetItem",
   "key": {
-    "id": $util.dynamodb.toDynamoDBJson($ctx.args.id),
-    "sk": $util.dynamodb.toDynamoDBJson($ctx.args.id),
+    "id": $util.dynamodb.toDynamoDBJson($context.arguments.id),
+    "sk": $util.dynamodb.toDynamoDBJson($context.arguments.id),
   }
 }

@@ -1,13 +1,14 @@
 import { ApolloQueryResult } from "@apollo/client";
 
 import { Album } from "../../../graphql/api";
-import client from "../../../graphql/client";
+import getClient from "../../../graphql/client";
 import useGet from "../../../hooks/useget";
 import { GetAlbumQuery } from "../../../graphql/api";
 import { getAlbum } from "../../../graphql/queries";
 import { toDbId } from "../../../utils/id";
 
 const doGetAlbum = async (variables: object) => {
+  const client = await getClient();
   const result = (await client.query({
     query: getAlbum,
     variables,

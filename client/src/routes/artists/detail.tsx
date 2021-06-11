@@ -1,19 +1,20 @@
 import { FunctionComponent, h } from "preact";
 import { Link } from "preact-router";
 
+import Options from "../../components/options";
 import { DetailProps } from "../../components/layout/detail/types";
 import Spinner from "../../components/spinner";
 import compareYear from "../../utils/compareyear";
 import { urlize } from "../../utils/id";
+import { Album } from "../../graphql/api";
 
 import style from "./detail.css";
 import useGetArtist from "./hooks/usegetartist";
-import useGetAlbumsForArtist from "./hooks/usegetalbumsforartist";
 
-// https://thenounproject.com/term/cd-cover/2032601/
-const DEFAULT_ALBUM_COVER = "/assets/img/default-album-cover.svg";
-const ArtistDetail: FunctionComponent<DetailProps> = ({ id }) => {
-  const { loading, error, artist } = useGetArtist(id);
+// Credit: https://www.reddit.com/r/pics/comments/1okjo8/youve_come_to_the_wrong_neighborhood/
+const DEFAULT_ALBUM_COVER = "/assets/img/default-album-cover.jpeg";
+const ArtistDetail: FunctionComponent<DetailProps> = (props) => {
+  const { loading, error, artist } = useGetArtist(props.id);
 
   if (loading) {
     return (
@@ -21,21 +22,26 @@ const ArtistDetail: FunctionComponent<DetailProps> = ({ id }) => {
         <Spinner />
       </div>
     );
-  }
-  if (!artist) {
-    return error ? <p>{error.message}</p> : <p>Artist not found</p>;
+  } else {
+    if (!artist) {
+      return <p class={style.error}>{error ? error.message : "Artist not found"}</p>;
+    }
   }
 
   const albums = (artist.albums || []).map((el) => el).sort(compareYear);
+  const bgImg = (a: Album) => `url("${a.imageUrl || DEFAULT_ALBUM_COVER}")`;
 
   return (
-    <div class={style.artist} key={id}>
-      <h1 class={style.name}>{artist.name}</h1>
+    <div key={`detail-${props.id}`}>
+      <div class={style.name}>
+        <h1>{artist.name}</h1>
+        <Options />
+      </div>
       <div class={style.albums}>
         {albums.map((album) => (
           <div class={style.album} key={album.id}>
             <Link href={`/album/${urlize(album.id)}`}>
-              <img src={album.imageUrl || DEFAULT_ALBUM_COVER} />
+              <div class={style.thumb} style={{ backgroundImage: bgImg(album) }} />
               <h2>{album.name}</h2>
               <h3 class={style.year}>{album.year}</h3>
             </Link>
@@ -44,13 +50,6 @@ const ArtistDetail: FunctionComponent<DetailProps> = ({ id }) => {
       </div>
     </div>
   );
-};
-
-const getAlbums = (artistId: string) => {
-  console.log(`getAlbums(${JSON.stringify(artistId)})`);
-  const { loading, error, albums } = useGetAlbumsForArtist(artistId);
-
-  return { loading, error, albums };
 };
 
 export default ArtistDetail;

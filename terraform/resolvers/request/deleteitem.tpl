@@ -2,6 +2,7 @@
   "version": "2017-02-28",
   "operation": "DeleteItem",
   "key": {
-    "id": { "S": "${ctx.args.id}" }
+    "id": { "S": "${context.arguments.id}" },
+    "sk": { "S": "${context.arguments.id}" }
   }
 }

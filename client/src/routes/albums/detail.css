@@ -6,6 +6,7 @@
   display: flex;
   align-items: center;
   padding: .5rem 0;
+  font-weight: bold;
 }
 
 .name h1 {
@@ -17,4 +18,38 @@
 }
 
 .tracklist {
+  margin-top: 1rem;
+  display: grid;
+  row-gap: .5rem;
+}
+
+.tracklist .track {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.tracklist .track img {
+  width: 2rem;
+}
+
+.tracklist .track .number {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  background-image: url("/assets/img/play.png");
+  background-size: cover;
+}
+
+.tracklist .track .title {
+  flex-grow: 1;
+  padding: 0 .5rem;
+}
+
+.tracklist .track .length {
+  font-size: 0.8rem;
 }

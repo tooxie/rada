@@ -7,7 +7,7 @@ import Router from "./router";
 const App: FunctionComponent = () => {
   return (
     <IntlProvider definition={definition}>
-      <div id="preact_root">
+      <div id="preact_root" key="preact_root">
         <Router key="router" />
       </div>
     </IntlProvider>

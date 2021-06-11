@@ -23,7 +23,8 @@ resource "null_resource" "codegen_exec" {
   }
 
   depends_on = [
-    null_resource.codegen_config
+    null_resource.codegen_config,
+    aws_appsync_graphql_api.gawshi,
   ]
 }
 
@@ -97,7 +98,7 @@ resource "aws_appsync_resolver" "list_albums" {
 resource "aws_appsync_function" "put_album" {
   api_id = aws_appsync_graphql_api.gawshi.id
   data_source = aws_appsync_datasource.gawshi_albums.name
-  name = "createAlbum"
+  name = "putAlbum"
 
   request_mapping_template = templatefile("./resolvers/request/putalbum.tpl", {
     table_name: aws_dynamodb_table.artists_albums.name,
@@ -142,6 +143,44 @@ resource "aws_appsync_resolver" "update_album" {
 
   request_template = file("./resolvers/request/updateitem.tpl")
   response_template = file("./resolvers/response/getitem.tpl")
+}
+
+resource "aws_appsync_function" "get_album_by_name" {
+  api_id = aws_appsync_graphql_api.gawshi.id
+  data_source = aws_appsync_datasource.gawshi_albums.name
+  name = "getAlbumByName"
+
+  request_mapping_template = templatefile("./resolvers/request/getbyname.tpl", {
+    entity: "album",
+  })
+  response_mapping_template = file("./resolvers/response/getbyname.tpl")
+}
+
+resource "aws_appsync_function" "update_album" {
+  api_id = aws_appsync_graphql_api.gawshi.id
+  data_source = aws_appsync_datasource.gawshi_albums.name
+  name = "updateAlbum"
+
+  request_mapping_template = file("./resolvers/request/updateitem.tpl")
+  response_mapping_template = file("./resolvers/response/getitem.tpl")
+}
+
+resource "aws_appsync_resolver" "update_or_create_album" {
+  api_id = aws_appsync_graphql_api.gawshi.id
+  type = "Mutation"
+  field = "updateOrCreateAlbum"
+  kind = "PIPELINE"
+
+  request_template  = file("./resolvers/request/updateorcreate.pipe.tpl")
+  response_template = file("./resolvers/response/updateorcreate.pipe.tpl")
+
+  pipeline_config {
+    functions = [
+      aws_appsync_function.get_album_by_name.function_id,
+      aws_appsync_function.put_album.function_id,
+      aws_appsync_function.populate_album.function_id,
+    ]
+  }
 }
 
 resource "aws_appsync_resolver" "delete_album" {
@@ -243,6 +282,55 @@ resource "aws_appsync_resolver" "create_artist" {
   response_template = file("./resolvers/response/getitem.tpl")
 }
 
+resource "aws_appsync_function" "get_artist_by_name" {
+  api_id = aws_appsync_graphql_api.gawshi.id
+  data_source = aws_appsync_datasource.gawshi_artists.name
+  name = "getArtistByName"
+
+  request_mapping_template = templatefile("./resolvers/request/getbyname.tpl", {
+    entity: "artist",
+  })
+  response_mapping_template = file("./resolvers/response/getbyname.tpl")
+}
+
+resource "aws_appsync_function" "create_artist" {
+  api_id = aws_appsync_graphql_api.gawshi.id
+  data_source = aws_appsync_datasource.gawshi_artists.name
+  name = "createArtist"
+
+  request_mapping_template = templatefile("./resolvers/request/putadjacent.tpl", {
+    entity: "artist",
+  })
+  response_mapping_template = file("./resolvers/response/getitem.tpl")
+}
+
+resource "aws_appsync_function" "update_artist" {
+  api_id = aws_appsync_graphql_api.gawshi.id
+  data_source = aws_appsync_datasource.gawshi_artists.name
+  name = "updateArtist"
+
+  request_mapping_template = file("./resolvers/request/updateitem.tpl")
+  response_mapping_template = file("./resolvers/response/getitem.tpl")
+}
+
+resource "aws_appsync_resolver" "update_or_create_artist" {
+  api_id = aws_appsync_graphql_api.gawshi.id
+  type = "Mutation"
+  field = "updateOrCreateArtist"
+  kind = "PIPELINE"
+
+  request_template  = file("./resolvers/request/updateorcreate.pipe.tpl")
+  response_template = file("./resolvers/response/updateorcreate.pipe.tpl")
+
+  pipeline_config {
+    functions = [
+      aws_appsync_function.get_artist_by_name.function_id,
+      aws_appsync_function.create_artist.function_id,
+      aws_appsync_function.update_artist.function_id,
+    ]
+  }
+}
+
 resource "aws_appsync_resolver" "update_artist" {
   api_id = aws_appsync_graphql_api.gawshi.id
   type = "Mutation"
@@ -301,7 +389,9 @@ resource "aws_appsync_resolver" "create_playlist" {
   field = "createPlaylist"
   data_source = aws_appsync_datasource.gawshi_playlists.name
 
-  request_template = file("./resolvers/request/putitem.tpl")
+  request_template = templatefile("./resolvers/request/putitem.tpl", {
+    entity: "playlist",
+  })
   response_template = file("./resolvers/response/getitem.tpl")
 }
 
@@ -363,7 +453,9 @@ resource "aws_appsync_resolver" "create_track" {
   field = "createTrack"
   data_source = aws_appsync_datasource.gawshi_tracks.name
 
-  request_template = file("./resolvers/request/putitem.tpl")
+  request_template = templatefile("./resolvers/request/putitem.tpl", {
+    entity: "track",
+  })
   response_template = file("./resolvers/response/getitem.tpl")
 }
 
@@ -393,8 +485,45 @@ resource "aws_appsync_resolver" "track_connection" {
   field = "tracks"
   data_source = aws_appsync_datasource.gawshi_tracks.name
 
-  request_template = file("./resolvers/request/connection.tpl")
-  response_template = file("./resolvers/response/connection.tpl")
+  request_template = templatefile("./resolvers/request/connection.tpl", {
+    entity: "track",
+  })
+  response_template = file("./resolvers/response/trackconnection.tpl")
+}
+
+resource "aws_appsync_resolver" "update_or_create_track" {
+  api_id = aws_appsync_graphql_api.gawshi.id
+  type = "Mutation"
+  field = "updateOrCreateTrack"
+  kind = "PIPELINE"
+
+  request_template  = file("./resolvers/request/updateorcreate.pipe.tpl")
+  response_template = file("./resolvers/response/updateorcreate.pipe.tpl")
+
+  pipeline_config {
+    functions = [
+      aws_appsync_function.get_track_by_title.function_id,
+      aws_appsync_function.update_or_create_track.function_id,
+    ]
+  }
+}
+
+resource "aws_appsync_function" "get_track_by_title" {
+  api_id = aws_appsync_graphql_api.gawshi.id
+  data_source = aws_appsync_datasource.gawshi_tracks.name
+  name = "getTrackByTitle"
+
+  request_mapping_template = file("./resolvers/request/gettrackbytitle.tpl")
+  response_mapping_template = file("./resolvers/response/getbyname.tpl")
+}
+
+resource "aws_appsync_function" "update_or_create_track" {
+  api_id = aws_appsync_graphql_api.gawshi.id
+  data_source = aws_appsync_datasource.gawshi_tracks.name
+  name = "updateOrCreateTrack"
+
+  request_mapping_template = file("./resolvers/request/updateorcreatetrack.tpl")
+  response_mapping_template = file("./resolvers/response/getitem.tpl")
 }
 
 // --- Outputs

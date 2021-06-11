@@ -1,9 +1,17 @@
+#if(!$util.isNull($context.prev.result.id))
+  #set( $id = $context.prev.result.id )
+  #set( $sk = $context.prev.result.sk )
+#else
+  #set( $id = $context.arguments.id )
+  #set( $sk = $id )
+#end
+
 {
   "version": "2017-02-28",
   "operation": "UpdateItem",
   "key": {
-    "id": $util.dynamodb.toDynamoDBJson($ctx.args.id)
-    "sk": $util.dynamodb.toDynamoDBJson($ctx.args.id)
+    "id": $util.dynamodb.toDynamoDBJson($id),
+    "sk": $util.dynamodb.toDynamoDBJson($sk)
   },
 
   ## Set up some space to keep track of things we're updating **
@@ -13,7 +21,7 @@
   #set( $expAdd = {} )
   #set( $expRemove = [] )
 
-  #foreach( $entry in $ctx.args.input.entrySet() )
+  #foreach( $entry in $context.arguments.input.entrySet() )
     #if( (!$entry.value) && ("$!{entry.value}" == "") )
       ## If the argument is set to "null", then remove that attribute from the item in DynamoDB **
 

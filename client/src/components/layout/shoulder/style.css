@@ -3,14 +3,13 @@
   min-height: 4rem;
   padding: 0 1em;
   position: relative;
+  top: -3em;
 }
 
 .collection {
   background-color: white;
-  top: -3em;
 }
 
 .detail {
   background-color: rgba(255, 255, 255, 0.8);
-  top: -3em;
 }

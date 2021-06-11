@@ -15,6 +15,13 @@ export const getAlbum = gql`
       name
       imageUrl
       year
+      tracks {
+        id
+        albumId
+        title
+        lengthInSeconds
+        number
+      }
     }
   }
 `;
@@ -83,6 +90,7 @@ export const getTrack = gql`
       albumId
       title
       lengthInSeconds
+      number
     }
   }
 `;
@@ -94,6 +102,7 @@ export const listTracks = gql`
         albumId
         title
         lengthInSeconds
+        number
       }
     }
   }

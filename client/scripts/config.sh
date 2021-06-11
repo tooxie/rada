@@ -65,3 +65,5 @@ GRAPHQL_CONFIG="export default {
 }
 "
 echo -en "$GRAPHQL_CONFIG" > "$GRAPHQL_CONFIG_FILE"
+
+# TODO: Load fixtures here

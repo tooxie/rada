@@ -17,9 +17,11 @@ const Header: FunctionComponent<DetailProps> = ({ id }) => {
   if (error) console.error(error);
 
   return (
-    <header key={id} class={style.header} style={{ backgroundImage }}>
-      <Navigation />
-    </header>
+    <div class={style.gradient}>
+      <header key={`header-${id}`} class={style.header} style={{ backgroundImage }}>
+        <Navigation />
+      </header>
+    </div>
   );
 };
 

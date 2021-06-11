@@ -2,21 +2,17 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
+export type CreateArtistInput = {
+  name: string;
+  imageUrl?: string | null;
+  albums?: Array<CreateAlbumInput | null> | null;
+};
+
 export type CreateAlbumInput = {
   artists?: Array<string> | null;
   name: string;
   imageUrl?: string | null;
   year?: number | null;
-};
-
-export type Album = {
-  __typename: "Album";
-  id?: string;
-  artists?: Array<Artist> | null;
-  name?: string | null;
-  imageUrl?: string | null;
-  year?: number | null;
-  tracks?: TrackConnection;
 };
 
 export type Artist = {
@@ -27,9 +23,14 @@ export type Artist = {
   albums?: Array<Album> | null;
 };
 
-export type TrackConnection = {
-  __typename: "TrackConnection";
-  items?: Array<Track> | null;
+export type Album = {
+  __typename: "Album";
+  id?: string;
+  artists?: Array<Artist> | null;
+  name?: string | null;
+  imageUrl?: string | null;
+  year?: number | null;
+  tracks?: Array<Track> | null;
 };
 
 export type Track = {
@@ -38,6 +39,12 @@ export type Track = {
   albumId?: string;
   title?: string | null;
   lengthInSeconds?: number | null;
+  number?: number | null;
+};
+
+export type UpdateArtistInput = {
+  name?: string | null;
+  imageUrl?: string | null;
 };
 
 export type UpdateAlbumInput = {
@@ -46,14 +53,18 @@ export type UpdateAlbumInput = {
   year?: number | null;
 };
 
-export type CreateArtistInput = {
-  name: string;
-  imageUrl?: string | null;
+export type CreateTrackInput = {
+  albumId: string;
+  title: string;
+  lengthInSeconds?: number | null;
+  number?: number | null;
 };
 
-export type UpdateArtistInput = {
-  name?: string | null;
-  imageUrl?: string | null;
+export type UpdateTrackInput = {
+  albumId: string;
+  title: string;
+  lengthInSeconds?: number | null;
+  number?: number | null;
 };
 
 export type CreatePlaylistInput = {
@@ -71,18 +82,6 @@ export type Playlist = {
 export type UpdatePlaylistInput = {
   name?: string | null;
   imageUrl?: string | null;
-};
-
-export type CreateTrackInput = {
-  albumId: string;
-  title: string;
-  lengthInSeconds?: number | null;
-};
-
-export type UpdateTrackInput = {
-  albumId: string;
-  title: string;
-  lengthInSeconds?: number | null;
 };
 
 export type TableAlbumFilterInput = {
@@ -129,65 +128,9 @@ export type TableTrackFilterInput = {
   title?: TableStringFilterInput | null;
 };
 
-export type CreateAlbumMutationVariables = {
-  input?: CreateAlbumInput;
-};
-
-export type CreateAlbumMutation = {
-  createAlbum?: {
-    __typename: "Album";
-    id: string;
-    artists?: Array<{
-      __typename: "Artist";
-      id: string;
-      name?: string | null;
-      imageUrl?: string | null;
-    }> | null;
-    name?: string | null;
-    imageUrl?: string | null;
-    year?: number | null;
-  } | null;
-};
-
-export type UpdateAlbumMutationVariables = {
-  id?: string;
-  input?: UpdateAlbumInput;
-};
-
-export type UpdateAlbumMutation = {
-  updateAlbum?: {
-    __typename: "Album";
-    id: string;
-    artists?: Array<{
-      __typename: "Artist";
-      id: string;
-      name?: string | null;
-      imageUrl?: string | null;
-    }> | null;
-    name?: string | null;
-    imageUrl?: string | null;
-    year?: number | null;
-  } | null;
-};
-
-export type DeleteAlbumMutationVariables = {
-  id?: string;
-};
-
-export type DeleteAlbumMutation = {
-  deleteAlbum?: {
-    __typename: "Album";
-    id: string;
-    artists?: Array<{
-      __typename: "Artist";
-      id: string;
-      name?: string | null;
-      imageUrl?: string | null;
-    }> | null;
-    name?: string | null;
-    imageUrl?: string | null;
-    year?: number | null;
-  } | null;
+export type TrackConnection = {
+  __typename: "TrackConnection";
+  items?: Array<Track> | null;
 };
 
 export type CreateArtistMutationVariables = {
@@ -251,6 +194,220 @@ export type DeleteArtistMutation = {
   } | null;
 };
 
+export type DeleteCascadeArtistMutationVariables = {
+  id?: string;
+};
+
+export type DeleteCascadeArtistMutation = {
+  deleteCascadeArtist?: {
+    __typename: "Artist";
+    id: string;
+    name?: string | null;
+    imageUrl?: string | null;
+    albums?: Array<{
+      __typename: "Album";
+      id: string;
+      name?: string | null;
+      imageUrl?: string | null;
+      year?: number | null;
+    }> | null;
+  } | null;
+};
+
+export type UpdateOrCreateArtistMutationVariables = {
+  input?: CreateArtistInput;
+};
+
+export type UpdateOrCreateArtistMutation = {
+  updateOrCreateArtist?: {
+    __typename: "Artist";
+    id: string;
+    name?: string | null;
+    imageUrl?: string | null;
+    albums?: Array<{
+      __typename: "Album";
+      id: string;
+      name?: string | null;
+      imageUrl?: string | null;
+      year?: number | null;
+    }> | null;
+  } | null;
+};
+
+export type CreateAlbumMutationVariables = {
+  input?: CreateAlbumInput;
+};
+
+export type CreateAlbumMutation = {
+  createAlbum?: {
+    __typename: "Album";
+    id: string;
+    artists?: Array<{
+      __typename: "Artist";
+      id: string;
+      name?: string | null;
+      imageUrl?: string | null;
+    }> | null;
+    name?: string | null;
+    imageUrl?: string | null;
+    year?: number | null;
+    tracks?: Array<{
+      __typename: "Track";
+      id: string;
+      albumId: string;
+      title?: string | null;
+      lengthInSeconds?: number | null;
+      number?: number | null;
+    }> | null;
+  } | null;
+};
+
+export type UpdateAlbumMutationVariables = {
+  id?: string;
+  input?: UpdateAlbumInput;
+};
+
+export type UpdateAlbumMutation = {
+  updateAlbum?: {
+    __typename: "Album";
+    id: string;
+    artists?: Array<{
+      __typename: "Artist";
+      id: string;
+      name?: string | null;
+      imageUrl?: string | null;
+    }> | null;
+    name?: string | null;
+    imageUrl?: string | null;
+    year?: number | null;
+    tracks?: Array<{
+      __typename: "Track";
+      id: string;
+      albumId: string;
+      title?: string | null;
+      lengthInSeconds?: number | null;
+      number?: number | null;
+    }> | null;
+  } | null;
+};
+
+export type DeleteAlbumMutationVariables = {
+  id?: string;
+};
+
+export type DeleteAlbumMutation = {
+  deleteAlbum?: {
+    __typename: "Album";
+    id: string;
+    artists?: Array<{
+      __typename: "Artist";
+      id: string;
+      name?: string | null;
+      imageUrl?: string | null;
+    }> | null;
+    name?: string | null;
+    imageUrl?: string | null;
+    year?: number | null;
+    tracks?: Array<{
+      __typename: "Track";
+      id: string;
+      albumId: string;
+      title?: string | null;
+      lengthInSeconds?: number | null;
+      number?: number | null;
+    }> | null;
+  } | null;
+};
+
+export type UpdateOrCreateAlbumMutationVariables = {
+  input?: CreateAlbumInput;
+};
+
+export type UpdateOrCreateAlbumMutation = {
+  updateOrCreateAlbum?: {
+    __typename: "Album";
+    id: string;
+    artists?: Array<{
+      __typename: "Artist";
+      id: string;
+      name?: string | null;
+      imageUrl?: string | null;
+    }> | null;
+    name?: string | null;
+    imageUrl?: string | null;
+    year?: number | null;
+    tracks?: Array<{
+      __typename: "Track";
+      id: string;
+      albumId: string;
+      title?: string | null;
+      lengthInSeconds?: number | null;
+      number?: number | null;
+    }> | null;
+  } | null;
+};
+
+export type CreateTrackMutationVariables = {
+  input?: CreateTrackInput;
+};
+
+export type CreateTrackMutation = {
+  createTrack?: {
+    __typename: "Track";
+    id: string;
+    albumId: string;
+    title?: string | null;
+    lengthInSeconds?: number | null;
+    number?: number | null;
+  } | null;
+};
+
+export type UpdateTrackMutationVariables = {
+  id?: string;
+  input?: UpdateTrackInput;
+};
+
+export type UpdateTrackMutation = {
+  updateTrack?: {
+    __typename: "Track";
+    id: string;
+    albumId: string;
+    title?: string | null;
+    lengthInSeconds?: number | null;
+    number?: number | null;
+  } | null;
+};
+
+export type DeleteTrackMutationVariables = {
+  id?: string;
+};
+
+export type DeleteTrackMutation = {
+  deleteTrack?: {
+    __typename: "Track";
+    id: string;
+    albumId: string;
+    title?: string | null;
+    lengthInSeconds?: number | null;
+    number?: number | null;
+  } | null;
+};
+
+export type UpdateOrCreateTrackMutationVariables = {
+  input?: CreateTrackInput;
+};
+
+export type UpdateOrCreateTrackMutation = {
+  updateOrCreateTrack?: {
+    __typename: "Track";
+    id: string;
+    albumId: string;
+    title?: string | null;
+    lengthInSeconds?: number | null;
+    number?: number | null;
+  } | null;
+};
+
 export type CreatePlaylistMutationVariables = {
   input?: CreatePlaylistInput;
 };
@@ -291,49 +448,6 @@ export type DeletePlaylistMutation = {
   } | null;
 };
 
-export type CreateTrackMutationVariables = {
-  input?: CreateTrackInput;
-};
-
-export type CreateTrackMutation = {
-  createTrack?: {
-    __typename: "Track";
-    id: string;
-    albumId: string;
-    title?: string | null;
-    lengthInSeconds?: number | null;
-  } | null;
-};
-
-export type UpdateTrackMutationVariables = {
-  id?: string;
-  input?: UpdateTrackInput;
-};
-
-export type UpdateTrackMutation = {
-  updateTrack?: {
-    __typename: "Track";
-    id: string;
-    albumId: string;
-    title?: string | null;
-    lengthInSeconds?: number | null;
-  } | null;
-};
-
-export type DeleteTrackMutationVariables = {
-  id?: string;
-};
-
-export type DeleteTrackMutation = {
-  deleteTrack?: {
-    __typename: "Track";
-    id: string;
-    albumId: string;
-    title?: string | null;
-    lengthInSeconds?: number | null;
-  } | null;
-};
-
 export type GetAlbumQueryVariables = {
   id?: string;
 };
@@ -351,6 +465,14 @@ export type GetAlbumQuery = {
     name?: string | null;
     imageUrl?: string | null;
     year?: number | null;
+    tracks?: Array<{
+      __typename: "Track";
+      id: string;
+      albumId: string;
+      title?: string | null;
+      lengthInSeconds?: number | null;
+      number?: number | null;
+    }> | null;
   } | null;
 };
 
@@ -447,6 +569,7 @@ export type GetTrackQuery = {
     albumId: string;
     title?: string | null;
     lengthInSeconds?: number | null;
+    number?: number | null;
   } | null;
 };
 
@@ -463,6 +586,7 @@ export type ListTracksQuery = {
       albumId: string;
       title?: string | null;
       lengthInSeconds?: number | null;
+      number?: number | null;
     }> | null;
   } | null;
 };

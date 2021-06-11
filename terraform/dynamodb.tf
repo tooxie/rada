@@ -55,6 +55,7 @@ resource "aws_dynamodb_table" "tracks" {
   name = "GawshiTracks_${local.suffix}"
   billing_mode = "PAY_PER_REQUEST"
   hash_key = "id"
+  range_key = "sk"
 
   attribute {
     name = "id"
@@ -62,14 +63,8 @@ resource "aws_dynamodb_table" "tracks" {
   }
 
   attribute {
-    name = "albumId"
+    name = "sk"
     type = "S"
-  }
-
-  global_secondary_index {
-    name = "AlbumIdIndex"
-    hash_key = "albumId"
-    projection_type = "ALL"
   }
 }
 

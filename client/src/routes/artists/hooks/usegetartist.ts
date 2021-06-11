@@ -1,13 +1,14 @@
 import { ApolloQueryResult } from "@apollo/client";
 
 import { Artist } from "../../../graphql/api";
-import client from "../../../graphql/client";
+import getClient from "../../../graphql/client";
 import useGet from "../../../hooks/useget";
 import { GetArtistQuery } from "../../../graphql/api";
 import { getArtist } from "../../../graphql/queries";
 import { toDbId } from "../../../utils/id";
 
 const doGetArtist = async (variables: { [k: string]: string }) => {
+  const client = await getClient();
   const result = (await client.query({
     query: getArtist,
     variables,
