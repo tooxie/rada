@@ -20,16 +20,16 @@ aws_access_key_id=<YOUR_AWS_ACCESS_KEY_ID>
 aws_secret_access_key=<YOUR_AWS_SECRET_ACCESS_KEY>
 ```
 
-3. Run terraform using the new profile:
+3. Run terraform using the new profile from the `backend/` directory:
 ```
 cd backend/
 AWS_PROFILE=gawshi-backend-resources terraform init
-AWS_PROFILE=gawshi-backend-resources terraform plan
+AWS_PROFILE=gawshi-backend-resources terraform apply
 ```
 
 You will be prompted for the region in which to create the resources.
 
-4. Find the "gawshi" user in IAM and click on "Create access key".
+4. Find the "gawshi-<suffix>" user in IAM and click on "Create access key".
 5. Download the credentials and add them to the `~/.aws/credentials` file.
 
 This guide will assume the name "gawshi" for the new profile.
