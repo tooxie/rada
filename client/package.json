@@ -37,6 +37,7 @@
     "typescript": "^3.7.5"
   },
   "devDependencies": {
+    "@aws-amplify/cli": "^7.6.15",
     "@graphql-codegen/cli": "1.21.5",
     "@graphql-codegen/introspection": "1.18.2",
     "@graphql-codegen/typescript": "1.22.1",
@@ -45,6 +46,7 @@
     "@graphql-codegen/typescript-operations": "1.18.0",
     "@typescript-eslint/eslint-plugin": "^2.25.0",
     "@typescript-eslint/parser": "^2.25.0",
+    "amplify-codegen": "^2.28.0",
     "eslint": "^6.8.0",
     "eslint-config-preact": "^1.1.1",
     "eslint-plugin-preact-i18n": "^1.1.0",
