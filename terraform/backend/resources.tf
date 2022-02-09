@@ -6,7 +6,7 @@ provider "aws" {
 data "aws_caller_identity" "gawshi" {}
 
 resource "aws_iam_user" "gawshi" {
-  name = "gawshi"
+  name = "gawshi-${random_string.suffix.result}"
 
   tags = {
     Gawshi = "1"
@@ -31,7 +31,7 @@ resource "aws_s3_bucket" "terraform_state" {
 }
 
 resource "aws_iam_policy" "terraform_state" {
-  name = "GawshiTerraformState"
+  name = "GawshiTerraformState-${random_string.suffix.result}"
   path = "/"
   description = "Policy for the gawshi user to store terraform state in S3"
 
@@ -65,7 +65,7 @@ resource "aws_iam_user_policy_attachment" "gawshi_terraform_state" {
 
 // --- Gawshi resources
 resource "aws_iam_policy" "gawshi" {
-  name = "gawshi"
+  name = "gawshi-${random_string.suffix.result}"
   path = "/"
   description = "Policy for the gawshi user that restricts access to the gawshi resources exclusively"
 
@@ -138,7 +138,7 @@ resource "aws_iam_user_policy_attachment" "gawshi_appsync_administrator" {
 }
 
 resource "aws_iam_role" "gawshi" {
-  name = "gawshi"
+  name = "gawshi-${random_string.suffix.result}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
