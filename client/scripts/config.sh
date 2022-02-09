@@ -55,7 +55,11 @@ AMPLIFY_CONFIG="projects:
 echo "$AMPLIFY_CONFIG" > "$AMPLIFY_CONFIG_FILE"
 
 tobase64 () {
-  echo -n "$1" | base64 | tr -d '\n'
+  if [ "`uname`" = "Darwin" ]; then
+    echo "$1" | tr -d '\n' | base64 | tr -d '\n'
+  else
+    echo -n "$1" | base64 | tr -d '\n'
+  fi
 }
 
 GRAPHQL_CONFIG_FILE="./src/graphql/config.ts"
@@ -66,7 +70,11 @@ GRAPHQL_CONFIG="export default {
   Region: \"`tobase64 $REGION`\",
 }
 "
-echo -e "$GRAPHQL_CONFIG" > "$GRAPHQL_CONFIG_FILE"
+if [ "`uname`" = "Darwin" ]; then
+  echo "$GRAPHQL_CONFIG" > "$GRAPHQL_CONFIG_FILE"
+else
+  echo -e "$GRAPHQL_CONFIG" > "$GRAPHQL_CONFIG_FILE"
+fi
 
 
 # TODO: Load fixtures here

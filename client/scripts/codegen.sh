@@ -5,8 +5,14 @@ transform () {
   FILE="$1"
   HEADER='import gql from "graphql-tag";'
   CONTENT=`sed 's/\/\* GraphQL \*\/ /gql/g' "$FILE"`
-  echo -e "$HEADER" > "$FILE"
-  echo -e "$CONTENT" >> "$FILE"
+
+  if [ "`uname`" = "Darwin" ]; then
+    echo "$HEADER" > "$FILE"
+    echo "$CONTENT" >> "$FILE"
+  else
+    echo -e "$HEADER" > "$FILE"
+    echo -e "$CONTENT" >> "$FILE"
+  fi
 }
 
 GRAPHQL_SCHEMA_SRC="../terraform/schema.graphql"
