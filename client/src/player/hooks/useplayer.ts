@@ -99,8 +99,7 @@ class Queue implements IQueue {
     return q.getIndex();
   }
   getCurrentTrack(): Track | null {
-    console.log("[hooks/useplayer.ts] Getting track");
-    console.log(`[hooks/useplayer.ts] Got track: ${q.getCurrentTrack()}`);
+    console.log("[hooks/useplayer.ts] getCurrentTrack():", q.getCurrentTrack());
     return q.getCurrentTrack();
   }
   getDuration() {
@@ -294,12 +293,10 @@ const usePlayer = () => {
           this.queue.append(tracks);
         },
         removeTrackAt(index: number) {
+          const trackIsPlaying = this.isPlaying() && this.queue.getIndex() === index;
+          if (trackIsPlaying) this.stop();
           this.queue.removeAt(index);
-          if (this.isPlaying() && this.queue.getIndex() === index) {
-            this.stop();
-          } else {
-            forceRender();
-          }
+          forceRender();
         },
       } as IPlayer);
     }
@@ -311,11 +308,7 @@ const usePlayer = () => {
     const canPlay = () => setLoading(false);
     const timeUpdate = (ev: AudioEvent): void => {
       const audio = ev.path ? ev.path[0] : ev.currentTarget;
-      const delta = audio.currentTime - player.getCurrentTime();
-      if (delta >= 0.5) {
-        player.setCurrentTime(audio.currentTime);
-        // forceRender(audio.currentTime);
-      }
+      player.setCurrentTime(audio.currentTime);
     };
     const reset = (ev: Event): void => {
       console.warn(`[hooks/useplayer.ts] reset (${ev.type})`);
@@ -364,6 +357,7 @@ const usePlayer = () => {
     };
     const error = (ev: Event) => {
       console.warn(`[hooks/useplayer.ts] error (${ev.type})`);
+      console.log(ev.target);
       const target = ev.currentTarget as any;
       const errorMsg = target.error?.message || "";
       player.setCurrentTime(0);
