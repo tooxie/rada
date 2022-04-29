@@ -6,6 +6,7 @@ stages:
 build:
   stage: build
   script:
+    - export NODE_OPTIONS=--openssl-legacy-provider
     - cd client
     - yarn install --production
     - yarn codegen:config --api-id $API_ID --api-key $API_KEY --api-url $API_URL --auth-mode API_KEY --region eu-central-1 --bucket-name $BUCKET_NAME
