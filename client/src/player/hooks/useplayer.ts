@@ -99,7 +99,7 @@ class Queue implements IQueue {
     return q.getIndex();
   }
   getCurrentTrack(): Track | null {
-    console.log("[hooks/useplayer.ts] getCurrentTrack():", q.getCurrentTrack());
+    console.log("[hooks/useplayer.ts] q.getCurrentTrack()");
     return q.getCurrentTrack();
   }
   getDuration() {
@@ -187,6 +187,7 @@ const usePlayer = () => {
           this.queue.setIndex(i);
         },
         clearQueue() {
+          console.log("[hooks/useplayer.ts] player.clearQueue()");
           this.stop();
           this.queue.clear();
         },
@@ -195,7 +196,7 @@ const usePlayer = () => {
           this.queue.append(tracks);
         },
         getCurrentTrack(): Track | null {
-          console.log("[hooks/useplayer.ts] Getting track from queue");
+          console.log("[hooks/useplayer.ts] player.getCurrentTrack()");
           return this.queue.getCurrentTrack();
         },
         getCurrentTime(): number {
@@ -228,6 +229,7 @@ const usePlayer = () => {
           // navigator.mediaSession.playbackState = "paused";
         },
         stop() {
+          console.log("[hooks/useplayer.ts] player.stop()");
           this.audio.pause();
           this.audio.removeAttribute("src");
           this.audio.removeAttribute("hash");
@@ -274,17 +276,20 @@ const usePlayer = () => {
           return this.queue.getIndex() === this.getQueueLength() - 1;
         },
         skipNext() {
+          console.log("[hooks/useplayer.ts] player.skipNext()");
           this.stop();
           this.queue.next();
           this.play();
         },
         skipPrevious() {
+          console.log("[hooks/useplayer.ts] player.skipPrevious()");
           if (this.atFirstTrack()) return;
           this.stop();
           this.queue.previous();
           this.play();
         },
         skipTo(index: number) {
+          console.log("[hooks/useplayer.ts] player.skipTo()");
           this.stop();
           this.queue.setIndex(index);
           this.play();
@@ -293,6 +298,7 @@ const usePlayer = () => {
           this.queue.append(tracks);
         },
         removeTrackAt(index: number) {
+          console.log(`[hooks/useplayer.ts] player.removeTrackAt(${index})`);
           const trackIsPlaying = this.isPlaying() && this.queue.getIndex() === index;
           if (trackIsPlaying) this.stop();
           this.queue.removeAt(index);
@@ -311,36 +317,34 @@ const usePlayer = () => {
       player.setCurrentTime(audio.currentTime);
     };
     const reset = (ev: Event): void => {
-      console.warn(`[hooks/useplayer.ts] reset (${ev.type})`);
+      console.log(`[hooks/useplayer.ts] Event: reset (${ev.type})`);
       player.setCurrentTime(0);
       setPlaying(false);
     };
     const pause = (ev: AudioEvent): void => {
-      console.warn(`[hooks/useplayer.ts] pause (${ev.type})`);
+      console.log(`[hooks/useplayer.ts] Event: pause (${ev.type})`);
       const audio = ev.path ? ev.path[0] : ev.currentTarget;
       player.setCurrentTime(audio.currentTime);
       setPlaying(false);
       setLoading(false);
     };
     const play = (ev: Event): void => {
-      console.warn(`[hooks/useplayer.ts] play (${ev.type})`);
-      console.warn(`[hooks/useplayer.ts] "playing" was: ${playing}`);
+      console.log(`[hooks/useplayer.ts] Event: play (${ev.type})`);
       setPlaying(true);
-      console.warn(`[hooks/useplayer.ts] "loading" was: ${loading}`);
       setLoading(false);
     };
     const suspend = (ev: Event): void => {
-      console.warn(`[hooks/useplayer.ts] suspend (${ev.type})`);
+      console.log(`[hooks/useplayer.ts] Event: suspend (${ev.type})`);
       setPlaying(false);
       setLoading(false);
     };
     const waiting = (ev: Event): void => {
-      console.warn(`[hooks/useplayer.ts] waiting (${ev.type})`);
+      console.log(`[hooks/useplayer.ts] Event: waiting (${ev.type})`);
       setPlaying(false);
       setLoading(true);
     };
     const next = (ev: Event): void => {
-      console.warn(`[hooks/useplayer.ts] next (${ev.type})`);
+      console.log(`[hooks/useplayer.ts] Event: next (${ev.type})`);
       if (player.atLastTrack()) {
         console.log(`[hooks/useplayer.ts] End of queue`);
         player.setIndex(0);
@@ -356,14 +360,12 @@ const usePlayer = () => {
       }
     };
     const error = (ev: Event) => {
-      console.warn(`[hooks/useplayer.ts] error (${ev.type})`);
-      console.log(ev.target);
+      console.warn(`[hooks/useplayer.ts] Event: error (${ev.type})`);
       const target = ev.currentTarget as any;
-      const errorMsg = target.error?.message || "";
       player.setCurrentTime(0);
       setPlaying(false);
       setLoading(false);
-      if (errorMsg.includes("Empty src attribute")) return;
+      console.warn(`[hooks/useplayer.ts] "${target.error.message}"`);
       if (!errored) {
         console.warn(`[hooks/useplayer.ts] [ERROR] Code: ${target.error.code}`);
         console.warn(`[hooks/useplayer.ts] [ERROR] Message: "${target.error.message}"`);
