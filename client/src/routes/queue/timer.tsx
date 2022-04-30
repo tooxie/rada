@@ -31,8 +31,7 @@ const Timer = ({ current, total, playing }: TimerProps) => {
     if (!playing) return;
 
     const intervalId = setInterval(() => {
-      elapsed += 1;
-      render(ref.current, elapsed);
+      render(ref.current, ++elapsed);
     }, 1000);
 
     return () => clearInterval(intervalId);

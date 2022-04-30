@@ -36,9 +36,7 @@ const Countdown = ({ current, total, playing }: CountdownProps) => {
     if (!playing) return;
 
     const intervalId = setInterval(() => {
-      remaining -= 1;
-      if (remaining < 0) remaining = 0;
-      render(ref.current, remaining);
+      render(ref.current, --remaining);
     }, 1000);
 
     return () => clearInterval(intervalId);

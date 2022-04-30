@@ -229,8 +229,8 @@ const usePlayer = () => {
         },
         stop() {
           this.audio.pause();
-          this.audio.src = "";
-          this.audio.setAttribute("hash", "");
+          this.audio.removeAttribute("src");
+          this.audio.removeAttribute("hash");
           this.setCurrentTime(0);
           setPlaying(false);
           setLoading(false);
