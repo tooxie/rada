@@ -7,6 +7,9 @@ import { GetArtistQuery, GetArtistQueryVariables } from "../../../graphql/api";
 import { getArtist } from "../../../graphql/custom";
 import { toDbId } from "../../../utils/id";
 import { ArtistId } from "../../../types";
+import Logger from "../../../logger";
+
+const log = new Logger(__filename);
 
 type UseGetReturnType = Omit<ReturnType<typeof useGet>, "item">;
 interface UseGetArtistReturn extends UseGetReturnType {
@@ -25,7 +28,7 @@ const doGetArtist = async (variables: { [k: string]: string }) => {
 };
 
 export const useGetArtist = (id: ArtistId): UseGetArtistReturn => {
-  console.log(`[hooks/usegetartist.ts] useGetArtist("${id}")`);
+  log.debug(`useGetArtist("${id}")`);
   const dbId = toDbId("artist", id);
   const pk: GetArtistQueryVariables = { id: dbId };
   const {
@@ -40,7 +43,7 @@ export const useGetArtist = (id: ArtistId): UseGetArtistReturn => {
   }
 
   const result = { loading, error, artist };
-  console.log("[hooks/usegetartist.ts] useGetArtist.return:", result);
+  log.debug("useGetArtist.return:", result);
   return result;
 };
 

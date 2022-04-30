@@ -2,6 +2,10 @@ import { h } from "preact";
 import { memo } from "preact/compat";
 import { useEffect } from "preact/hooks";
 
+import Logger from "../../logger";
+
+const log = new Logger(__filename);
+
 interface Artwork {
   src?: string | null;
   type?: string | null;
@@ -38,10 +42,10 @@ const MediaSession = (props: MediaSessionProps) => {
         },
       ],
     });
-    console.log("[player/mediasession.tsx] mediaSession.metadata", mediaSession.metadata);
+    log.debug("mediaSession.metadata", mediaSession.metadata);
 
     return () => {
-      console.log("[player/mediasession.tsx] MediaSession.metadata = null");
+      log.debug("MediaSession.metadata = null");
       mediaSession.metadata = null;
     };
   }, [props.title, props.artist, props.album, props.artwork]);

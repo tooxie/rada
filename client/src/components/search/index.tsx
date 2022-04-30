@@ -2,10 +2,13 @@ import { h, Fragment } from "preact";
 import { useEffect, useState } from "preact/hooks";
 
 import useConf from "../../hooks/useconf";
+import Logger from "../../logger";
 
 import style from "./style.css";
 import closeIcon from "./close.svg";
 import searchIcon from "./search.svg";
+
+const log = new Logger(__filename);
 
 interface SearchProps {
   input: any[];
@@ -17,7 +20,7 @@ interface SearchProps {
 }
 
 const Search = (props: SearchProps) => {
-  console.log(`[search/index.tsx] Search.render()`);
+  log.debug(`Search.render()`);
   const { conf, setConf } = useConf();
   const [value, setValue] = useState("");
   const clear = () => updateValue("");
@@ -50,7 +53,7 @@ const Search = (props: SearchProps) => {
     }
   };
 
-  console.log(`[search/index.tsx] Got ${props.input.length} items`);
+  log.debug(`Got ${props.input.length} items`);
 
   useEffect(() => {
     const hash = window.location.hash;

@@ -5,6 +5,9 @@ import getClient from "../../../graphql/client";
 import useGet from "../../../hooks/useget";
 import { getAlbum } from "../../../graphql/custom";
 import { AlbumId } from "../../../types";
+import Logger from "../../../logger";
+
+const log = new Logger(__filename);
 
 const doGetAlbum = async (variables: GetAlbumQueryVariables) => {
   const client = await getClient();
@@ -18,7 +21,7 @@ const doGetAlbum = async (variables: GetAlbumQueryVariables) => {
 };
 
 const useGetAlbum = (id: AlbumId) => {
-  console.log(`[hooks/usegetalbumforheader.ts] useGetAlbum("${id}")`);
+  log.debug(`useGetAlbum("${id}")`);
   const pk: GetAlbumQueryVariables = { id };
   const {
     loading,
@@ -27,7 +30,7 @@ const useGetAlbum = (id: AlbumId) => {
   } = useGet<Album, GetAlbumQueryVariables>(doGetAlbum, pk);
 
   const result = { loading, error, album };
-  console.log("[hooks/usegetalbumforheader.ts] useGetAlbum.return:", result);
+  log.debug("useGetAlbum.return:", result);
   return result;
 };
 

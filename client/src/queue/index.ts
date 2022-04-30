@@ -1,6 +1,10 @@
 import { Track as ITrack } from "../graphql/api";
 // import { TrackId } from "../types";
 
+import Logger from "../logger";
+
+const log = new Logger(__filename);
+
 interface Track extends ITrack {
   [key: string]: any;
 }
@@ -26,26 +30,26 @@ const storage = {
     this.setIndex(-1);
   },
   __clearLocalStorage: function (index?: number): void {
-    console.log(`[queue/index.tsx] __clearLocalStorage(${index})`);
+    log.debug(`__clearLocalStorage(${index})`);
     for (let x = index ? index : 0; x < this.getLength(); x++) {
-      console.log(`[queue/index.tsx] Removing item with key q.track-${x}`);
+      log.debug(`Removing item with key q.track-${x}`);
       localStorage.removeItem(`q.track-${x}`);
     }
   },
-  __updateLocalStorage: function (): void {
-    for (let x = 0; x < this.getLength() - 1; x++) {
-      const key = `q.track-${x}`;
-      const value = (this.cache as any)[key];
-      localStorage.setItem(key, JSON.stringify(value));
-    }
-  },
+  // __updateLocalStorage: function (): void {
+  //   for (let x = 0; x < this.getLength() - 1; x++) {
+  //     const key = `q.track-${x}`;
+  //     const value = (this.cache as any)[key];
+  //     localStorage.setItem(key, JSON.stringify(value));
+  //   }
+  // },
   setItem: function (key: string, value: any): void {
     if (!value || value === "undefined") throw new Error(`No value for item "${key}"`);
     this.saveToCache(key, value);
     localStorage.setItem(key, JSON.stringify(value));
   },
   getItem: function (key: string): Track | null {
-    console.log(`[queue/index.tsx] Getting track under key "${key}"`);
+    log.debug(`Getting track under key "${key}"`);
     return (this.cache as any)[key] || null;
   },
   removeItem: function (key: string): void {
@@ -54,7 +58,7 @@ const storage = {
   },
   updateLength: function (): void {
     const length = this.getLength().toString();
-    console.log(`[queue/index.tsx] Setting new length to ${length}`);
+    log.debug(`Setting new length to ${length}`);
     localStorage.setItem("q.__meta__.length", length);
   },
   getLength: function (): number {
@@ -85,13 +89,13 @@ const storage = {
     this.__clearLocalStorage(i);
     for (let x = i; x < oldLength; x++) {
       const track = this.getItem(`q.track-${x}`);
-      console.log(`[queue/index.tsx] track (${x}): ${track?.title}`);
+      log.debug(`track (${x}): ${track?.title}`);
       if (!track) {
         const { next, pos } = findNext(x + 1, oldLength);
         if (next) {
-          console.log(`[queue/index.tsx] Setting track "${next.title}" in position ${x}`);
+          log.debug(`Setting track "${next.title}" in position ${x}`);
           this.setItem(`q.track-${x}`, next);
-          console.log(`[queue/index.tsx] Clearing position ${pos}`);
+          log.debug(`Clearing position ${pos}`);
           this.removeItem(`q.track-${pos}`);
         }
       }
@@ -100,7 +104,7 @@ const storage = {
 };
 
 const init = () => {
-  console.log(`[queue/index.tsx] init()${storage.__init ? " -> noop" : ""}`);
+  log.debug(`init()${storage.__init ? " -> noop" : ""}`);
   if (storage.__init) return;
 
   const storedLength = readLength();
@@ -111,7 +115,7 @@ const init = () => {
 
   const computedLength = storage.getLength();
   if (storedLength !== computedLength) {
-    console.warn(`Warning: Expected ${storedLength} tracks, found ${computedLength}`);
+    log.warn(`Warning: Expected ${storedLength} tracks, found ${computedLength}`);
   }
 
   const iKey = "q.__meta__.index";
@@ -120,10 +124,10 @@ const init = () => {
 
   // Sanitization
   if (emptyQueue && index !== -1) {
-    console.warn(`Warning: Index out of bounds: Index at ${index} with an empty queue`);
+    log.warn(`Warning: Index out of bounds: Index at ${index} with an empty queue`);
     index = -1;
   } else if (!emptyQueue && index === -1) {
-    console.warn("Warning: Index out of bounds: Index at -1 with a non-empty queue");
+    log.warn("Warning: Index out of bounds: Index at -1 with a non-empty queue");
     index = 0;
   }
 
@@ -131,7 +135,7 @@ const init = () => {
   storage.setIndex(index);
 
   storage.__init = true;
-  console.log("[queue/index.tsx] Initialization finished", storage);
+  log.debug("Initialization finished", storage);
 };
 
 const getIndex = () => storage.getIndex();
@@ -176,21 +180,21 @@ const replace = (tracks: Track[]) => {
 };
 const getTrack = (i: number): Track | null => storage.getItem(`q.track-${i}`);
 const removeTrackAt = (i: number) => {
-  console.log(`[queue/index.tsx] removeTrackAt(${i})`);
+  log.debug(`removeTrackAt(${i})`);
   storage.removeItem(`q.track-${i}`);
-  console.log(`[queue/index.tsx] Shifting index by -1`);
+  log.debug(`Shifting index by -1`);
   if (i <= getIndex()) shiftIndex(-1);
   // If we remove an item that leaves a gap in the queue, for example, we
   // have 3 items and we remove the 2nd, we have to reindex the queue so that
   // it's a continuous sequence again without any gaps.
-  console.log(`[queue/index.tsx] ${i < getLength() ? "Reindexing" : "noop"}`);
+  log.debug(`${i < getLength() ? "Reindexing" : "noop"}`);
   if (i < getLength()) storage.reindex(i);
 };
 
 const getCurrentTrack = () => getTrack(getIndex());
 const removeAt = (i: number) => {
-  console.log(`[queue/index.tsx] Removing track at ${i}`);
-  console.log(`[queue/index.tsx] Current length is ${getLength()}`);
+  log.debug(`Removing track at ${i}`);
+  log.debug(`Current length is ${getLength()}`);
   removeTrackAt(i);
   storage.updateLength();
 };

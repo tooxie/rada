@@ -1,6 +1,10 @@
 import gql from "graphql-tag";
+
 import { Album, ListAlbumsQuery } from "../../../graphql/api";
 import useQuery from "../../../hooks/usequery";
+import Logger from "../../../logger";
+
+const log = new Logger(__filename);
 
 const listAlbums = gql`
   query ListAlbums($filter: TableAlbumFilterInput) {
@@ -26,12 +30,12 @@ interface UseListAlbumsReturn extends UseQueryReturnType {
 }
 
 const useListAlbums = (): UseListAlbumsReturn => {
-  console.log("[albums/hooks/uselistalbums.ts] useListAlbums");
+  log.debug("useListAlbums");
   const { loading, error, data } = useQuery<ListAlbumsQuery>(listAlbums);
   const albums = data?.listAlbums?.items || [];
 
   const result = { loading, error, albums };
-  console.log("[albums/hooks/uselistalbums.ts] useListAlbums.return:", result);
+  log.debug("useListAlbums.return:", result);
   return result;
 };
 

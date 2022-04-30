@@ -4,16 +4,19 @@ import { DetailProps } from "../../components/layout/detail/types";
 import Navigation from "../../components/navigation";
 import { AlbumId } from "../../types";
 import { Album } from "../../graphql/api";
+import Logger from "../../logger";
 
 import useGetAlbum from "./hooks/usegetalbumforheader";
 import style from "./header.css";
 import PlayAlbum from "./play";
 
+const log = new Logger(__filename);
+
 let _album: Album | null = null;
 let backgroundImage = "url(none)";
 
 const Header = (props: DetailProps) => {
-  console.log(`[albums/header.tsx] Loading album "${props.id}"`);
+  log.debug(`Loading album "${props.id}"`);
   const albumId = props.id as AlbumId;
   const { album } = useGetAlbum(albumId);
 

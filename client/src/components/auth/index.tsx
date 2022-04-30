@@ -10,12 +10,15 @@ import {
   storeCredentials,
   storeAccessToken,
 } from "../../utils/auth";
+import Logger from "../../logger";
 
 /* develblock:start */
 import rootCredentials from "../../rootuser.json";
 /* develblock:end */
 
 import style from "./style.css";
+
+const log = new Logger(__filename);
 
 interface AuthProps {
   onLogin?: (admin: boolean, token: string) => void;
@@ -40,25 +43,25 @@ const Auth = ({ onLogin, onFailedAuth }: AuthProps) => {
   const [rootUserInstalled, setRootUserInstalled] = useState(false);
   useEffect(() => {
     if (!rootUserInstalled) {
-      console.log(window.btoa(JSON.stringify(rootCredentials) + "\n"));
+      log.debug(window.btoa(JSON.stringify(rootCredentials) + "\n"));
       setCredentials(rootCredentials);
-      console.log("[auth/index.tsx] Root user installed");
+      log.debug("Root user installed");
       setRootUserInstalled(true);
     }
   }, []);
   /* develblock:end */
 
   useEffect(() => {
-    console.log("[auth/index.tsx] Secret updated");
+    log.debug("Secret updated");
     if (secret) {
-      console.log("[auth/index.tsx] Setting credentials");
+      log.debug("Setting credentials");
       setCredentials(JSON.parse(window.atob(secret.trim())));
     }
   }, [secret]);
 
   useEffect(() => {
     if (credentials) {
-      console.log("[auth/index.tsx] Storing credentials");
+      log.debug("Storing credentials");
       storeCredentials(credentials);
     }
   }, [credentials]);
@@ -66,11 +69,11 @@ const Auth = ({ onLogin, onFailedAuth }: AuthProps) => {
   useEffect(() => {
     if (!credentials || authorized) return;
 
-    console.log("[auth/index.tsx] Authenticating against cognito");
+    log.debug("Authenticating against cognito");
     setLoading(true);
     authenticate(credentials)
       .then((response) => {
-        console.log("[auth/index.tsx] Logged in");
+        log.debug("Logged in");
         storeAccessToken(response.token);
         const isAdmin = !!response.groups.find((group) =>
           group.startsWith("Gawshi-Admin-")
@@ -80,8 +83,8 @@ const Auth = ({ onLogin, onFailedAuth }: AuthProps) => {
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Unauthorized");
-        console.error(error);
+        log.error("Unauthorized");
+        log.error(error);
         if (onFailedAuth) onFailedAuth();
         setAuthorized(false);
         setLoading(false);

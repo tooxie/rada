@@ -7,6 +7,9 @@ import { HttpRequest } from "@aws-sdk/protocol-http";
 
 import { Track } from "../graphql/api";
 import config from "../config.json";
+import Logger from "../logger";
+
+const log = new Logger(__filename);
 
 export const getSignedUrl = async (track: Track, retry = 0): Promise<string> => {
   if (!AWS.config.credentials) {
@@ -24,7 +27,7 @@ export const getSignedUrl = async (track: Track, retry = 0): Promise<string> => 
   try {
     return formatUrl(await presigner.presign(httpRequest));
   } catch (e) {
-    console.error(e);
+    log.error(e);
     if (retry < 3) {
       return getSignedUrl(track, ++retry);
     } else {

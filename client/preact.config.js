@@ -38,5 +38,7 @@ export default {
         use: [{ loader: "webpack-strip-block" }],
       });
     }
+
+    config.node.__filename = true;
   },
 };

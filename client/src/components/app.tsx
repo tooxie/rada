@@ -8,9 +8,12 @@ import Conf from "../conf/context";
 import useConf from "../conf/hooks/useconf";
 import Apollo from "../graphql/context";
 import getClient, { Client } from "../graphql/client";
+import Logger from "../logger";
 
 import Root from "./root";
 import Auth from "./auth";
+
+const log = new Logger(__filename);
 
 const App = () => {
   const { conf, setConf } = useConf();
@@ -26,11 +29,7 @@ const App = () => {
 
   getClient().then((c: Client) => setClient(c));
 
-  console.log(
-    `[app.tsx] ${
-      loggedIn ? `Logged in ${conf.isAdmin ? "as admin" : ""}` : "Anonymous user"
-    }`
-  );
+  log.debug(loggedIn ? `Logged in ${conf.isAdmin ? "as admin" : ""}` : "Anonymous user");
 
   return (
     <Conf.Provider value={{ conf, setConf }}>

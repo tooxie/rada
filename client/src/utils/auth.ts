@@ -7,6 +7,10 @@ import {
 } from "amazon-cognito-identity-js";
 import * as AWS from "aws-sdk/global";
 
+import Logger from "../logger";
+
+const log = new Logger(__filename);
+
 interface AuthResponse {
   token: string;
   groups: string[];
@@ -79,9 +83,9 @@ interface Credentials {
 const storeCredentials = (credentials: Credentials) => {
   const { username, password } = credentials;
   if (!username || !password) throw new Error("Must provide both username and password");
-  console.log(`[utils/auth] Storing username "${username}"`);
+  log.debug(`Storing username "${username}"`);
   localStorage.setItem("GawshiUsername", username);
-  console.log(`[utils/auth] Storing password ${password}`);
+  log.debug(`Storing password ${password}`);
   localStorage.setItem("GawshiPassword", password);
 };
 

@@ -7,12 +7,15 @@ import Spinner from "../../components/spinner";
 import { Artist, Album, Track } from "../../graphql/api";
 import { AlbumId } from "../../types";
 import toMinutes from "../../utils/tominutes";
+import usePlayer from "../../hooks/useplayer";
+import Logger from "../../logger";
 
 import useGetAlbum from "./hooks/usegetalbum";
 import style from "./detail.css";
 import AlbumOptions from "./albumoptions";
 import TrackOptions from "./trackoptions";
-import usePlayer from "../../hooks/useplayer";
+
+const log = new Logger(__filename);
 
 let _album: Album | null = null;
 
@@ -55,7 +58,7 @@ const AlbumDetail = ({ id, trackId }: DetailProps) => {
     return total + (track.lengthInSeconds || 0);
   }, 0);
   const duration = toMinutes(durationInSeconds);
-  console.log(`[albums/detail.tsx] Duration: ${durationInSeconds}s (${duration})`);
+  log.debug(`Duration: ${durationInSeconds}s (${duration})`);
   const shouldHighlight = (id: string): Boolean => `track:${trackId}` === id;
 
   return (

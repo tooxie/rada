@@ -6,11 +6,13 @@ import q from "../../queue";
 import { States } from "../../queue/types";
 import { IQueue, AudioEvent, AudioEventListener, IPlayer } from "../../player/types";
 import { authenticate, fetchCredentials } from "../../utils/auth";
+import Logger from "../../logger";
 
+const log = new Logger(__filename);
 const reauth = () => authenticate(fetchCredentials());
 let wakeLock: WakeLockSentinel | null;
 const setMediaMetadata = (track: Track, player: IPlayer) => {
-  console.log("[hooks/useplayer.ts] Setting mediasession metadata");
+  log.debug("Setting mediasession metadata");
   const getType = (url?: string | null) => {
     if (!url) return "";
     const i = url.lastIndexOf(".");
@@ -32,13 +34,10 @@ const setMediaMetadata = (track: Track, player: IPlayer) => {
       },
     ],
   });
-  console.log(
-    "[hooks/useplayer.ts] mediaSession.metadata:",
-    navigator.mediaSession.metadata
-  );
+  log.debug("mediaSession.metadata:", navigator.mediaSession.metadata);
   navigator.mediaSession.playbackState = "playing";
 
-  console.log("[hooks/useplayer.ts] Setting action handlers...");
+  log.debug("Setting action handlers...");
   navigator.mediaSession.setActionHandler("nexttrack", player.skipNext.bind(player));
   navigator.mediaSession.setActionHandler("pause", player.pause.bind(player));
   navigator.mediaSession.setActionHandler("play", player.play.bind(player));
@@ -50,34 +49,34 @@ const setMediaMetadata = (track: Track, player: IPlayer) => {
   navigator.mediaSession.setActionHandler(
     "seekbackward",
     (ev: MediaSessionActionDetails) => {
-      console.log("[hooks/useplayer.ts] EV:", ev);
+      log.debug("EV:", ev);
       player.seekBy((ev.seekOffset || 10) * -1);
     }
   );
   navigator.mediaSession.setActionHandler(
     "seekforward",
     (ev: MediaSessionActionDetails) => {
-      console.log("[hooks/useplayer.ts] EV:", ev);
+      log.debug("EV:", ev);
       player.seekBy(ev.seekOffset || 10);
     }
   );
   navigator.mediaSession.setActionHandler("seekto", (ev: MediaSessionActionDetails) => {
-    console.log("[hooks/useplayer.ts] EV:", ev);
+    log.debug("EV:", ev);
     if (ev.seekTime !== null && ev.seekTime !== undefined) player.seekTo(ev.seekTime);
   });
 };
 const requestScreenLock = () => {
   if (!("wakeLock" in navigator)) return;
-  console.log("[hooks/useplayer.ts] Requesting screen lock...");
+  log.debug("Requesting screen lock...");
   navigator.wakeLock.request("screen").then((lock: WakeLockSentinel) => {
     wakeLock = lock;
-    console.log("[hooks/useplayer.ts] Screen lock acquired");
+    log.debug("Screen lock acquired");
   });
 };
 const releaseScreenLock = () => {
   if (!wakeLock) return;
   wakeLock.release().then(() => {
-    console.log("[hooks/useplayer.ts] Screen lock released");
+    log.debug("Screen lock released");
     wakeLock = null;
   });
 };
@@ -99,7 +98,7 @@ class Queue implements IQueue {
     return q.getIndex();
   }
   getCurrentTrack(): Track | null {
-    console.log("[hooks/useplayer.ts] q.getCurrentTrack()");
+    log.debug("q.getCurrentTrack()");
     return q.getCurrentTrack();
   }
   getDuration() {
@@ -187,7 +186,7 @@ const usePlayer = () => {
           this.queue.setIndex(i);
         },
         clearQueue() {
-          console.log("[hooks/useplayer.ts] player.clearQueue()");
+          log.debug("player.clearQueue()");
           this.stop();
           this.queue.clear();
         },
@@ -196,7 +195,7 @@ const usePlayer = () => {
           this.queue.append(tracks);
         },
         getCurrentTrack(): Track | null {
-          console.log("[hooks/useplayer.ts] player.getCurrentTrack()");
+          log.debug("player.getCurrentTrack()");
           return this.queue.getCurrentTrack();
         },
         getCurrentTime(): number {
@@ -219,7 +218,7 @@ const usePlayer = () => {
 
           await this.audio.play();
           // navigator.mediaSession.playbackState = "playing";
-          console.log("[hooks/useplayer.ts] Playing!");
+          log.debug("Playing!");
           setMediaMetadata(currentTrack, this);
           requestScreenLock();
         },
@@ -229,7 +228,7 @@ const usePlayer = () => {
           // navigator.mediaSession.playbackState = "paused";
         },
         stop() {
-          console.log("[hooks/useplayer.ts] player.stop()");
+          log.debug("player.stop()");
           this.audio.pause();
           this.audio.removeAttribute("src");
           this.audio.removeAttribute("hash");
@@ -276,20 +275,20 @@ const usePlayer = () => {
           return this.queue.getIndex() === this.getQueueLength() - 1;
         },
         skipNext() {
-          console.log("[hooks/useplayer.ts] player.skipNext()");
+          log.debug("player.skipNext()");
           this.stop();
           this.queue.next();
           this.play();
         },
         skipPrevious() {
-          console.log("[hooks/useplayer.ts] player.skipPrevious()");
+          log.debug("player.skipPrevious()");
           if (this.atFirstTrack()) return;
           this.stop();
           this.queue.previous();
           this.play();
         },
         skipTo(index: number) {
-          console.log("[hooks/useplayer.ts] player.skipTo()");
+          log.debug("player.skipTo()");
           this.stop();
           this.queue.setIndex(index);
           this.play();
@@ -298,7 +297,7 @@ const usePlayer = () => {
           this.queue.append(tracks);
         },
         removeTrackAt(index: number) {
-          console.log(`[hooks/useplayer.ts] player.removeTrackAt(${index})`);
+          log.debug(`player.removeTrackAt(${index})`);
           const trackIsPlaying = this.isPlaying() && this.queue.getIndex() === index;
           if (trackIsPlaying) this.stop();
           this.queue.removeAt(index);
@@ -317,36 +316,36 @@ const usePlayer = () => {
       player.setCurrentTime(audio.currentTime);
     };
     const reset = (ev: Event): void => {
-      console.log(`[hooks/useplayer.ts] Event: reset (${ev.type})`);
+      log.debug(`Event: reset (${ev.type})`);
       player.setCurrentTime(0);
       setPlaying(false);
     };
     const pause = (ev: AudioEvent): void => {
-      console.log(`[hooks/useplayer.ts] Event: pause (${ev.type})`);
+      log.debug(`Event: pause (${ev.type})`);
       const audio = ev.path ? ev.path[0] : ev.currentTarget;
       player.setCurrentTime(audio.currentTime);
       setPlaying(false);
       setLoading(false);
     };
     const play = (ev: Event): void => {
-      console.log(`[hooks/useplayer.ts] Event: play (${ev.type})`);
+      log.debug(`Event: play (${ev.type})`);
       setPlaying(true);
       setLoading(false);
     };
     const suspend = (ev: Event): void => {
-      console.log(`[hooks/useplayer.ts] Event: suspend (${ev.type})`);
+      log.debug(`Event: suspend (${ev.type})`);
       setPlaying(false);
       setLoading(false);
     };
     const waiting = (ev: Event): void => {
-      console.log(`[hooks/useplayer.ts] Event: waiting (${ev.type})`);
+      log.debug(`Event: waiting (${ev.type})`);
       setPlaying(false);
       setLoading(true);
     };
     const next = (ev: Event): void => {
-      console.log(`[hooks/useplayer.ts] Event: next (${ev.type})`);
+      log.debug(`Event: next (${ev.type})`);
       if (player.atLastTrack()) {
-        console.log(`[hooks/useplayer.ts] End of queue`);
+        log.debug(`End of queue`);
         player.setIndex(0);
         player.setCurrentTime(0);
         setPlaying(false);
@@ -360,25 +359,25 @@ const usePlayer = () => {
       }
     };
     const error = (ev: Event) => {
-      console.warn(`[hooks/useplayer.ts] Event: error (${ev.type})`);
+      log.warn(`Event: error (${ev.type})`);
       const target = ev.currentTarget as any;
       player.setCurrentTime(0);
       setPlaying(false);
       setLoading(false);
-      console.warn(`[hooks/useplayer.ts] "${target.error.message}"`);
+      log.warn(`"${target.error.message}"`);
       if (!errored) {
-        console.warn(`[hooks/useplayer.ts] [ERROR] Code: ${target.error.code}`);
-        console.warn(`[hooks/useplayer.ts] [ERROR] Message: "${target.error.message}"`);
-        console.log("[hooks/useplayer.ts] Reauthenticating...");
+        log.warn(`[ERROR] Code: ${target.error.code}`);
+        log.warn(`[ERROR] Message: "${target.error.message}"`);
+        log.debug("Reauthenticating...");
         reauth().then(() => {
-          console.log("[hooks/useplayer.ts] Retrying...");
+          log.debug("Retrying...");
           player.play().then(() => {
             errored = false;
           });
         });
       } else {
-        console.log(ev);
-        console.error(target.error);
+        log.debug(ev);
+        log.error(target.error);
       }
 
       errored = true;
@@ -398,7 +397,7 @@ const usePlayer = () => {
     // been loaded (or partially loaded), and the HTMLMediaElement.load method is called to
     // reload it
     // audio.addEventListener("emptied", () => {
-    //   console.log("[hooks/useplayer.ts] audio.emptied");
+    //   log.debug("audio.emptied");
     //   reset();
     // });
 
@@ -416,7 +415,7 @@ const usePlayer = () => {
 
     // Media data loading has been suspended
     // audio.addEventListener("suspend", () => {
-    //   console.log("[hooks/useplayer.ts] audio.suspend");
+    //   log.debug("audio.suspend");
     //   suspend();
     // });
 
@@ -439,7 +438,7 @@ const usePlayer = () => {
       audio.removeEventListener("timeupdate", timeUpdate as AudioEventListener);
       audio.removeEventListener("waiting", waiting);
 
-      console.log("[hooks/useplayer.ts] MediaSession.metadata = null");
+      log.debug("MediaSession.metadata = null");
       navigator.mediaSession.setActionHandler("nexttrack", null);
       navigator.mediaSession.setActionHandler("pause", null);
       navigator.mediaSession.setActionHandler("play", null);

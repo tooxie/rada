@@ -7,6 +7,9 @@ import {
 } from "../../../graphql/api";
 import { listArtists } from "../../../graphql/queries";
 import useQuery from "../../../hooks/usequery";
+import Logger from "../../../logger";
+
+const log = new Logger(__filename);
 
 type UseQueryReturnType = Omit<ReturnType<typeof useQuery>, "data">;
 interface UseListArtistsReturn extends UseQueryReturnType {
@@ -14,7 +17,7 @@ interface UseListArtistsReturn extends UseQueryReturnType {
 }
 
 const useListArtists = (queryFn?: DocumentNode): UseListArtistsReturn => {
-  console.log("[artists/hooks/uselistartists.ts] useListArtists");
+  log.debug("[artists/hooks/uselistartists.ts] useListArtists");
 
   const listArtistsFn = queryFn || listArtists;
   const { loading, error, data } = useQuery<ListArtistsQuery, ListArtistsQueryVariables>(
@@ -23,7 +26,7 @@ const useListArtists = (queryFn?: DocumentNode): UseListArtistsReturn => {
   );
   const artists = (data?.listArtists?.items || []) as Artist[];
 
-  console.log("[artists/hooks/uselistartists.ts] useListArtists.return:", {
+  log.debug("useListArtists.return:", {
     loading,
     error,
     artists,

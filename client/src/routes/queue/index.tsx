@@ -10,6 +10,7 @@ import { AlbumId } from "../../types";
 import { Artist, Track } from "../../graphql/api";
 import usePlayer from "../../hooks/useplayer";
 import ScrollTop from "../../components/scrolltop";
+import Logger from "../../logger";
 
 import clearQueueIcon from "./delete_list_playlist_remove.svg";
 import style from "./style.css";
@@ -19,10 +20,12 @@ import playSmallIcon from "./play-small.svg";
 import pauseIcon from "./pause.svg";
 import Timer from "./timer";
 
+const log = new Logger(__filename);
+
 const Queue = () => {
-  console.log(`[queue/index.tsx] Queue.render()`);
+  log.debug(`Queue.render()`);
   const player = usePlayer();
-  console.log("[queue/index.tsx] queue: ", player?.getQueue());
+  log.debug("queue: ", player?.getQueue());
   if (!player) return <div />;
   if (player.getQueueLength() === 0) route("/artists");
   const { queue } = player;
@@ -34,7 +37,7 @@ const Queue = () => {
 
   const trackClickHandler = (index: number) => player.skipTo(index);
   const togglePlayback = (event: Event) => {
-    console.log(`[queue/index.tsx] togglePlayback()`);
+    log.debug(`togglePlayback()`);
     player.togglePlayback();
     event.stopPropagation();
     event.preventDefault();
@@ -46,8 +49,8 @@ const Queue = () => {
   const toUrl = (id: string) => id.split(":").join("/");
   const track = player.getCurrentTrack();
   if (!track) return <div />;
-  console.log(`[queue/index.tsx] Current index at ${player.getIndex()}`);
-  console.log(`[queue/index.tsx] Current track is "${track.title}"`);
+  log.debug(`Current index at ${player.getIndex()}`);
+  log.debug(`Current track is "${track.title}"`);
   let prevArtist: string;
   let prevAlbum: string;
 

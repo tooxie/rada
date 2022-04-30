@@ -1,4 +1,8 @@
+import Logger from "../logger";
+
 import use from "./use";
+
+const log = new Logger(__filename);
 
 type UseReturnType = Omit<ReturnType<typeof use>, "data">;
 interface UseGetReturn<T> extends UseReturnType {
@@ -9,7 +13,7 @@ const useGet = <T, V>(fnGet: Function, pk: V): UseGetReturn<T> => {
   const { loading, error, data: item } = use<T, V>(fnGet, pk);
 
   const result = { loading, error, item };
-  console.log("[hooks/useget.ts] useGet.return:", result);
+  log.debug("useGet.return:", result);
   return result;
 };
 

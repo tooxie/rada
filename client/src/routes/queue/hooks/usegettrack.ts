@@ -5,6 +5,9 @@ import getClient from "../../../graphql/client";
 import useGet from "../../../hooks/useget";
 import { getTrack } from "../../../graphql/queries";
 import { TrackId, AlbumId } from "../../../types";
+import Logger from "../../../logger";
+
+const log = new Logger(__filename);
 
 const doGetTrack = async (variables: GetTrackQueryVariables): Promise<Track | null> => {
   const client = await getClient();
@@ -28,7 +31,7 @@ const useGetTrack = (trackId: TrackId, albumId: AlbumId): UseGetTrackType => {
       `useGetTrack requires 2 parameters, trackId and albumId. Got "${trackId}" and "${albumId}"`
     );
   }
-  console.log(`[hooks/usegettrack.ts] useGetTrack("${trackId}", "${albumId}")`);
+  log.debug(`useGetTrack("${trackId}", "${albumId}")`);
   const pk: GetTrackQueryVariables = { albumId, id: trackId };
   const {
     loading,
@@ -37,7 +40,7 @@ const useGetTrack = (trackId: TrackId, albumId: AlbumId): UseGetTrackType => {
   } = useGet<Track, GetTrackQueryVariables>(doGetTrack, pk);
 
   const result = { loading, error, track };
-  console.log("[hooks/usegettrack.ts] useGetTrack.return:", result);
+  log.debug("useGetTrack.return:", result);
   return result;
 };
 

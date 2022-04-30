@@ -6,6 +6,9 @@ import useGet from "../../../hooks/useget";
 import { getAlbumWithTracks } from "../../../graphql/custom";
 import { AlbumId } from "../../../types";
 import { toDbId } from "../../../utils/id";
+import Logger from "../../../logger";
+
+const log = new Logger(__filename);
 
 type UseGetReturnType = Omit<ReturnType<typeof useGet>, "item">;
 interface UseGetAlbumReturn extends UseGetReturnType {
@@ -24,7 +27,7 @@ const doGetAlbum = async (variables: GetAlbumQueryVariables) => {
 };
 
 const useGetAlbum = (id: AlbumId): UseGetAlbumReturn => {
-  console.log(`[hooks/usegetalbum.ts] useGetAlbum("${id}")`);
+  log.debug(`useGetAlbum("${id}")`);
   const dbId = toDbId("album", id);
   const pk: GetAlbumQueryVariables = { id: dbId };
   const {
@@ -39,7 +42,7 @@ const useGetAlbum = (id: AlbumId): UseGetAlbumReturn => {
   }
 
   const result = { loading, error, album };
-  console.log("[hooks/usegetalbum.ts] useGetAlbum.return:", result);
+  log.debug("useGetAlbum.return:", result);
   return result;
 };
 

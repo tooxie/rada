@@ -1,11 +1,11 @@
 import { h } from "preact";
 import { Link } from "preact-router";
 
-import { Album, Track } from "../../graphql/api";
+import { Album } from "../../graphql/api";
 import { AlbumId, TrackId } from "../../types";
 import useGetAlbum from "../../routes/albums/hooks/usegetalbum";
-import useGetTrack from "../../routes/queue/hooks/usegettrack";
 import usePlayer from "../../hooks/useplayer";
+import Logger from "../../logger";
 
 import style from "./style.css";
 import icon from "./playlist.svg";
@@ -13,6 +13,8 @@ import playIcon from "./play.svg";
 import pauseIcon from "./pause.svg";
 import wifiIcon from "./wifi.svg";
 import Countdown from "./countdown";
+
+const log = new Logger(__filename);
 
 interface PlayerProps {
   trackId: TrackId;
@@ -23,7 +25,7 @@ let backgroundImage = "url(none)";
 let _album: Album | null = null;
 
 const Player = (props: PlayerProps) => {
-  console.log(`[player/index.tsx] Player.render(${JSON.stringify(props)})`);
+  log.debug(`Player.render(${JSON.stringify(props)})`);
   const { album } = useGetAlbum(props.albumId);
   const albumChanged = _album?.id !== props.albumId;
   const player = usePlayer();

@@ -3,6 +3,9 @@ import { useState } from "preact/hooks";
 import useClient from "../../../graphql/hooks";
 import { CreateInviteInput } from "../../../graphql/api";
 import { createInvite } from "../../../graphql/mutations";
+import Logger from "../../../logger";
+
+const log = new Logger(__filename);
 
 type HookFn = (i: CreateInviteInput) => void;
 interface HookReturn {
@@ -27,7 +30,7 @@ const useCreateInvite = (): [HookFn, HookReturn] => {
         variables: { input },
       })
       .then(({ data }) => {
-        console.log("[invites/hooks/usecreate] useCreateInvite return:", data);
+        log.debug("useCreateInvite return:", data);
         setClaimUrl(data.createInvite.claimUrl);
         setLoading(false);
       })

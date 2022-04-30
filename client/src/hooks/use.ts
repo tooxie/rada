@@ -1,6 +1,9 @@
 import { useState, useEffect } from "preact/hooks";
 
 import { authenticate, fetchCredentials } from "../utils/auth";
+import Logger from "../logger";
+
+const log = new Logger(__filename);
 
 const reauth = () => authenticate(fetchCredentials());
 let oldError: Error | null = null;
@@ -14,7 +17,7 @@ interface UseReturn<T> {
 
 const use = <T, V>(fn: Function, vars: V): UseReturn<T> => {
   const fnName = fn.toString().split("\n")[0].split(" ")[1];
-  console.log(`[hooks/use.ts] use("${fnName}", ${JSON.stringify(vars)})`);
+  log.debug(`use("${fnName}", ${JSON.stringify(vars)})`);
 
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<T | null>(null);
@@ -23,16 +26,16 @@ const use = <T, V>(fn: Function, vars: V): UseReturn<T> => {
   useEffect(() => {
     fn(vars)
       .then((data: T) => {
-        console.log("[hooks/use.ts] use.useEffect.fn data:", data);
+        log.debug("use.useEffect.fn data:", data);
         setData(data);
         setLoading(false);
         if (error) setError(null);
         isRetry = false;
       })
       .catch(async (error: Error) => {
-        console.error("[hooks/use.ts] use.useEffect.fn error:", error);
-        console.log(`[hooks/use.ts] vars: (${typeof vars}) ${JSON.stringify(vars)}`);
-        console.log(fn.toString().split("{")[0]);
+        log.error("use.useEffect.fn error:", error);
+        log.debug(`vars: (${typeof vars}) ${JSON.stringify(vars)}`);
+        log.debug(fn.toString().split("{")[0]);
         setLoading(false);
         const msg = error.message.toLowerCase();
 
@@ -51,9 +54,9 @@ const use = <T, V>(fn: Function, vars: V): UseReturn<T> => {
         // unauthorized to see the contents, we don't want to retry forever.
         if (!isRetry) {
           if (msg.includes("unauthorized") || msg.includes("status code 401")) {
-            console.warn("[hooks/use.ts] It's a 401, we will attempt to reauth...");
+            log.warn("It's a 401, we will attempt to reauth...");
             await reauth();
-            console.log("[hooks/use.ts] Reauth successful, retrying...");
+            log.debug("Reauth successful, retrying...");
             setLoading(true);
             isRetry = true;
           }
@@ -62,7 +65,7 @@ const use = <T, V>(fn: Function, vars: V): UseReturn<T> => {
   }, [vars]);
 
   const result = { loading, error, data };
-  console.log("[hooks/use.ts] use.return:", result);
+  log.debug("use.return:", result);
   return result;
 };
 

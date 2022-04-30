@@ -3,7 +3,9 @@ import { ApolloQueryResult, DocumentNode, TypedDocumentNode } from "@apollo/clie
 
 import getClient from "../graphql/client";
 import { authenticate, fetchCredentials } from "../utils/auth";
+import Logger from "../logger";
 
+const log = new Logger(__filename);
 const reauth = () => authenticate(fetchCredentials());
 let oldError: Error | null = null;
 let isRetry = false;
@@ -14,10 +16,10 @@ const useQuery = <T, V = void>(query: Q, vars?: V) => {
   const [data, setData] = useState<T | null>();
   const [error, setError] = useState<Error | null>();
 
-  console.log(
-    `[hooks/usequery.ts] useQuery(query:${
-      (query.definitions[0] as any).name.value
-    }, vars:${JSON.stringify(vars)})`
+  log.debug(
+    `useQuery(query:${(query.definitions[0] as any).name.value}, vars:${JSON.stringify(
+      vars
+    )})`
   );
   getClient()
     .then(async (client) => {
@@ -25,8 +27,8 @@ const useQuery = <T, V = void>(query: Q, vars?: V) => {
       try {
         data = await client.query({ query, variables: vars });
       } catch (error: any) {
-        console.error("[hooks/usequery.ts] useQuery got error:", error);
-        console.log(`[hooks/usequery.ts] vars: (${typeof vars}) ${JSON.stringify(vars)}`);
+        log.error("useQuery got error:", error);
+        log.debug(`vars: (${typeof vars}) ${JSON.stringify(vars)}`);
         setLoading(false);
         const msg = error.message.toLowerCase();
 
@@ -45,9 +47,9 @@ const useQuery = <T, V = void>(query: Q, vars?: V) => {
         // unauthorized to see the contents, we don't want to retry forever.
         if (!isRetry) {
           if (msg.includes("unauthorized") || msg.includes("status code 401")) {
-            console.warn("[hooks/usequery.ts] It's a 401, we will attempt to reauth...");
+            log.warn("It's a 401, we will attempt to reauth...");
             await reauth();
-            console.log("[hooks/usequery.ts] Reauth successful, retrying...");
+            log.debug("Reauth successful, retrying...");
             setLoading(true);
             isRetry = true;
           }
@@ -55,17 +57,17 @@ const useQuery = <T, V = void>(query: Q, vars?: V) => {
       }
 
       if (data) {
-        console.log("[hooks/usequery.ts] useQuery got data:", data);
+        log.debug("useQuery got data:", data);
         setData((data as ApolloQueryResult<T>).data);
         setLoading(false);
         if (error) setError(null);
       }
     })
     .catch((error) => {
-      console.error(`[hooks/usequery.ts] Error getting graphql client: ${error}`);
+      log.error(`Error getting graphql client: ${error}`);
     });
 
-  console.log("[hooks/usequery.ts] useQuery.return:", { loading, error, data });
+  log.debug("useQuery.return:", { loading, error, data });
   return { loading, error, data };
 };
 

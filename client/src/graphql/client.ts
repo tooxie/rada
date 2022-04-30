@@ -3,6 +3,9 @@ import { onError } from "@apollo/client/link/error";
 
 import config from "../config.json";
 import { getAccessToken } from "../utils/auth";
+import Logger from "../logger";
+
+const log = new Logger(__filename);
 
 export type Client = ApolloClient<NormalizedCacheObject>;
 
@@ -17,11 +20,11 @@ const getClient = async (): Promise<Client> => {
   onError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors)
       graphQLErrors.forEach(({ message, locations, path }) =>
-        console.log(
-          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+        log.error(
+          `[GraphQL Error] Message: ${message}; Location: ${locations}; Path: ${path}`
         )
       );
-    if (networkError) console.log(`[Network error]: ${networkError}`);
+    if (networkError) log.error(`Network error: ${networkError}`);
   });
 
   const httpLink = createHttpLink({ uri: config.graphql.url });
