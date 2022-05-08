@@ -46,6 +46,7 @@ const Queue = ({ player, visible, onClick }: QueueProps) => {
 
   const trackClickHandler = (index: number) => player.skipTo(index);
   const clearQueue = (ev: Event) => {
+    player.pause();
     onClick();
     ev.stopPropagation();
     setTimeout(() => player.clearQueue(), 250);
