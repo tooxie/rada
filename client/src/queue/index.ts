@@ -24,12 +24,14 @@ const storage = {
     (this.cache as any)[key] = value;
   },
   clear: function () {
-    this.cache = {};
     this.__clearLocalStorage();
+    this.cache = {};
     this.setIndex(-1);
   },
   __clearLocalStorage: function (index?: number): void {
-    log.debug(`__clearLocalStorage(${index})`);
+    log.debug(
+      `Clearing localStorage from ${index ? index : 0} to ${this.getLength() - 1}`
+    );
     for (let x = index ? index : 0; x < this.getLength(); x++) {
       log.debug(`Removing item with key q.track-${x}`);
       localStorage.removeItem(`q.track-${x}`);

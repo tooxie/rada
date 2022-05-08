@@ -15,7 +15,6 @@ import Player from "./player";
 const AppRoot = () => {
   const { player } = usePlayer();
   const [showQueue, setShowQueue] = useState(false);
-  const track = player?.getCurrentTrack();
 
   if (!player)
     return (
@@ -31,13 +30,7 @@ const AppRoot = () => {
     <div id="preact_root" key="preact_root" class={style.root}>
       <PlayerCtx.Provider value={player}>
         <Router />
-        {track && (
-          <Player
-            trackId={track.id}
-            albumId={track.album.id}
-            onClick={() => setShowQueue(true)}
-          />
-        )}
+        <Player onClick={() => setShowQueue(true)} />
         {/*
           If I don't wrap the Queue component with a div I get the error:
           TypeError: Cannot read properties of null (reading 'type')

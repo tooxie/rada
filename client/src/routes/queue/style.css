@@ -2,6 +2,21 @@
   overflow: hidden;
 }
 
+.modal {
+  transition: background-color 0.25s ease;
+  background-color: transparent;
+  position: fixed;
+}
+
+.modal.visible {
+  background-color: rgba(0, 0, 0, 0.7);
+  display: block;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
 section.queue {
   background-color: white;
   border-radius: 1rem 1rem 0 0;
@@ -20,7 +35,7 @@ section.queue.hidden {
 
 section.queue.visible {
   top: 0.5rem;
-  transition: 0.5s ease-out;
+  transition: 0.35s ease-out;
 }
 
 .timer {

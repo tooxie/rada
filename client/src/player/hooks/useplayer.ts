@@ -189,10 +189,12 @@ const usePlayer = () => {
           log.debug("player.clearQueue()");
           this.stop();
           this.queue.clear();
+          forceRender();
         },
         replaceQueue(tracks) {
           this.clearQueue();
           this.queue.append(tracks);
+          forceRender();
         },
         getCurrentTrack(): Track | null {
           log.debug("player.getCurrentTrack()");
@@ -295,6 +297,7 @@ const usePlayer = () => {
         },
         appendTracks(tracks: Track[]) {
           this.queue.append(tracks);
+          forceRender();
         },
         removeTrackAt(index: number) {
           log.debug(`player.removeTrackAt(${index})`);

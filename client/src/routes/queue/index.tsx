@@ -1,6 +1,6 @@
 import { h, Fragment } from "preact";
 import { useEffect, useRef } from "preact/hooks";
-import { Link, route } from "preact-router";
+import { Link } from "preact-router";
 
 import type { IPlayer } from "../../player/types";
 
@@ -29,22 +29,26 @@ interface QueueProps {
 
 const Queue = ({ player, visible, onClick }: QueueProps) => {
   log.debug(`Queue.render()`);
-  if (player.getQueueLength() === 0) route("/artists");
   const { queue } = player;
   const ref = useRef<HTMLDivElement>(null);
 
+  const show = () => document.body.classList.add(style.noscroll);
+  const hide = () => document.body.classList.remove(style.noscroll);
+
   useEffect(() => {
-    if (visible) document.body.classList.add(style.noscroll);
-    else document.body.classList.remove(style.noscroll);
+    if (visible) show();
+    else hide();
+
     if (ref.current) ref.current.scrollTo({ top: 0 });
 
     return () => document.body.classList.remove(style.noscroll);
   }, [visible]);
 
   const trackClickHandler = (index: number) => player.skipTo(index);
-  const clearQueue = () => {
-    player.clearQueue();
-    window.history.back();
+  const clearQueue = (ev: Event) => {
+    onClick();
+    ev.stopPropagation();
+    setTimeout(() => player.clearQueue(), 250);
   };
   const toUrl = (id: string) => id.split(":").join("/");
   const track = player.getCurrentTrack();
@@ -132,74 +136,84 @@ const Queue = ({ player, visible, onClick }: QueueProps) => {
   const qDuration = queue.getDuration();
 
   return (
-    <section ref={ref} class={`${style.queue} ${visible ? style.visible : style.hidden}`}>
-      <Header
-        key="queue-header"
-        id={track.album.id as AlbumId}
-        hidePlayButton={true}
-        hideNav={true}
-        onClick={() => (onClick ? onClick() : null)}
+    <Fragment>
+      <div class={`${style.modal} ${visible ? style.visible : ""}`} />
+
+      <section
+        ref={ref}
+        class={`${style.queue} ${visible ? style.visible : style.hidden}`}
       >
-        <Vinyl
-          onPlay={() => player.play()}
-          onPause={() => player.pause()}
-          isPlaying={player.isPlaying()}
-          isLoading={player.isLoading()}
-          totalTime={player.getCurrentTrack()?.lengthInSeconds || 0}
-          currentTime={player.getCurrentTime()}
-        />
-      </Header>
+        <Header
+          key="queue-header"
+          id={track.album.id as AlbumId}
+          hidePlayButton={true}
+          hideNav={true}
+          onClick={() => (onClick ? onClick() : null)}
+        >
+          <Vinyl
+            onPlay={() => player.play()}
+            onPause={() => player.pause()}
+            isPlaying={player.isPlaying()}
+            isLoading={player.isLoading()}
+            totalTime={player.getCurrentTrack()?.lengthInSeconds || 0}
+            currentTime={player.getCurrentTime()}
+          />
+        </Header>
 
-      <Shoulder key="queue-shoulder" detail={true} noPadding={true}>
-        <section class={style.timer}>
-          <div class={style.remaining}>
-            <Timer
-              current={player?.getCurrentTime()}
-              total={track.lengthInSeconds}
-              playing={player?.isPlaying()}
-            />
-          </div>
-          <div class={style.total}>{toMinutes(track.lengthInSeconds)}</div>
-        </section>
-
-        <section class={style.details}>
-          <div class={style.title}>
-            <Link href={`/${toUrl(track.album.id)}/${toUrl(track.id)}`} onClick={onClick}>
-              {track.title ? (
-                track.title
-              ) : (
-                <span class={style.missing}>&lt;no title&gt;</span>
-              )}
-            </Link>
-          </div>
-          <div class={style.artists} onClick={onClick}>
-            {renderArtistLinks(track?.artists || [])}
-          </div>
-          <div class={style.album}>
-            <Link href={`/album/${urlize(track.album.id)}`} onClick={onClick}>
-              {track.album.name}
-            </Link>
-            &nbsp;
-          </div>
-        </section>
-
-        <section class={style.tracklist}>
-          <div class={style.heading}>
-            <h2>
-              Queue | {qLength} tracks | {toMinutes(qDuration)}
-            </h2>
-            <div class={style.clearQueueIcon} onClick={clearQueue}>
-              <img src={clearQueueIcon} />
+        <Shoulder key="queue-shoulder" detail={true} noPadding={true}>
+          <section class={style.timer}>
+            <div class={style.remaining}>
+              <Timer
+                current={player?.getCurrentTime()}
+                total={track.lengthInSeconds}
+                playing={player?.isPlaying()}
+              />
             </div>
-          </div>
-          {queue.getTracks().map(renderTrackList)}
-        </section>
+            <div class={style.total}>{toMinutes(track.lengthInSeconds)}</div>
+          </section>
 
-        <div class={style.scrolltop}>
-          <ScrollTop container={ref.current} />
-        </div>
-      </Shoulder>
-    </section>
+          <section class={style.details}>
+            <div class={style.title}>
+              <Link
+                href={`/${toUrl(track.album.id)}/${toUrl(track.id)}`}
+                onClick={onClick}
+              >
+                {track.title ? (
+                  track.title
+                ) : (
+                  <span class={style.missing}>&lt;no title&gt;</span>
+                )}
+              </Link>
+            </div>
+            <div class={style.artists} onClick={onClick}>
+              {renderArtistLinks(track?.artists || [])}
+            </div>
+            <div class={style.album}>
+              <Link href={`/album/${urlize(track.album.id)}`} onClick={onClick}>
+                {track.album.name}
+              </Link>
+              &nbsp;
+            </div>
+          </section>
+
+          <section class={style.tracklist}>
+            <div class={style.heading}>
+              <h2>
+                Queue | {qLength} tracks | {toMinutes(qDuration)}
+              </h2>
+              <div class={style.clearQueueIcon} onClick={clearQueue}>
+                <img src={clearQueueIcon} />
+              </div>
+            </div>
+            {queue.getTracks().map(renderTrackList)}
+          </section>
+
+          <div class={style.scrolltop}>
+            <ScrollTop container={ref.current} />
+          </div>
+        </Shoulder>
+      </section>
+    </Fragment>
   );
 };
 
