@@ -1,30 +1,3 @@
-.vinyl {
-  display: flex;
-  justify-content: center;
-}
-
-.border {
-  position: relative;
-  top: 48vw;
-  z-index: 1;
-  background-color: white;
-  border-radius: 50%;
-  padding: 1rem;
-  width: 65vw;
-}
-
-.vinyl img {
-  width: 100%;
-}
-
-.controls {
-  background-image: url(/assets/img/vinyl.png);
-  background-size: contain;
-  background-repeat: no-repeat;
-  width: 100%;
-  padding: calc(100vw / 5);
-}
-
 .timer {
   display: flex;
   justify-content: space-between;

@@ -19,6 +19,7 @@ import loadingIcon from "./wifi.svg";
 import playSmallIcon from "./play-small.svg";
 import pauseIcon from "./pause.svg";
 import Timer from "./timer";
+import Vinyl from "./vinyl";
 
 const log = new Logger(__filename);
 
@@ -131,19 +132,14 @@ const Queue = () => {
   return (
     <Fragment key="queue">
       <Header key="queue-header" id={track.album.id as AlbumId} hidePlayButton={true}>
-        <section class={style.vinyl}>
-          <div class={style.border}>
-            <div class={style.controls}>
-              {player.isLoading() ? (
-                <img src={loadingIcon} onClick={togglePlayback} />
-              ) : player.isPlaying() ? (
-                <img src={pauseIcon} onClick={togglePlayback} />
-              ) : (
-                <img src={playBigIcon} onClick={togglePlayback} />
-              )}
-            </div>
-          </div>
-        </section>
+        <Vinyl
+          onPlay={() => player.play()}
+          onPause={() => player.pause()}
+          isPlaying={player.isPlaying()}
+          isLoading={player.isLoading()}
+          totalTime={player.getCurrentTrack()?.lengthInSeconds || 0}
+          currentTime={player.getCurrentTime()}
+        />
       </Header>
 
       <Shoulder key="queue-shoulder" detail={true} noPadding={true}>

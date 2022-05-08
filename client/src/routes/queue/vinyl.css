@@ -1,0 +1,49 @@
+.border {
+  background-color: white;
+  border-radius: 50%;
+  padding: 1rem;
+  width: 65vw;
+  z-index: 1;
+}
+
+.vinyl {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  top: calc((100vw - (65vw / 2)) - 3rem);
+}
+
+.controls {
+  background-image: url(/assets/img/vinyl.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 100%;
+  padding: calc(100vw / 5);
+  position: relative;
+}
+
+.arm {
+  left: 10vw;
+  filter: drop-shadow(2px 3px 2px rgba(0, 0, 0, 0.3));
+  position: absolute;
+  top: 80vw;
+  transform-origin: 37% 84%;
+  width: 33vw;
+  z-index: 1;
+}
+
+.idle {
+  transform: rotate(-21deg);
+}
+
+/* If either the loading or playing classes change rotation value, the
+ * calculation for the current position has to be updated in the
+ * vinyl.tsx file.
+ */
+.loading {
+  transform: rotate(-14deg);
+}
+
+.playing {
+  transform: rotate(10deg);
+}
