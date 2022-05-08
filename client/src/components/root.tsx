@@ -38,7 +38,21 @@ const AppRoot = () => {
             onClick={() => setShowQueue(true)}
           />
         )}
-        <Queue player={player} visible={showQueue} onClick={() => setShowQueue(false)} />
+        {/*
+          If I don't wrap the Queue component with a div I get the error:
+          TypeError: Cannot read properties of null (reading 'type')
+              at getPreviousSibling (async.js?7a7b:8:1)
+              at getPreviousSibling (async.js?7a7b:19:1)
+              at AsyncComponent.render (async.js?7a7b:48:1)
+          This is the @preact/async-loader package. Is this a preact bug?
+         */}
+        <div>
+          <Queue
+            player={player}
+            visible={showQueue}
+            onClick={() => setShowQueue(false)}
+          />
+        </div>
       </PlayerCtx.Provider>
     </div>
   );
