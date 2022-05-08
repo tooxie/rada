@@ -13,22 +13,12 @@ const Menu = ({ hideControls, isAdmin }: MenuProps) => {
 
   return (
     <section class={style.collections}>
-{/*
-      <Link href="/favorites" activeClassName={style.active}>
-        Favs
-      </Link>
-*/}
       <Link href="/artists" activeClassName={style.active}>
         Artists
       </Link>
       <Link href="/albums" activeClassName={style.active}>
         Albums
       </Link>
-{/*
-      <Link href="/playlists" activeClassName={style.active}>
-        Playlists
-      </Link>
-*/}
       {isAdmin && (
         <Link href="/invitations" activeClassName={style.active}>
           Invitations

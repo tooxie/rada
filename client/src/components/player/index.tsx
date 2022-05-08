@@ -34,14 +34,6 @@ const Player = (props: PlayerProps) => {
   if (albumChanged) _album = album;
   if (_album) backgroundImage = `url(${_album.imageUrl || "none"})`;
 
-  // const dispatch = (event: Event, eventName: string) => {
-  //   doNothing(event);
-  // };
-  // const doNothing = (event: Event) => {
-  //   event.stopPropagation();
-  //   event.preventDefault();
-  // };
-
   const clickHandler = (ev: Event) => {
     ev.preventDefault();
     ev.stopPropagation();

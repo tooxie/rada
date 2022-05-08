@@ -1,14 +1,7 @@
-import { h, Fragment } from "preact";
+import { h } from "preact";
 import { useLayoutEffect, useRef } from "preact/hooks";
 
 import toMinutes from "../../utils/tominutes";
-import usePlayer from "../../hooks/useplayer";
-
-const _Timer = () => {
-  const player = usePlayer();
-
-  return <Fragment>{toMinutes(player?.getCurrentTime())}</Fragment>;
-};
 
 interface TimerProps {
   current: number;

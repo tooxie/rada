@@ -1,5 +1,4 @@
 import { Track as ITrack } from "../graphql/api";
-// import { TrackId } from "../types";
 
 import Logger from "../logger";
 
@@ -36,13 +35,6 @@ const storage = {
       localStorage.removeItem(`q.track-${x}`);
     }
   },
-  // __updateLocalStorage: function (): void {
-  //   for (let x = 0; x < this.getLength() - 1; x++) {
-  //     const key = `q.track-${x}`;
-  //     const value = (this.cache as any)[key];
-  //     localStorage.setItem(key, JSON.stringify(value));
-  //   }
-  // },
   setItem: function (key: string, value: any): void {
     if (!value || value === "undefined") throw new Error(`No value for item "${key}"`);
     this.saveToCache(key, value);
@@ -141,7 +133,6 @@ const init = () => {
 const getIndex = () => storage.getIndex();
 const setIndex = (index: number) => storage.setIndex(index);
 const getLength = () => storage.getLength();
-// const setLength = (length: number) => storage.setLength(length);
 const clear = () => storage.clear();
 
 const shiftIndex = (offset: number) => {

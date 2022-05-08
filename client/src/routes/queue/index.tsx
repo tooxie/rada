@@ -112,12 +112,7 @@ const Queue = () => {
               {track.album.isVa ? getArtistName(track) : ""}
               {track.features ? ` ft. ${getFeatures(track)}` : ""}
             </div>
-            {/* TODO: Add here the `feature` attr */}
           </div>
-          {/* <X onclick={() => dispatch({ type: actions.RemoveAt, index })} />
-           *   icon: delete_music_playlist_remove_song_track.svg
-           * <Options track={track} index={index} />
-           */}
           <div class={style.rm} onClick={rmTrack(index)}>
             &#215;
           </div>

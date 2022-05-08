@@ -1,4 +1,4 @@
-import { ComponentChildren, Fragment, FunctionComponent, h, VNode } from "preact";
+import { Fragment, FunctionComponent, h } from "preact";
 
 import { AlbumId, TrackId } from "../../../types";
 import DefaultHeader from "../../header";
@@ -38,35 +38,6 @@ const Detail = (
       </Fragment>
     );
   };
-};
-
-interface Props {
-  children: ComponentChildren;
-  header?: VNode<any>;
-  id?: string;
-}
-
-const _Detail = (props: Props) => {
-  const player = usePlayer();
-  if (!player) return <div />;
-
-  const track = player.getCurrentTrack();
-
-  return (
-    <Fragment>
-      {!!track && (
-        <Player
-          key="player"
-          trackId={track.id as TrackId}
-          albumId={track.album.id as AlbumId}
-        />
-      )}
-      {props.header ? props.header : <DefaultHeader />}
-      <Shoulder key="detail-shoulder" detail={true}>
-        {props.children}
-      </Shoulder>
-    </Fragment>
-  );
 };
 
 export default Detail;
