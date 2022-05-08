@@ -5,9 +5,9 @@ import BackLink from "../backlink";
 import useConf from "../../hooks/useconf";
 
 import back from "./back.svg";
-import servers from "./servers.svg";
 import searchIn from "./search-in.svg";
 import searchOut from "./search-out.svg";
+import Servers from "./servers";
 import Settings from "./settings";
 import style from "./style.css";
 
@@ -51,8 +51,8 @@ const Navigation = (props: NavigationProps) => {
           </div>
 
           {/* Only show if we have at least 1 server */}
-          <div class={style.servers} onClick={() => alert("Servers!")}>
-            <img src={servers} />
+          <div class={style.servers}>
+            <Servers />
           </div>
 
           <div class={style.search}>
