@@ -255,6 +255,7 @@ export type GetAlbumWithTracksQuery = {
         id: string;
         name?: string | null;
         imageUrl?: string | null;
+        isVa?: boolean | null;
       };
     }> | null;
   } | null;

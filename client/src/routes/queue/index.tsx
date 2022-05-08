@@ -52,17 +52,16 @@ const Queue = () => {
   if (!track) return <div />;
   log.debug(`Current index at ${player.getIndex()}`);
   log.debug(`Current track is "${track.title}"`);
-  let prevArtist: string;
-  let prevAlbum: string;
+  let prevTrack: Track | undefined;
+  const getArtistName = (track?: Track): string | null =>
+    (track?.artists || []).map((a) => a.name).join(", ");
 
   const renderTrackList = (track: Track, index: number) => {
-    const getArtistName = (track: Track) =>
-      (track.artists || []).map((a) => a.name).join(", ");
     const getFeatures = (track: Track) => (track.features || []).join(", ");
-    let currArtist = !!track.album.isVa ? "V/A" : getArtistName(track);
-    let currAlbum = track.album.name || "";
-    let artistChanged = currArtist !== prevArtist;
-    let albumChanged = currAlbum !== prevAlbum;
+    const artistName = track.album.isVa ? "V/A" : getArtistName(track);
+    const albumName = track.album.name;
+    let artistChanged = artistName !== getArtistName(prevTrack);
+    let albumChanged = track.album.id !== prevTrack?.album.id;
     const isCurrentTrack = queue.getIndex() === index;
     const trackClasses = style.track + (isCurrentTrack ? ` ${style.current}` : "");
     const clickHandler = isCurrentTrack ? undefined : () => trackClickHandler(index);
@@ -73,17 +72,22 @@ const Queue = () => {
         ev.stopPropagation();
       };
     };
+    // If the album is V/A then we ignore the artist because it will obviously
+    // be different for every track.
+    const showHeader = track.album.isVa ? albumChanged : artistChanged || albumChanged;
 
     const trackJsx = (
       <Fragment>
-        {artistChanged || albumChanged ? (
+        {showHeader && (
           <div class={style.header}>
-            {/* TODO: Handle missing artist/album */}
-            <span class={style.artists}>{currArtist}</span>/
-            <span class={style.album}>{currAlbum}</span>
+            <span class={artistName ? style.artists : style.missing}>
+              {artistName || "<no artist>"}
+            </span>
+            &nbsp;
+            <span class={albumName ? style.album : style.missing}>
+              {albumName || "<no album>"}
+            </span>
           </div>
-        ) : (
-          ""
         )}
         <div key={`q-track-${index}`} class={trackClasses} onClick={clickHandler}>
           <div class={style.index}>
@@ -109,10 +113,10 @@ const Queue = () => {
             ) : (
               <span class={style.missing}>&lt;no title&gt;</span>
             )}
-            <div class={style.sub}>
+            <span class={style.sub}>
               {track.album.isVa ? getArtistName(track) : ""}
               {track.features ? ` ft. ${getFeatures(track)}` : ""}
-            </div>
+            </span>
           </div>
           <div class={style.rm} onClick={rmTrack(index)}>
             &#215;
@@ -120,8 +124,7 @@ const Queue = () => {
         </div>
       </Fragment>
     );
-    prevArtist = currArtist;
-    prevAlbum = currAlbum;
+    prevTrack = track;
 
     return trackJsx;
   };

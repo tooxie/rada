@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
 export const getAlbum = gql`
-  query GetAlbum($id: ID!) {
+  query GetAlbumOnly($id: ID!) {
     getAlbum(id: $id) {
       id
       name
@@ -41,6 +41,7 @@ export const getAlbumWithTracks = gql`
           id
           name
           imageUrl
+          isVa
         }
       }
     }
