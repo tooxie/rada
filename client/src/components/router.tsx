@@ -48,7 +48,7 @@ const AppRouter = () => {
       <Route path="/playlist/:id" key="playlist" component={PlaylistDetail} />
 
       <Route path="/queue" key="queue" component={Queue} />
-      <Route path="/invitations" key="queue" component={Invitations} />
+      <Route path="/invitations" key="invites" component={Invitations} />
 
       <NotFound default />
     </Router>
