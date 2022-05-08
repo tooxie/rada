@@ -18,12 +18,10 @@ const InviteList = () => {
 
   if (!conf.isAdmin) route("/404");
 
-  if (loading) {
-    return <Spinner />;
-  } else {
-    if (error) return <p class={style.empty}>{error.message}</p>;
-    if (!invites || invites.length < 1) return <p class={style.empty}>No invites</p>;
-  }
+  if (error) return <p class={style.empty}>{error.message}</p>;
+  if (loading) <Spinner />;
+  if ((invites || []).length < 1) return <p class={style.empty}>No invites</p>;
+
   const stats = invites.reduce(
     (acc, invite) => {
       acc.claimed += Number(!!invite.visited);
