@@ -19,13 +19,14 @@
 
 section.queue {
   background-color: white;
+  border: 1px solid gray;
+  border-bottom: none;
   border-radius: 1rem 1rem 0 0;
   height: 100%;
   overflow: scroll;
   position: fixed;
   width: 100%;
   z-index: 1;
-  border: 1px solid gray;
 }
 
 section.queue.hidden {
