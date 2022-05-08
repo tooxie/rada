@@ -1,11 +1,7 @@
 import type { ApolloClient, NormalizedCacheObject } from "@apollo/client";
-import { onError } from "@apollo/client/link/error";
 
 import config from "../config.json";
 import { getAccessToken } from "../utils/auth";
-import Logger from "../logger";
-
-const log = new Logger(__filename);
 
 export type Client = ApolloClient<NormalizedCacheObject>;
 
@@ -16,16 +12,6 @@ const getClient = async (): Promise<Client> => {
 
   const { ApolloClient, createHttpLink, InMemoryCache } = await import("@apollo/client");
   const { setContext } = await import("@apollo/client/link/context");
-
-  onError(({ graphQLErrors, networkError }) => {
-    if (graphQLErrors)
-      graphQLErrors.forEach(({ message, locations, path }) =>
-        log.error(
-          `[GraphQL Error] Message: ${message}; Location: ${locations}; Path: ${path}`
-        )
-      );
-    if (networkError) log.error(`Network error: ${networkError}`);
-  });
 
   const httpLink = createHttpLink({ uri: config.graphql.url });
   const authLink = setContext((_, { headers }) => {
