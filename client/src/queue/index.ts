@@ -41,7 +41,6 @@ const storage = {
     localStorage.setItem(key, JSON.stringify(value));
   },
   getItem: function (key: string): Track | null {
-    log.debug(`Getting track under key "${key}"`);
     return (this.cache as any)[key] || null;
   },
   removeItem: function (key: string): void {
