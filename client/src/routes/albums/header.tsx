@@ -19,14 +19,23 @@ const Header = (props: DetailProps) => {
   log.debug(`Loading album "${props.id}"`);
   const albumId = props.id as AlbumId;
   const { album } = useGetAlbum(albumId);
+  const clickHandler = (ev: Event) => {
+    ev.stopPropagation();
+    if (props.onClick) props.onClick(ev);
+  };
 
   if (!_album || _album.id !== props.id) _album = album;
 
   backgroundImage = `url("${_album?.imageUrl || "none"}")`;
 
   return (
-    <header key="header" class={style.header} style={{ backgroundImage }}>
-      <Navigation />
+    <header
+      key="header"
+      class={style.header}
+      style={{ backgroundImage }}
+      onClick={clickHandler}
+    >
+      {!props.hideNav && <Navigation />}
       {_album && !props.hidePlayButton && <PlayAlbum albumId={albumId} />}
       {props.children}
     </header>

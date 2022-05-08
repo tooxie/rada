@@ -1,3 +1,28 @@
+.noscroll {
+  overflow: hidden;
+}
+
+section.queue {
+  background-color: white;
+  border-radius: 1rem 1rem 0 0;
+  height: 100%;
+  overflow: scroll;
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+  border: 1px solid gray;
+}
+
+section.queue.hidden {
+  top: 100vh;
+  transition: 0.25s ease-in;
+}
+
+section.queue.visible {
+  top: 0.5rem;
+  transition: 0.5s ease-out;
+}
+
 .timer {
   display: flex;
   justify-content: space-between;
@@ -16,7 +41,6 @@ section.tracklist .album {
 }
 
 section.details {
-  margin-top: 10vw;
   padding: 0 1rem;
   position: relative;
   z-index: 1;
@@ -32,13 +56,12 @@ section.details .artists a, section.details .album a {
 }
 
 section.details .title {
-  align-items: center;
+  align-items: flex-end;
   display: flex;
   font-size: 2rem;
   font-weight: bold;
   justify-content: center;
-  margin-bottom: 1rem;
-  min-height: 4rem;
+  min-height: 3rem;
 
  -webkit-text-stroke: 1px black;
  color: white;
@@ -61,6 +84,7 @@ section.details .title .missing {
 
 section.details .artists {
   font-size: 1.5rem;
+  margin-top: 0.5rem;
 }
 
 section.details .artists, section.details .album {
@@ -108,7 +132,7 @@ section.tracklist .track .index {
 
 section.tracklist .track .title {
   flex-grow: 1;
-  margin: 0.5rem 0;
+  margin: 0.25rem 0;
 }
 
 section.tracklist .title .missing {

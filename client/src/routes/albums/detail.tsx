@@ -1,6 +1,6 @@
 import { Fragment, h } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { Link, route } from "preact-router";
+import { Link } from "preact-router";
 
 import { DetailProps } from "../../components/layout/detail/types";
 import Spinner from "../../components/spinner";
@@ -48,11 +48,7 @@ const AlbumDetail = ({ id, trackId }: DetailProps) => {
 
   const trackList = ((_album.tracks || []) as Required<Track>[]).filter((t) => t.url);
   const getTracks = (i: number) => (i == 0 ? trackList : trackList.slice(i));
-  const appendFrom = (i: number) => {
-    if (!player) return;
-    player.appendTracks(getTracks(i));
-    route("/queue");
-  };
+  const appendFrom = (i: number) => player?.appendTracks(getTracks(i));
   const isVa = (_album.artists || []).length > 1;
   const durationInSeconds = trackList.reduce((total, track) => {
     return total + (track.lengthInSeconds || 0);

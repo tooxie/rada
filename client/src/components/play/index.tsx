@@ -1,5 +1,4 @@
 import { h } from "preact";
-import { route } from "preact-router";
 
 import { Track } from "../../graphql/api";
 import usePlayer from "../../hooks/useplayer";
@@ -12,10 +11,7 @@ interface PlayProps {
 
 const Play = (props: PlayProps) => {
   const player = usePlayer();
-  const handler = () => {
-    player?.queue.append([props.track]);
-    route("/queue");
-  };
+  const handler = () => player?.queue.append([props.track]);
 
   return (
     <div onClick={handler} class={props.class}>

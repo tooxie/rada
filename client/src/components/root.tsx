@@ -1,19 +1,21 @@
 import { h, Fragment } from "preact";
 import { useState } from "preact/hooks";
 
-import { Track } from "../graphql/api";
+import Queue from "../routes/queue";
 import usePlayer from "../player/hooks/useplayer";
 
+import PlayerCtx from "./player/context";
 import Shoulder from "./layout/shoulder";
-import Player from "./player/context";
 import Header from "./header";
 import Router from "./router";
 
 import style from "./app.css";
+import Player from "./player";
 
 const AppRoot = () => {
   const { player } = usePlayer();
-  const [track, setTrack] = useState<Track>();
+  const [showQueue, setShowQueue] = useState(false);
+  const track = player?.getCurrentTrack();
 
   if (!player)
     return (
@@ -25,17 +27,19 @@ const AppRoot = () => {
       </Fragment>
     );
 
-  const _track = player.getCurrentTrack();
-
-  if ((!track && _track) || track?.id !== _track?.id) {
-    if (_track) setTrack(_track);
-  }
-
   return (
     <div id="preact_root" key="preact_root" class={style.root}>
-      <Player.Provider value={player}>
+      <PlayerCtx.Provider value={player}>
         <Router />
-      </Player.Provider>
+        {track && (
+          <Player
+            trackId={track.id}
+            albumId={track.album.id}
+            onClick={() => setShowQueue(true)}
+          />
+        )}
+        <Queue player={player} visible={showQueue} onClick={() => setShowQueue(false)} />
+      </PlayerCtx.Provider>
     </div>
   );
 };

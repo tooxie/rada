@@ -4,7 +4,6 @@ import { Route, Router } from "preact-router";
 import Home from "../routes/home";
 import Unauthorized from "../routes/unauthorized";
 import NotFoundPage from "../routes/notfound";
-import Queue from "../routes/queue";
 import InviteList from "../routes/invites";
 
 import Collection from "./layout/collection";
@@ -46,8 +45,6 @@ const AppRouter = () => {
       <Route path="/album/:id" key="album" component={AlbumDetail} />
       <Route path="/album/:id/track/:trackId" key="track" component={AlbumDetail} />
       <Route path="/playlist/:id" key="playlist" component={PlaylistDetail} />
-
-      <Route path="/queue" key="queue" component={Queue} />
       <Route path="/invitations" key="invites" component={Invitations} />
 
       <NotFound default />

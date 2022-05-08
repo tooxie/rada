@@ -1,6 +1,8 @@
 import { h, Fragment } from "preact";
-import { useEffect } from "preact/hooks";
+import { useEffect, useRef } from "preact/hooks";
 import { Link, route } from "preact-router";
+
+import type { IPlayer } from "../../player/types";
 
 import Header from "../albums/header";
 import Shoulder from "../../components/layout/shoulder";
@@ -8,41 +10,38 @@ import toMinutes from "../../utils/tominutes";
 import { urlize } from "../../utils/id";
 import { AlbumId } from "../../types";
 import { Artist, Track } from "../../graphql/api";
-import usePlayer from "../../hooks/useplayer";
 import ScrollTop from "../../components/scrolltop";
 import Logger from "../../logger";
 
 import clearQueueIcon from "./delete_list_playlist_remove.svg";
 import style from "./style.css";
-import playBigIcon from "./play-big.svg";
-import loadingIcon from "./wifi.svg";
 import playSmallIcon from "./play-small.svg";
-import pauseIcon from "./pause.svg";
 import Timer from "./timer";
 import Vinyl from "./vinyl";
 
 const log = new Logger(__filename);
 
-const Queue = () => {
+interface QueueProps {
+  player: IPlayer;
+  visible: boolean;
+  onClick: (ev?: Event) => void;
+}
+
+const Queue = ({ player, visible, onClick }: QueueProps) => {
   log.debug(`Queue.render()`);
-  const player = usePlayer();
-  log.debug("queue: ", player?.getQueue());
-  if (!player) return <div />;
   if (player.getQueueLength() === 0) route("/artists");
   const { queue } = player;
+  const ref = useRef<HTMLDivElement>(null);
 
-  // If you scroll down in the artists page, for example, and then click on the
-  // player to go to the queue, it won't reset the scroll position, so we have
-  // to force it ¯\_(ツ)_/¯
-  useEffect(() => window.scrollTo(0, 0), []);
+  useEffect(() => {
+    if (visible) document.body.classList.add(style.noscroll);
+    else document.body.classList.remove(style.noscroll);
+    if (ref.current) ref.current.scrollTo({ top: 0 });
+
+    return () => document.body.classList.remove(style.noscroll);
+  }, [visible]);
 
   const trackClickHandler = (index: number) => player.skipTo(index);
-  const togglePlayback = (event: Event) => {
-    log.debug(`togglePlayback()`);
-    player.togglePlayback();
-    event.stopPropagation();
-    event.preventDefault();
-  };
   const clearQueue = () => {
     player.clearQueue();
     window.history.back();
@@ -133,8 +132,14 @@ const Queue = () => {
   const qDuration = queue.getDuration();
 
   return (
-    <Fragment key="queue">
-      <Header key="queue-header" id={track.album.id as AlbumId} hidePlayButton={true}>
+    <section ref={ref} class={`${style.queue} ${visible ? style.visible : style.hidden}`}>
+      <Header
+        key="queue-header"
+        id={track.album.id as AlbumId}
+        hidePlayButton={true}
+        hideNav={true}
+        onClick={() => (onClick ? onClick() : null)}
+      >
         <Vinyl
           onPlay={() => player.play()}
           onPause={() => player.pause()}
@@ -159,7 +164,7 @@ const Queue = () => {
 
         <section class={style.details}>
           <div class={style.title}>
-            <Link href={`/${toUrl(track.album.id)}/${toUrl(track.id)}`}>
+            <Link href={`/${toUrl(track.album.id)}/${toUrl(track.id)}`} onClick={onClick}>
               {track.title ? (
                 track.title
               ) : (
@@ -167,14 +172,13 @@ const Queue = () => {
               )}
             </Link>
           </div>
-          <div class={style.artists}>
-            {/* Small hack to preserve the height of the element while the track loads */}
-            {track?.artists ? "" : <div>&nbsp;</div>}
+          <div class={style.artists} onClick={onClick}>
             {renderArtistLinks(track?.artists || [])}
           </div>
           <div class={style.album}>
-            {/* eslint-disable-next-line @typescript-eslint/no-use-before-define */}
-            <Link href={`/album/${urlize(track.album.id)}`}>{track.album.name}</Link>
+            <Link href={`/album/${urlize(track.album.id)}`} onClick={onClick}>
+              {track.album.name}
+            </Link>
             &nbsp;
           </div>
         </section>
@@ -192,10 +196,10 @@ const Queue = () => {
         </section>
 
         <div class={style.scrolltop}>
-          <ScrollTop />
+          <ScrollTop container={ref.current} />
         </div>
       </Shoulder>
-    </Fragment>
+    </section>
   );
 };
 

@@ -15,7 +15,7 @@
   -webkit-touch-callout: none;
 }
 
-.player a {
+.player .wrapper {
   border-radius: 1rem 1rem 0 0;
   align-items: center;
   backdrop-filter: blur(1rem) brightness(0.7);
@@ -26,7 +26,7 @@
   width: 100%;
 }
 
-.player a img {
+.player .wrapper img {
   width: 1.5rem;
 }
 

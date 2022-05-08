@@ -1,5 +1,4 @@
 import { h } from "preact";
-import { route } from "preact-router";
 
 import { AlbumId } from "../../types";
 import style from "./play.css";
@@ -22,7 +21,8 @@ const PlayAlbum = ({ albumId }: PlayAlbumProps) => {
 
     player.replaceQueue(tracks);
     player.play();
-    route("/queue");
+
+    // TODO: Show queue
   };
 
   return (

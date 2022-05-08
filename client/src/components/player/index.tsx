@@ -1,5 +1,4 @@
 import { h } from "preact";
-import { Link } from "preact-router";
 
 import { Album } from "../../graphql/api";
 import { AlbumId, TrackId } from "../../types";
@@ -19,6 +18,7 @@ const log = new Logger(__filename);
 interface PlayerProps {
   trackId: TrackId;
   albumId: AlbumId;
+  onClick: Function;
 }
 
 let backgroundImage = "url(none)";
@@ -41,22 +41,16 @@ const Player = (props: PlayerProps) => {
   };
   const title = player.getCurrentTrack()?.title;
   const artists = player.getCurrentTrack()?.artists || [];
+  const notify = () => (props.onClick ? props.onClick() : null);
 
   return (
     <div
       key="player-background"
       class={style.player}
       style={{ backgroundImage }}
-      /*
-       * Think about using touchStart instead of click. It speeds up reaction
-       * times immensely, but if may lead to some subtle usability issues that
-       * should be understood before.
-       * onTouchStart={(ev) => {
-       *   route("/queue");
-       * }}
-       */
+      onClick={notify}
     >
-      <Link href={"/queue"}>
+      <div class={style.wrapper}>
         <div class={style.icon}>
           <img src={icon} />
         </div>
@@ -69,11 +63,7 @@ const Player = (props: PlayerProps) => {
             &nbsp;
           </div>
         </div>
-        <div
-          class={style.controls}
-          onClick={clickHandler}
-          /* onTouchStart={(ev) => dispatch(ev, playing ? "pause" : "play")} */
-        >
+        <div class={style.controls} onClick={clickHandler}>
           <div class={style.button}>
             <img
               src={
@@ -89,7 +79,7 @@ const Player = (props: PlayerProps) => {
             />
           </div>
         </div>
-      </Link>
+      </div>
     </div>
   );
 };
