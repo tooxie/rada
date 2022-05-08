@@ -17,12 +17,19 @@
   color: white;
 }
 
-.back, .title, .servers, .search, .settings {
+.back,
+.search,
+.servers,
+.settings,
+.title {
   padding: 1em .5em .5em;
   display: flex;
   align-items: center;
 }
 
-.back img, .servers img, .search img, .settings img {
+.back img,
+.search img,
+.servers img,
+.settings img {
   width: 1.3em;
 }
