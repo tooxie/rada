@@ -4,12 +4,12 @@ import { Link } from "preact-router/match";
 import BackLink from "../backlink";
 import useConf from "../../hooks/useconf";
 
-import style from "./style.css";
 import back from "./back.svg";
 import servers from "./servers.svg";
 import searchIn from "./search-in.svg";
 import searchOut from "./search-out.svg";
 import Settings from "./settings";
+import style from "./style.css";
 
 interface NavigationProps {
   hideControls?: boolean;
@@ -47,7 +47,7 @@ const Navigation = (props: NavigationProps) => {
           </div>
 
           <div class={style.title}>
-            <Link href="/">Gawshi</Link>
+            <Link href="/artists">Gawshi</Link>
           </div>
 
           {/* Only show if we have at least 1 server */}

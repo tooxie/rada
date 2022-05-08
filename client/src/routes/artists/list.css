@@ -2,36 +2,36 @@
   padding-top: 1rem;
 }
 
-.artistgrid {
+section.grid {
   column-count: 2;
   min-height: 100%;
-  width: 100%;
   padding-top: 1rem;
+  width: 100%;
 }
 
-.artistgrid a {
+section.grid a {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   border-radius: 1rem;
-  border: 1px solid #C0C0C0;
+  border: 1px solid #EAEAEA;
   border-bottom: none;
   display: inline-block;
   margin-bottom: 1rem;
   width: 100%;
 }
 
-.artistgrid .artist {
+section.grid .artist {
   overflow: hidden;
 }
 
-.artistgrid .artist img {
+section.grid .artist img {
   visibility: hidden;
   min-height: 1.5rem;
   width: 100%;
 }
 
-.artistgrid .artist .name {
+section.grid .artist .name {
   background-color: rgba(255, 255, 255, .7);
   border-bottom: 1px solid #C0C0C0;
   border-radius: 0 0 1rem 1rem;
@@ -43,4 +43,51 @@
   position: relative;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+section.list .artist {
+  padding: 0.5rem 0;
+  display: flex;
+  color: black;
+}
+
+section.list .artist img {
+  width: 1rem;
+  margin-right: 0.5rem;
+}
+
+section.list .artist:first-of-type {
+  padding-top: 1rem;
+}
+
+section.list .artist:last-of-type {
+  padding-bottom: 0;
+}
+
+section.thumbnails .artist {
+  display: flex;
+  color: black;
+  padding: 0.5rem 0;
+  align-items: center;
+}
+
+section.thumbnails .artist:first-of-type {
+  padding-top: 1rem;
+}
+
+section.thumbnails .artist:last-of-type {
+  padding-bottom: 0;
+}
+
+section.thumbnails .artist .thumb {
+  width: 3rem;
+  min-width: 3rem;
+  height: 3rem;
+  margin-right: 1rem;
+  border-radius: 2rem;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border: 1px solid #C0C0C0;
+  background-color: #EAEAEA;
 }

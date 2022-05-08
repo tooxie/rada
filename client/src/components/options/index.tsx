@@ -46,20 +46,20 @@ const Options = ({ title, icon, children }: OptionsProps) => {
 };
 
 interface ActionProps {
-  on?: () => void;
+  on?: (() => void) | ((ev: Event) => void);
+  noop?: boolean;
   children: ComponentChildren;
 }
 
-export const Action = ({ on, children }: ActionProps) => {
+const Action = (props: ActionProps) => {
   const handler = (ev: Event) => {
-    if (on) on();
-    ev.preventDefault();
-    ev.stopPropagation();
+    if (props.noop) ev.stopPropagation();
+    if (props.on) props.on(ev);
   };
 
   return (
-    <div class={style.action} onClick={on}>
-      {children}
+    <div class={style.action} onClick={handler}>
+      {props.children}
     </div>
   );
 };
@@ -68,8 +68,8 @@ interface TitleProps {
   children: ComponentChildren;
 }
 
-export const Title = ({ children }: TitleProps) => {
-  return <div class={style.title}>{children}</div>;
+const Title = (props: TitleProps) => {
+  return <div class={style.title}>{props.children}</div>;
 };
 
 interface StepProps {
@@ -79,7 +79,7 @@ interface StepProps {
   children: ComponentChildren;
 }
 
-export const Step = ({ on, next, children }: StepProps) => {
+const Step = ({ on, next, children }: StepProps) => {
   const [content, setContent] = useState<ComponentChildren>(children);
   const handler = (ev: Event) => {
     on();
@@ -96,3 +96,4 @@ export const Step = ({ on, next, children }: StepProps) => {
 };
 
 export default Options;
+export { Action, Step, Title };

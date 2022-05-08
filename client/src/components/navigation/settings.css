@@ -1,0 +1,15 @@
+.label {
+}
+
+.setting {
+  display: flex;
+  width: 100%;
+}
+
+.setting label {
+  margin-right: 1rem;
+}
+
+.setting select {
+  flex-grow: 1;
+}

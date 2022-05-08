@@ -2,21 +2,25 @@
   padding-top: 1rem;
 }
 
-.albumgrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  column-gap: 1rem;
-  row-gap: 1rem;
+section.mosaic, section.list, section.thumbnails {
   padding-top: 1rem;
 }
 
-.albumgrid a {
+section.mosaic {
+  column-gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  row-gap: 1rem;
+}
+
+section.mosaic a {
   color: black;
   display: block;
 }
 
-.albumgrid a.album .cover {
+section.mosaic a.album .cover {
   background-position: center;
+  background-repeat: no-repeat;
   background-size: cover;
   border-radius: 1rem 1rem 1rem 0;
   border: 1px solid #C0C0C0;
@@ -25,11 +29,11 @@
   width: 100%;
 }
 
-.albumgrid a.album .name {
+section.mosaic a.album .name {
   word-break: break-word;
 }
 
-.albumgrid a.album .artistname {
+section.mosaic a.album .artist {
   color: #742e12;
   font-size: 0.8rem;
   margin-bottom: .5rem;
@@ -37,4 +41,63 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+section.list .album {
+  display: flex;
+  align-items: center;
+  color: black;
+  padding: 0.5rem 0;
+}
+
+section.list .album:first-of-type {
+  padding-top: 0;
+}
+
+section.list .album:last-of-type {
+  padding-bottom: 0;
+}
+
+section.list .album img {
+  max-width: 2rem;
+  margin-right: 0.5rem;
+}
+
+section.list .album .artist {
+  color: #742e12;
+  font-size: 0.8rem;
+  margin-bottom: 0.2rem;
+}
+
+section.thumbnails .album {
+  padding-top: 1rem;
+  display: flex;
+  color: black;
+}
+
+section.thumbnails .album:first-of-type {
+  padding-top: 0;
+}
+
+section.thumbnails .album:last-of-type {
+  padding-bottom: 0;
+}
+
+section.thumbnails .thumb {
+  width: 3rem;
+  min-width: 3rem;
+  height: 3rem;
+  min-height: 3rem;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 0.5rem 0 0.5rem 0.5rem;
+  border: 1px solid #C0C0C0;
+  margin-right: 0.5rem;
+}
+
+section.thumbnails .album .artist {
+  color: #742e12;
+  font-size: 0.8rem;
+  margin-bottom: 0.2rem;
 }
