@@ -15,12 +15,8 @@ transform () {
   fi
 }
 
-GRAPHQL_SCHEMA_SRC="../terraform/schema.graphql"
-GRAPHQL_SCHEMA_DEST="./schema.graphql"
-cp "$GRAPHQL_SCHEMA_SRC" "$GRAPHQL_SCHEMA_DEST"
-
+[ ! -f "schema.graphql" ] && ln -s "../terraform/schema.graphql" .
 npx amplify codegen
-rm -f "$GRAPHQL_SCHEMA_DEST"
 
 MUTATIONS_FILE="src/graphql/mutations.ts"
 transform $MUTATIONS_FILE
