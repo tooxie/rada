@@ -1,13 +1,9 @@
 import { useState, useEffect } from "preact/hooks";
 
-import { authenticate, fetchCredentials } from "../utils/auth";
 import Logger from "../logger";
 
 const log = new Logger(__filename);
-
-const reauth = () => authenticate(fetchCredentials());
 let oldError: Error | null = null;
-let isRetry = false;
 
 interface UseReturn<T> {
   loading: boolean;
@@ -30,7 +26,6 @@ const use = <T, V>(fn: Function, vars: V): UseReturn<T> => {
         setData(data);
         setLoading(false);
         if (error) setError(null);
-        isRetry = false;
       })
       .catch(async (error: Error) => {
         log.error("use.useEffect.fn error:", error);
@@ -47,19 +42,6 @@ const use = <T, V>(fn: Function, vars: V): UseReturn<T> => {
         } else {
           setError(error);
           oldError = error;
-        }
-
-        // In case of a 401 we do a retry, but only once. This is because the
-        // session could have expired. However, if the user is actually
-        // unauthorized to see the contents, we don't want to retry forever.
-        if (!isRetry) {
-          if (msg.includes("unauthorized") || msg.includes("status code 401")) {
-            log.warn("It's a 401, we will attempt to reauth...");
-            await reauth();
-            log.debug("Reauth successful, retrying...");
-            setLoading(true);
-            isRetry = true;
-          }
         }
       });
   }, [vars]);
