@@ -39,6 +39,10 @@ section.queue.visible {
   transition: 0.35s ease-out;
 }
 
+section.queue.hidden.noanim {
+  transition: none;
+}
+
 .timer {
   display: flex;
   justify-content: space-between;

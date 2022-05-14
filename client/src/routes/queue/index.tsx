@@ -1,5 +1,5 @@
 import { h, Fragment } from "preact";
-import { useEffect, useRef } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 import { Link } from "preact-router";
 
 import type { IPlayer } from "../../player/types";
@@ -19,6 +19,7 @@ import Timer from "./timer";
 import Vinyl from "./vinyl";
 
 const log = new Logger(__filename);
+let wasVisible: boolean;
 
 interface QueueProps {
   player: IPlayer;
@@ -30,17 +31,32 @@ const Queue = ({ player, visible, onClick }: QueueProps) => {
   log.debug(`Queue.render()`);
   const { queue } = player;
   const ref = useRef<HTMLDivElement>(null);
+  const [removeAnimation, setRemoveAnimation] = useState(true);
 
-  const show = () => document.body.classList.add(style.noscroll);
-  const hide = () => document.body.classList.remove(style.noscroll);
+  const preventBodyScroll = () => document.body.classList.add(style.noscroll);
+  const enableBodyScroll = () => document.body.classList.remove(style.noscroll);
+
+  // In mobile, when you click on the search and the keyboard is displayed, the
+  // viewport height changes. When you dismiss the keyboard the queue had adapted
+  // to the new page height and it will show up where the keyboard used to be and
+  // transition off the screen. That's why we need to remove the transition when
+  // the queue is hidden.
+  const decideWhatToDoAboutTheAnimation = () => {
+    if (wasVisible !== visible) {
+      if (visible) setRemoveAnimation(false);
+      else setTimeout(() => setRemoveAnimation(true), 500);
+    }
+  };
 
   useEffect(() => {
-    if (visible) show();
-    else hide();
+    if (visible) preventBodyScroll();
+    else enableBodyScroll();
+    decideWhatToDoAboutTheAnimation();
 
     if (ref.current) ref.current.scrollTo({ top: 0 });
+    wasVisible = visible;
 
-    return () => document.body.classList.remove(style.noscroll);
+    return () => enableBodyScroll();
   }, [visible]);
 
   const trackClickHandler = (index: number) => player.skipTo(index);
@@ -141,7 +157,11 @@ const Queue = ({ player, visible, onClick }: QueueProps) => {
 
       <section
         ref={ref}
-        class={`${style.queue} ${visible ? style.visible : style.hidden}`}
+        class={[
+          style.queue,
+          visible ? style.visible : style.hidden,
+          removeAnimation ? style.noanim : "",
+        ].join(" ")}
       >
         <Header
           key="queue-header"
