@@ -83,6 +83,7 @@ export const createAlbum = gql`
         id
         url
         title
+        info
         lengthInSeconds
         ordinal
         hash
@@ -108,6 +109,7 @@ export const updateAlbum = gql`
         id
         url
         title
+        info
         lengthInSeconds
         ordinal
         hash
@@ -133,6 +135,7 @@ export const deleteAlbum = gql`
         id
         url
         title
+        info
         lengthInSeconds
         ordinal
         hash
@@ -158,6 +161,7 @@ export const deleteCascadeAlbum = gql`
         id
         url
         title
+        info
         lengthInSeconds
         ordinal
         hash
@@ -185,6 +189,7 @@ export const createTrack = gql`
       }
       url
       title
+      info
       lengthInSeconds
       ordinal
       hash
@@ -210,6 +215,7 @@ export const updateTrack = gql`
       }
       url
       title
+      info
       lengthInSeconds
       ordinal
       hash
@@ -235,6 +241,7 @@ export const deleteTrack = gql`
       }
       url
       title
+      info
       lengthInSeconds
       ordinal
       hash

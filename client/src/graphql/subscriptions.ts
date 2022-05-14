@@ -66,6 +66,7 @@ export const onCreateAlbum = /* GraphQL */ `
         id
         url
         title
+        info
         lengthInSeconds
         ordinal
         hash
@@ -91,6 +92,7 @@ export const onUpdateAlbum = /* GraphQL */ `
         id
         url
         title
+        info
         lengthInSeconds
         ordinal
         hash
@@ -116,6 +118,7 @@ export const onDeleteAlbum = /* GraphQL */ `
         id
         url
         title
+        info
         lengthInSeconds
         ordinal
         hash
@@ -143,6 +146,7 @@ export const onCreateTrack = /* GraphQL */ `
       }
       url
       title
+      info
       lengthInSeconds
       ordinal
       hash
@@ -168,6 +172,7 @@ export const onUpdateTrack = /* GraphQL */ `
       }
       url
       title
+      info
       lengthInSeconds
       ordinal
       hash
@@ -193,6 +198,7 @@ export const onDeleteTrack = /* GraphQL */ `
       }
       url
       title
+      info
       lengthInSeconds
       ordinal
       hash

@@ -28,6 +28,7 @@ export type Track = {
   artists?: Array<Artist> | null;
   url: string;
   title?: string | null;
+  info?: string | null;
   lengthInSeconds?: number | null;
   ordinal?: number | null;
   hash: string;
@@ -436,6 +437,7 @@ export type CreateAlbumMutation = {
       id: string;
       url: string;
       title?: string | null;
+      info?: string | null;
       lengthInSeconds?: number | null;
       ordinal?: number | null;
       hash: string;
@@ -468,6 +470,7 @@ export type UpdateAlbumMutation = {
       id: string;
       url: string;
       title?: string | null;
+      info?: string | null;
       lengthInSeconds?: number | null;
       ordinal?: number | null;
       hash: string;
@@ -499,6 +502,7 @@ export type DeleteAlbumMutation = {
       id: string;
       url: string;
       title?: string | null;
+      info?: string | null;
       lengthInSeconds?: number | null;
       ordinal?: number | null;
       hash: string;
@@ -530,6 +534,7 @@ export type DeleteCascadeAlbumMutation = {
       id: string;
       url: string;
       title?: string | null;
+      info?: string | null;
       lengthInSeconds?: number | null;
       ordinal?: number | null;
       hash: string;
@@ -563,6 +568,7 @@ export type CreateTrackMutation = {
     }> | null;
     url: string;
     title?: string | null;
+    info?: string | null;
     lengthInSeconds?: number | null;
     ordinal?: number | null;
     hash: string;
@@ -595,6 +601,7 @@ export type UpdateTrackMutation = {
     }> | null;
     url: string;
     title?: string | null;
+    info?: string | null;
     lengthInSeconds?: number | null;
     ordinal?: number | null;
     hash: string;
@@ -626,6 +633,7 @@ export type DeleteTrackMutation = {
     }> | null;
     url: string;
     title?: string | null;
+    info?: string | null;
     lengthInSeconds?: number | null;
     ordinal?: number | null;
     hash: string;
@@ -756,6 +764,7 @@ export type GetAlbumQuery = {
       id: string;
       url: string;
       title?: string | null;
+      info?: string | null;
       lengthInSeconds?: number | null;
       ordinal?: number | null;
       hash: string;
@@ -895,6 +904,7 @@ export type GetTrackQuery = {
     }> | null;
     url: string;
     title?: string | null;
+    info?: string | null;
     lengthInSeconds?: number | null;
     ordinal?: number | null;
     hash: string;
@@ -914,6 +924,7 @@ export type ListTracksQuery = {
       id: string;
       url: string;
       title?: string | null;
+      info?: string | null;
       lengthInSeconds?: number | null;
       ordinal?: number | null;
       hash: string;
@@ -1048,6 +1059,7 @@ export type OnCreateAlbumSubscription = {
       id: string;
       url: string;
       title?: string | null;
+      info?: string | null;
       lengthInSeconds?: number | null;
       ordinal?: number | null;
       hash: string;
@@ -1080,6 +1092,7 @@ export type OnUpdateAlbumSubscription = {
       id: string;
       url: string;
       title?: string | null;
+      info?: string | null;
       lengthInSeconds?: number | null;
       ordinal?: number | null;
       hash: string;
@@ -1112,6 +1125,7 @@ export type OnDeleteAlbumSubscription = {
       id: string;
       url: string;
       title?: string | null;
+      info?: string | null;
       lengthInSeconds?: number | null;
       ordinal?: number | null;
       hash: string;
@@ -1146,6 +1160,7 @@ export type OnCreateTrackSubscription = {
     }> | null;
     url: string;
     title?: string | null;
+    info?: string | null;
     lengthInSeconds?: number | null;
     ordinal?: number | null;
     hash: string;
@@ -1178,6 +1193,7 @@ export type OnUpdateTrackSubscription = {
     }> | null;
     url: string;
     title?: string | null;
+    info?: string | null;
     lengthInSeconds?: number | null;
     ordinal?: number | null;
     hash: string;
@@ -1210,6 +1226,7 @@ export type OnDeleteTrackSubscription = {
     }> | null;
     url: string;
     title?: string | null;
+    info?: string | null;
     lengthInSeconds?: number | null;
     ordinal?: number | null;
     hash: string;

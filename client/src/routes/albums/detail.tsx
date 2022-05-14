@@ -96,21 +96,24 @@ const AlbumDetail = ({ id, trackId }: DetailProps) => {
             <div class={style.ordinal}>{track.ordinal || " "}</div>
             <div class={style.stretch} onClick={() => appendFrom(i)}>
               <div class={style.title}>
-                {track.title ? (
-                  <div>{track.title}</div>
-                ) : (
-                  <div class={style.missing}>&lt;no title&gt;</div>
-                )}
+                <div>
+                  {track.title ? (
+                    <span>{track.title}</span>
+                  ) : (
+                    <span class={style.missing}>&lt;no title&gt;</span>
+                  )}
+                  {track.info && <span class={style.info}>&nbsp;{track.info}</span>}
+                  {track.features && (
+                    <span class={style.features}>
+                      &nbsp;ft. {(track.features || []).join(", ")}
+                    </span>
+                  )}
+                </div>
                 <div class={style.length}>
                   {toMinutes(track.lengthInSeconds)}
                   {isVa ? (
                     <span class={style.artists}>
                       {(track.artists || []).map((artist) => artist.name).join(", ")}
-                    </span>
-                  ) : null}
-                  {track.features ? (
-                    <span class={style.features}>
-                      &nbsp;ft. {(track.features || []).join(", ")}
                     </span>
                   ) : null}
                 </div>

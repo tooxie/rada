@@ -231,6 +231,7 @@ type Track {
   artists: [Artist!]
   url: AWSURL!
   title: String
+  info: String
   lengthInSeconds: Int
   ordinal: Int
   hash: String!

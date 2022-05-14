@@ -29,6 +29,7 @@ export const getAlbumWithTracks = gql`
         id
         url
         title
+        info
         lengthInSeconds
         ordinal
         hash

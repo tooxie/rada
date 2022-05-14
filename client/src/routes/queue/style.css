@@ -170,6 +170,20 @@ section.tracklist .track .title {
   margin: 0.25rem 0;
 }
 
+section.tracklist .track .title .artists {
+  color: gray;
+  font-size: 0.8rem;
+}
+
+section.tracklist .title .info {
+  color: gray;
+  font-size: 0.8rem;
+}
+
+section.tracklist .title .features {
+  font-size: 0.8rem;
+}
+
 section.tracklist .title .missing {
   color: gray;
 }
@@ -256,10 +270,4 @@ section.tracklist .track .playing {
     box-shadow: 0 -2em;
     height: 5em;
   }
-}
-
-.sub {
-  color: gray;
-  font-size: 0.8rem;
-  margin: 0.2rem 0 0 0.5rem;
 }

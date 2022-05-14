@@ -76,7 +76,6 @@ const Queue = ({ player, visible, onClick }: QueueProps) => {
     (track?.artists || []).map((a) => a.name).join(", ");
 
   const renderTrackList = (track: Track, index: number) => {
-    const getFeatures = (track: Track) => (track.features || []).join(", ");
     const artistName = track.album.isVa ? "V/A" : getArtistName(track);
     const albumName = track.album.name;
     let artistChanged = artistName !== getArtistName(prevTrack);
@@ -143,10 +142,11 @@ const Queue = ({ player, visible, onClick }: QueueProps) => {
             ) : (
               <span class={style.missing}>&lt;no title&gt;</span>
             )}
-            <span class={style.sub}>
-              {track.album.isVa ? getArtistName(track) : ""}
-              {track.features ? ` ft. ${getFeatures(track)}` : ""}
+            <span class={style.artists}>
+              {track.album.isVa ? ` ${getArtistName(track)}` : ""}
+              {track.features ? ` ft. ${(track.features || []).join(", ")}` : ""}
             </span>
+            {track.info && <div class={style.info}>{track.info}</div>}
           </div>
           <div class={style.rm} onClick={rmTrack(index)}>
             &#215;

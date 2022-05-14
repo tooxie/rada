@@ -74,15 +74,21 @@
   font-style: italic;
 }
 
+.tracklist .title .info {
+  color: gray;
+  font-size: 0.8rem;
+}
+
+.tracklist .track .features {
+  color: #742e12;
+  font-size: 0.8rem;
+}
+
 .tracklist .track .length {
   font-size: 0.8rem;
 }
 
 .tracklist .track .artists {
   margin-left: 1rem;
-  color: gray;
-}
-
-.tracklist .track .features {
   color: gray;
 }
