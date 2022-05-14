@@ -30,7 +30,6 @@ export interface IPlayer {
   __currentTime: number;
 
   getCurrentTime: () => number;
-  setCurrentTime: (t: number) => void;
   getCurrentTrack: () => Track | null;
   getIndex: () => number;
   setIndex: (i: number) => void;

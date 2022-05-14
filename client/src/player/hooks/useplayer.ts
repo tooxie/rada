@@ -70,13 +70,13 @@ class Queue implements IQueue {
 const usePlayer = () => {
   const [loading, setLoading] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const [_, setCurrentTime] = useState(0);
   const [player, setPlayer] = useState<IPlayer>();
   const [audio, setAudio] = useState<HTMLAudioElement>();
   const [queue, setQueue] = useState<Queue>();
   const [track, setTrack] = useState<Track>();
 
-  const forceRender = (x?: number) => setCurrentTime(x || Math.random() * 100);
+  const [_, setX] = useState(0);
+  const forceRender = (x?: number) => setX(x || Math.random() * 100);
 
   let state: States;
   let errored = false;
@@ -115,7 +115,6 @@ const usePlayer = () => {
   useEffect(() => {
     if (audio && queue) {
       setPlayer({
-        __currentTime: 0,
         audio: audio,
         queue: queue,
         state: States.Idle,
@@ -147,10 +146,7 @@ const usePlayer = () => {
           return this.queue.getCurrentTrack();
         },
         getCurrentTime(): number {
-          return this.__currentTime;
-        },
-        setCurrentTime(currentTime: number): void {
-          this.__currentTime = currentTime;
+          return this.audio.currentTime;
         },
         async play() {
           const currentTrack = this.getCurrentTrack();
@@ -179,7 +175,6 @@ const usePlayer = () => {
           this.audio.pause();
           this.audio.removeAttribute("src");
           this.audio.removeAttribute("hash");
-          this.setCurrentTime(0);
           setPlaying(false);
           setLoading(false);
           // navigator.mediaSession.playbackState = "none";
@@ -261,17 +256,14 @@ const usePlayer = () => {
     const canPlay = () => setLoading(false);
     const timeUpdate = (ev: AudioEvent): void => {
       const audio = ev.path ? ev.path[0] : ev.currentTarget;
-      player.setCurrentTime(audio.currentTime);
     };
     const reset = (ev: Event): void => {
       log.debug(`Event: reset (${ev.type})`);
-      player.setCurrentTime(0);
       setPlaying(false);
     };
     const pause = (ev: AudioEvent): void => {
       log.debug(`Event: pause (${ev.type})`);
       const audio = ev.path ? ev.path[0] : ev.currentTarget;
-      player.setCurrentTime(audio.currentTime);
       setPlaying(false);
       setLoading(false);
     };
@@ -295,7 +287,6 @@ const usePlayer = () => {
       if (player.atLastTrack()) {
         log.debug(`End of queue`);
         player.setIndex(0);
-        player.setCurrentTime(0);
         setPlaying(false);
         setLoading(false);
 
@@ -309,7 +300,6 @@ const usePlayer = () => {
     const error = (ev: Event) => {
       log.warn(`Event: error (${ev.type})`);
       const target = ev.currentTarget as any;
-      player.setCurrentTime(0);
       setPlaying(false);
       setLoading(false);
       log.warn(`"${target.error.message}"`);
