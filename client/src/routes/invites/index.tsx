@@ -21,12 +21,12 @@ const InviteList = () => {
 
   if (error) return <ErrorMsg error={error} />;
   if (loading) <Spinner />;
-  if ((invites || []).length < 1) return <p class={style.empty}>No invites</p>;
 
   const stats = invites.reduce(
     (acc, invite) => {
       acc.claimed += Number(!!invite.visited);
       acc.installed += Number(!!invite.visited);
+      acc.unsolicited += Number(!!invite.unsolicited);
 
       return acc;
     },
