@@ -4,6 +4,7 @@ import { Link } from "preact-router";
 import { Album } from "../../graphql/api";
 import { urlize } from "../../utils/id";
 import Search from "../../components/search";
+import ErrorMsg from "../../components/error";
 import Spinner from "../../components/spinner";
 import ScrollTop from "../../components/scrolltop";
 import useConf from "../../hooks/useconf";
@@ -23,7 +24,7 @@ const AlbumList = () => {
     return name.includes(s.toLowerCase());
   };
 
-  if (error) return <p class={style.empty}>{error.message}</p>;
+  if (error) return <ErrorMsg error={error} />;
   if (loading) return <Spinner />;
   if (albums.length < 1) return <p class={style.empty}>No Albums</p>;
 

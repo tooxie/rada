@@ -3,6 +3,7 @@ import { Link } from "preact-router";
 
 import { urlize } from "../../utils/id";
 import { Artist } from "../../graphql/api";
+import ErrorMsg from "../../components/error";
 import Spinner from "../../components/spinner";
 import Search from "../../components/search";
 import ScrollTop from "../../components/scrolltop";
@@ -21,7 +22,7 @@ const ArtistList = () => {
     return name.includes(s.toLowerCase());
   };
 
-  if (error) return <p class={style.empty}>{error.message}</p>;
+  if (error) return <ErrorMsg error={error} />;
   if (loading) return <Spinner />;
   if ((artists || []).length < 1) return <p class={style.empty}>No Artists</p>;
 

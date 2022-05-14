@@ -1,6 +1,7 @@
 import { h, Fragment } from "preact";
 import { route } from "preact-router";
 
+import ErrorMsg from "../../components/error";
 import Spinner from "../../components/spinner";
 import useConf from "../../conf/hooks/useconf";
 
@@ -18,7 +19,7 @@ const InviteList = () => {
 
   if (!conf.isAdmin) route("/404");
 
-  if (error) return <p class={style.empty}>{error.message}</p>;
+  if (error) return <ErrorMsg error={error} />;
   if (loading) <Spinner />;
   if ((invites || []).length < 1) return <p class={style.empty}>No invites</p>;
 

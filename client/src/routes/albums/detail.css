@@ -1,3 +1,7 @@
+.empty {
+  padding-top: 4rem;
+}
+
 .header {
   align-items: center;
   display: flex;
@@ -81,8 +85,4 @@
 
 .tracklist .track .features {
   color: gray;
-}
-
-.empty {
-  padding-top: 1rem;
 }

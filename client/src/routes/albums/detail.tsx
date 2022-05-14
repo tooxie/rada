@@ -3,6 +3,7 @@ import { useEffect, useState } from "preact/hooks";
 import { Link } from "preact-router";
 
 import { DetailProps } from "../../components/layout/detail/types";
+import ErrorMsg from "../../components/error";
 import Spinner from "../../components/spinner";
 import { Artist, Album, Track } from "../../graphql/api";
 import { AlbumId } from "../../types";
@@ -29,7 +30,7 @@ const AlbumDetail = ({ id, trackId }: DetailProps) => {
   if (id !== _album?.id) _album = null;
   if (!loading && album) _album = album;
 
-  if (error) return <p class={style.empty}>{error.message}</p>;
+  if (error) return <ErrorMsg error={error} margin={4} />;
   if (!loading && !album) return <p class={style.empty}>Album not found</p>;
   if (!_album) {
     return (

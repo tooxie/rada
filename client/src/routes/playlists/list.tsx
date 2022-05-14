@@ -1,6 +1,7 @@
 import { h } from "preact";
 import { Link } from "preact-router";
 
+import ErrorMsg from "../../components/error";
 import Spinner from "../../components/spinner";
 
 import useListPlaylists from "./hooks/uselistplaylists";
@@ -20,14 +21,11 @@ const PlaylistList = () => {
   // That playlists translate to tracks that we can add to the queue, while favorites
   // are only albums and/or artists that are shown in the "homepage". Can playlists
   // be favorited? I don't see why not.
-  return (
-    <div class={style.playlistgrid}>This resource is currently not implemented.</div>
-  );
 
   if (loading) {
     return <Spinner />;
   } else {
-    if (error) return <p class={style.empty}>ERROR: {error?.message}</p>;
+    if (error) return <ErrorMsg error={error} />;
     if (!playlists || playlists.length < 1)
       return <p class={style.empty}>No Playlists</p>;
   }

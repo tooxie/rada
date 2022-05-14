@@ -3,6 +3,7 @@ import { Link } from "preact-router";
 
 import Options from "../../components/options";
 import { DetailProps } from "../../components/layout/detail/types";
+import ErrorMsg from "../../components/error";
 import Spinner from "../../components/spinner";
 import compareYear from "../../utils/compareyear";
 import { urlize } from "../../utils/id";
@@ -21,7 +22,7 @@ const ArtistDetail: FunctionComponent<DetailProps> = ({ id }) => {
   if (id !== _artist?.id) _artist = null;
   if (!loading && artist) _artist = artist;
 
-  if (error) return <p class={style.empty}>{error.message}</p>;
+  if (error) return <ErrorMsg error={error} margin={4} />;
   if (!loading && !artist) return <p class={style.empty}>Artist not found</p>;
   if (!_artist) {
     return (
