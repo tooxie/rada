@@ -1,4 +1,4 @@
-import { h, FunctionComponent, Fragment } from "preact";
+import { h, Fragment } from "preact";
 import { Link } from "preact-router";
 
 import { urlize } from "../../utils/id";

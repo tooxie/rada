@@ -17,6 +17,7 @@ interface AuthResponse {
 }
 
 const authenticate = (credentials: Credentials): Promise<AuthResponse> => {
+  log.debug(`Authenticating as ${credentials.username}`);
   const { username, password } = credentials;
   if (!username || !password) throw new Error("No user credentials provided");
 
@@ -36,9 +37,11 @@ const authenticate = (credentials: Credentials): Promise<AuthResponse> => {
     };
     const auth = new AuthenticationDetails(authData);
     const user = new CognitoUser(userData);
+    log.debug("Querying cognito...");
     user.setAuthenticationFlowType("USER_PASSWORD_AUTH");
     user.authenticateUser(auth, {
       onSuccess: (result) => {
+        log.debug("Authentication successful");
         const loginData = {};
         const key = `cognito-idp.${poolConfig.region}.amazonaws.com/${poolConfig.userPoolId}`;
         (loginData as any)[key] = result.getIdToken().getJwtToken();
@@ -49,8 +52,10 @@ const authenticate = (credentials: Credentials): Promise<AuthResponse> => {
         });
         (AWS.config.credentials as any).refresh((error: Error) => {
           if (error) {
+            log.warn(error);
             reject(error);
           } else {
+            log.debug("Resolving...");
             resolve({
               token: result.getAccessToken().getJwtToken(),
               groups: result.getIdToken().payload["cognito:groups"] || [],
@@ -59,6 +64,7 @@ const authenticate = (credentials: Credentials): Promise<AuthResponse> => {
         });
       },
       onFailure: (err) => {
+        log.warn(err);
         reject(err);
       },
     });

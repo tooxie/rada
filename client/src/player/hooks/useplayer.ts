@@ -149,6 +149,7 @@ const usePlayer = () => {
           return this.audio.currentTime;
         },
         async play() {
+          log.debug("play()");
           const currentTrack = this.getCurrentTrack();
           if (!currentTrack) return;
 
@@ -160,12 +161,14 @@ const usePlayer = () => {
             this.audio.setAttribute("hash", currentTrack.hash);
           }
 
+          log.debug("audio.play()");
           await this.audio.play();
           // navigator.mediaSession.playbackState = "playing";
           log.debug("Playing!");
           requestScreenLock();
         },
         pause() {
+          log.debug("pause()");
           this.audio.pause();
           releaseScreenLock();
           // navigator.mediaSession.playbackState = "paused";
