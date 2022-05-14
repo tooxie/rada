@@ -12,8 +12,9 @@ import PlayAlbum from "./play";
 
 const log = new Logger(__filename);
 
+const defaultBackground = "/assets/img/black.png";
+let backgroundImage = `url(${defaultBackground})`;
 let _album: Album | null = null;
-let backgroundImage = "url(none)";
 
 const Header = (props: DetailProps) => {
   log.debug(`Loading album "${props.id}"`);
@@ -26,7 +27,7 @@ const Header = (props: DetailProps) => {
 
   if (!_album || _album.id !== props.id) _album = album;
 
-  backgroundImage = `url("${_album?.imageUrl || "none"}")`;
+  backgroundImage = `url("${_album?.imageUrl || defaultBackground}")`;
 
   return (
     <header
