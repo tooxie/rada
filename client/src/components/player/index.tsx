@@ -39,7 +39,8 @@ const Shell = ({ onClick }: ShellProps) => {
   );
 };
 
-let backgroundImage = "url(none)";
+const defaultBackground = "/assets/img/black.png";
+let backgroundImage = `url(${defaultBackground})`;
 let _album: Album | null = null;
 
 const Player = ({ player, track, onClick }: PlayerProps) => {
@@ -48,7 +49,7 @@ const Player = ({ player, track, onClick }: PlayerProps) => {
   const albumChanged = _album?.id !== track.album.id;
 
   if (albumChanged) _album = album;
-  if (_album) backgroundImage = `url(${_album.imageUrl || "none"})`;
+  if (_album) backgroundImage = `url(${_album.imageUrl || defaultBackground})`;
 
   const clickHandler = (ev: Event) => {
     ev.preventDefault();
@@ -66,7 +67,7 @@ const Player = ({ player, track, onClick }: PlayerProps) => {
       style={{ backgroundImage }}
       onClick={notify}
     >
-      <div class={style.wrapper}>
+      <div class={style.song2}>
         <div class={style.icon}>
           <img src={icon} />
         </div>

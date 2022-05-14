@@ -15,23 +15,25 @@
 }
 
 .player {
+  -webkit-touch-callout: none;
+  user-select: none;
+
   align-items: center;
   background-color: #041628;
+  background-position: center;
+  border-radius: 1rem 1rem 0 0;
   border-width: 0;
   bottom: 0;
   color: white;
   display: flex;
-  border-radius: 1rem 1rem 0 0;
   height: 3rem;
-  background-position: center;
-  user-select: none;
-  -webkit-touch-callout: none;
+  transition: background 1.5s linear;
 }
 
-.player .wrapper {
-  border-radius: 1rem 1rem 0 0;
+.player .song2 {
   align-items: center;
   backdrop-filter: blur(1rem) brightness(0.7);
+  border-radius: 1rem 1rem 0 0;
   color: white;
   display: flex;
   height: 100%;
@@ -39,7 +41,7 @@
   width: 100%;
 }
 
-.player .wrapper img {
+.player .song2 img {
   width: 1.5rem;
 }
 
