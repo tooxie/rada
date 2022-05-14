@@ -240,10 +240,6 @@ section.tracklist .track .playing {
   }
 }
 
-.scrolltop {
-  margin: 2rem 1rem 0 0;
-}
-
 .sub {
   color: gray;
   font-size: 0.8rem;

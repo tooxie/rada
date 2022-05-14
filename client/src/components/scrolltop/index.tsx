@@ -1,24 +1,24 @@
 import { h } from "preact";
+import { useLayoutEffect, useState } from "preact/hooks";
 
 import style from "./style.css";
 import scrollIcon from "./icon.svg";
 
-interface ScrollTopProps {
-  container?: HTMLDivElement | null;
-}
+const ScrollTop = () => {
+  const [visible, setVisible] = useState(false);
+  const scrollTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
-const ScrollTop = ({ container }: ScrollTopProps) => {
-  const scrollTop = () => (container || window).scrollTo({ top: 0, behavior: "smooth" });
+  useLayoutEffect(() => {
+    window.onscroll = () => setVisible(window.pageYOffset > window.innerHeight);
+
+    return () => (window.onscroll = null);
+  }, []);
 
   return (
-    <div class={style.wrapper}>
-      <div class={style.scrolltop} onClick={scrollTop}>
-        <img src={scrollIcon} />
-        <div>
-          Back
-          <br />
-          to top
-        </div>
+    <div class={`${style.scrolltop} ${visible ? style.visible : ""}`} onClick={scrollTop}>
+      <img src={scrollIcon} />
+      <div>
+        Back <br /> to top
       </div>
     </div>
   );

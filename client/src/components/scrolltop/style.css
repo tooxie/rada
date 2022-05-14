@@ -1,16 +1,14 @@
-.wrapper {
-  text-align: right;
-}
-
 .scrolltop {
-  display: inline-block;
-  clear: both;
+  bottom: -4rem;
   color: gray;
   font-size: 0.6rem;
+  position: fixed;
+  right: 1rem;
   text-align: center;
+  transition: 0.25s linear;
   width: 2rem;
 }
 
-.scrolltop img {
-  width: 2rem;
+.visible {
+  bottom: 3.5rem;
 }

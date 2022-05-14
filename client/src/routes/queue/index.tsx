@@ -10,7 +10,6 @@ import toMinutes from "../../utils/tominutes";
 import { urlize } from "../../utils/id";
 import { AlbumId } from "../../types";
 import { Artist, Track } from "../../graphql/api";
-import ScrollTop from "../../components/scrolltop";
 import Logger from "../../logger";
 
 import clearQueueIcon from "./delete_list_playlist_remove.svg";
@@ -208,10 +207,6 @@ const Queue = ({ player, visible, onClick }: QueueProps) => {
             </div>
             {queue.getTracks().map(renderTrackList)}
           </section>
-
-          <div class={style.scrolltop}>
-            <ScrollTop container={ref.current} />
-          </div>
         </Shoulder>
       </section>
     </Fragment>
