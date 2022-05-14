@@ -1,4 +1,4 @@
-import { h, Fragment, ComponentChildren, createRef, RefObject } from "preact";
+import { h, Fragment, ComponentChildren } from "preact";
 import { useState, useEffect } from "preact/hooks";
 
 import style from "./style.css";
@@ -12,13 +12,18 @@ interface OptionsProps {
 
 const Options = ({ title, icon, children }: OptionsProps) => {
   const [visible, setVisible] = useState(false);
-  const display = visible ? "block" : "none";
+  const [display, setDisplay] = useState(false);
   const body = document.body;
-  const ref = createRef();
 
   const clickHandler = (ev: MouseEvent) => {
-    setVisible(!visible);
     ev.stopPropagation();
+    if (visible) {
+      setVisible(false);
+      setTimeout(() => setDisplay(false), 250);
+    } else {
+      setDisplay(true);
+      setTimeout(() => setVisible(true), 0);
+    }
   };
 
   useEffect(() => {
@@ -32,13 +37,15 @@ const Options = ({ title, icon, children }: OptionsProps) => {
     <Fragment>
       <img src={icon || dots} class={style.trigger} onClick={clickHandler} />
 
-      <div class={style.overlay} style={{ display }} onClick={clickHandler}>
+      <div
+        class={`${style.overlay} ${visible ? style.visible : ""}`}
+        style={display ? {} : { display: "none" }}
+        onClick={clickHandler}
+      >
         &nbsp;
         <div class={style.modal}>
           {title}
-          <div class={style.body} ref={ref}>
-            {children}
-          </div>
+          <div class={style.body}>{children}</div>
         </div>
       </div>
     </Fragment>
@@ -75,7 +82,6 @@ const Title = (props: TitleProps) => {
 interface StepProps {
   on: () => void;
   next: (contentSetter: Function) => void;
-  ref: RefObject<any>;
   children: ComponentChildren;
 }
 
