@@ -57,7 +57,22 @@ section.queue.hidden.noanim {
 section.tracklist .header {
   color: gray;
   font-size: 0.8rem;
-  padding: .5rem 1rem 0 1rem;
+  padding: .5rem 0.8rem 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+section.tracklist .header .rm {
+  flex-grow: 1;
+  text-align: right;
+  color: #742e12;
+}
+
+section.tracklist .rm {
+  padding: 0 0.5rem;
+  font-size: 2rem;
+  color: gray;
 }
 
 section.tracklist .album {
@@ -247,10 +262,4 @@ section.tracklist .track .playing {
   color: gray;
   font-size: 0.8rem;
   margin: 0.2rem 0 0 0.5rem;
-}
-
-.rm {
-  padding: 0 0.5rem;
-  font-size: 2rem;
-  color: gray;
 }

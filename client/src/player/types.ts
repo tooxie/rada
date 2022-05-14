@@ -8,6 +8,7 @@ export interface IQueue {
   getDuration: () => number;
   getIndex: () => number;
   getTracks: () => Track[];
+  getTrackAt: (i: number) => Track | null;
   setIndex: (i: number) => void;
   next: () => void;
   previous: () => void;
@@ -35,9 +36,12 @@ export interface IPlayer {
   setIndex: (i: number) => void;
   getQueue: () => Track[];
   getQueueLength: () => number;
+  getAlbumCount: () => number;
+  getTrackAt: (i: number) => Track | null;
   replaceQueue: (tt: Track[]) => void;
   appendTracks: (tt: Track[]) => void;
   removeTrackAt: (i: number) => void;
+  removeAlbum: (i: number) => void;
 
   atFirstTrack: () => boolean;
   atLastTrack: () => boolean;

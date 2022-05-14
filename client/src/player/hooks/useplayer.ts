@@ -43,6 +43,9 @@ class Queue implements IQueue {
   getIndex() {
     return q.getIndex();
   }
+  getTrackAt(index: number) {
+    return q.getTrack(index);
+  }
   getCurrentTrack(): Track | null {
     log.debug("q.getCurrentTrack()");
     return q.getCurrentTrack();
@@ -141,12 +144,22 @@ const usePlayer = () => {
           this.queue.append(tracks);
           forceRender();
         },
+        getTrackAt(index: number) {
+          return this.queue.getTrackAt(index);
+        },
         getCurrentTrack(): Track | null {
           log.debug("player.getCurrentTrack()");
           return this.queue.getCurrentTrack();
         },
         getCurrentTime(): number {
           return this.audio.currentTime;
+        },
+        getAlbumCount(): number {
+          return this.getQueue().reduce((albums, track) => {
+            return albums.includes(track.album.id)
+              ? albums
+              : albums.concat(track.album.id);
+          }, <string[]>[]).length;
         },
         async play() {
           log.debug("play()");
@@ -248,6 +261,16 @@ const usePlayer = () => {
           if (trackIsPlaying) this.stop();
           this.queue.removeAt(index);
           forceRender();
+        },
+        removeAlbum(startingAt: number) {
+          let track = this.getTrackAt(startingAt);
+          if (!track) return;
+          const album = track.album.id;
+          do {
+            this.removeTrackAt(startingAt);
+            track = this.getTrackAt(startingAt);
+            if (!track) return;
+          } while (track.album.id === album);
         },
       } as IPlayer);
     }

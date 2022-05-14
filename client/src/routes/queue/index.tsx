@@ -86,14 +86,22 @@ const Queue = ({ player, visible, onClick }: QueueProps) => {
     const clickHandler = isCurrentTrack ? undefined : () => trackClickHandler(index);
     const rmTrack = (index: number): ((ev: Event) => void) => {
       return (ev: Event) => {
-        player.removeTrackAt(index);
-        ev.preventDefault();
         ev.stopPropagation();
+        // When we are removing the last track in the queue we treat it as a
+        // clearQueue() instead, because it's the same for all practical purposes.
+        if (player.getQueueLength() === 1) clearQueue(ev);
+        else player.removeTrackAt(index);
       };
     };
     // If the album is V/A then we ignore the artist because it will obviously
     // be different for every track.
     const showHeader = track.album.isVa ? albumChanged : artistChanged || albumChanged;
+    const rmAlbum = (startingAt: number) => {
+      return (ev: Event) => {
+        if (player.getAlbumCount() === 1) clearQueue(ev);
+        else player.removeAlbum(startingAt);
+      };
+    };
 
     const trackJsx = (
       <Fragment>
@@ -106,6 +114,9 @@ const Queue = ({ player, visible, onClick }: QueueProps) => {
             <span class={`${style.album} ${albumName ? "" : style.missing}`}>
               {albumName || "<no title>"}
             </span>
+            <div class={style.rm} onClick={rmAlbum(index)}>
+              ×
+            </div>
           </div>
         )}
         <div key={`q-track-${index}`} class={trackClasses} onClick={clickHandler}>
