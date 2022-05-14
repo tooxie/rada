@@ -67,7 +67,7 @@ section.list .artist:last-of-type {
 section.thumbnails .artist {
   display: flex;
   color: black;
-  padding: 0.5rem 0;
+  padding: 0.25rem 0;
   align-items: center;
 }
 
@@ -80,14 +80,22 @@ section.thumbnails .artist:last-of-type {
 }
 
 section.thumbnails .artist .thumb {
-  width: 3rem;
-  min-width: 3rem;
-  height: 3rem;
-  margin-right: 1rem;
-  border-radius: 2rem;
+  background-color: #EAEAEA;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  border-radius: 2rem;
   border: 1px solid #C0C0C0;
-  background-color: #EAEAEA;
+  height: 3rem;
+  margin-right: 1rem;
+  min-width: 3rem;
+  width: 3rem;
+}
+
+section.thumbnails .artist .name {
+  align-items: center;
+  border-bottom: 1px solid #EEE;
+  display: flex;
+  min-height: 3rem;
+  width: 100%;
 }
