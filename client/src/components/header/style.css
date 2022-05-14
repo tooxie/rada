@@ -22,7 +22,7 @@
   background-image: url(/assets/img/bg-header.jpg);
   background-size: cover;
   background-position: center;
-  max-height: 45vw;
+  max-height: 10rem;
 }
 
 .song2 {
@@ -30,6 +30,6 @@
   flex-direction: column;
   backdrop-filter: blur(4px) brightness(0.7);
   background-color: rgba(255, 255, 255, 0.3);
-  min-height: 45vw;
+  height: 10rem;
   padding-bottom: 2rem;
 }

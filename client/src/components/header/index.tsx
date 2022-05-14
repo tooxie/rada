@@ -8,6 +8,7 @@ import style from "./style.css";
 
 interface HeaderProps {
   hideControls?: boolean;
+  isDetail?: boolean;
 }
 
 const Header = (props: HeaderProps) => {
@@ -16,7 +17,11 @@ const Header = (props: HeaderProps) => {
   return (
     <header class={style.header}>
       <div class={style.song2} />
-      <Navigation hideControls={props.hideControls} key="navigation" />
+      <Navigation
+        hideControls={props.hideControls}
+        key="navigation"
+        isDetail={props.isDetail}
+      />
       <Menu hideControls={props.hideControls} isAdmin={conf.isAdmin} key="menu" />
     </header>
   );

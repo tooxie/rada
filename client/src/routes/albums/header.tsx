@@ -36,7 +36,7 @@ const Header = (props: DetailProps) => {
       style={{ backgroundImage }}
       onClick={clickHandler}
     >
-      {!props.hideNav && <Navigation />}
+      {!props.hideNav && <Navigation isDetail={true} />}
       {_album && !props.hidePlayButton && <PlayAlbum albumId={albumId} />}
       {props.children}
     </header>

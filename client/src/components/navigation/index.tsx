@@ -13,6 +13,7 @@ import style from "./style.css";
 
 interface NavigationProps {
   hideControls?: boolean;
+  isDetail?: boolean;
 }
 
 const Navigation = (props: NavigationProps) => {
@@ -29,7 +30,9 @@ const Navigation = (props: NavigationProps) => {
   };
 
   return (
-    <section class={style.navigation}>
+    <section
+      class={`${style.navigation} ${props.isDetail ? style.detail : style.collection}`}
+    >
       {props.hideControls ? (
         <Fragment>
           <div class={style.back}>

@@ -25,7 +25,7 @@ const Header: FunctionComponent<DetailProps> = ({ id }) => {
   return (
     <div class={style.gradient} key="header-gradient">
       <header key="header" class={style.header} style={{ backgroundImage }}>
-        <Navigation />
+        <Navigation isDetail={true} />
       </header>
     </div>
   );

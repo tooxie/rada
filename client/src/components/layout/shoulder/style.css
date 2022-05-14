@@ -2,7 +2,14 @@
   border-radius: 1rem;
   min-height: 4rem;
   position: relative;
-  top: -3em;
+}
+
+.shoulder.collection {
+  top: calc(-4em + 3px);
+}
+
+.shoulder.detail {
+  top: -3rem;
 }
 
 .collection {

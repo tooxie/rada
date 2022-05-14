@@ -21,7 +21,7 @@ const Root = () => {
       <Fragment>
         <Header />
         <Shoulder>
-          <div style={{ paddingTop: "1rem" }}>Loading...</div>
+          <div style={{ padding: "1rem 0 3rem" }}>Loading...</div>
         </Shoulder>
       </Fragment>
     );

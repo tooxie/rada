@@ -6,7 +6,7 @@
   overflow-x: scroll;
   padding: 1rem;
   position: relative;
-  top: calc(-45vw + 1rem);
+  top: -10rem;
 }
 
 .collections a {
