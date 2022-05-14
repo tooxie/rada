@@ -8,11 +8,11 @@ import PlayerCtx from "./player/context";
 import Shoulder from "./layout/shoulder";
 import Header from "./header";
 import Router from "./router";
-
-import style from "./app.css";
 import Player from "./player";
 
-const AppRoot = () => {
+import style from "./app.css";
+
+const Root = () => {
   const { player } = usePlayer();
   const [showQueue, setShowQueue] = useState(false);
 
@@ -51,4 +51,4 @@ const AppRoot = () => {
   );
 };
 
-export default AppRoot;
+export default Root;
