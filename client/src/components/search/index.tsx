@@ -43,8 +43,15 @@ const Search = (props: SearchProps) => {
   const scroll = () => {
     const shoulder = document.getElementById("shoulder");
     if (!shoulder) return;
-    const offset = shoulder.getBoundingClientRect()["y"];
-    window.scroll(0, offset);
+    const shoulderY = shoulder.getBoundingClientRect()["y"];
+    const bodyY = document.body.getBoundingClientRect()["y"];
+    var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    const annoyingBrowserOffset = isSafari ? 6 : 0; // Sigh...
+    const offset = Math.abs(shoulderY - bodyY) - annoyingBrowserOffset;
+
+    if (offset !== window.pageYOffset - annoyingBrowserOffset) {
+      window.scrollTo({ top: offset, behavior: "smooth" });
+    }
   };
   const handleEnter = (ev: KeyboardEvent) => {
     const input = ev.target as HTMLInputElement;
