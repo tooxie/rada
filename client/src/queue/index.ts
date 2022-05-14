@@ -11,6 +11,7 @@ interface Track extends ITrack {
 // Just a convenience
 const readLength = (): number => {
   const key = "q.__meta__.length";
+  log.warn("Touching localStorage");
   return parseInt(localStorage.getItem(key) || "0", 10);
 };
 
@@ -34,12 +35,14 @@ const storage = {
     );
     for (let x = index ? index : 0; x < this.getLength(); x++) {
       log.debug(`Removing item with key q.track-${x}`);
+      log.warn("Touching localStorage");
       localStorage.removeItem(`q.track-${x}`);
     }
   },
   setItem: function (key: string, value: any): void {
     if (!value || value === "undefined") throw new Error(`No value for item "${key}"`);
     this.saveToCache(key, value);
+    log.warn("Touching localStorage");
     localStorage.setItem(key, JSON.stringify(value));
   },
   getItem: function (key: string): Track | null {
@@ -47,17 +50,20 @@ const storage = {
   },
   removeItem: function (key: string): void {
     delete (this.cache as any)[key];
+    log.warn("Touching localStorage");
     localStorage.removeItem(key);
   },
   updateLength: function (): void {
     const length = this.getLength().toString();
     log.debug(`Setting new length to ${length}`);
+    log.warn("Touching localStorage");
     localStorage.setItem("q.__meta__.length", length);
   },
   getLength: function (): number {
     return Object.keys(this.cache).length;
   },
   setIndex: function (index: number): void {
+    log.warn("Touching localStorage");
     localStorage.setItem("q.__meta__.index", index.toString());
     this.__index = index;
   },
