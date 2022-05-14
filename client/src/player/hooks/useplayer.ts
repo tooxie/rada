@@ -11,60 +11,6 @@ import Logger from "../../logger";
 const log = new Logger(__filename);
 const reauth = () => authenticate(fetchCredentials());
 let wakeLock: WakeLockSentinel | null;
-const setMediaMetadata = (track: Track, player: IPlayer) => {
-  log.debug("Setting mediasession metadata");
-  const getType = (url?: string | null) => {
-    if (!url) return "";
-    const i = url.lastIndexOf(".");
-    if (i === -1) return "";
-    const ext = url.substring(i + 1);
-    if (ext.length < 3 || ext.length > 4) return "";
-
-    return `image/${ext}`;
-  };
-  navigator.mediaSession.metadata = new window.MediaMetadata({
-    title: track.title || "N/A",
-    artist: (track.artists || []).map((a) => a.name).join(", "),
-    album: track.album.name || "N/A",
-    artwork: [
-      {
-        src: track.album.imageUrl || "",
-        type: getType(track.album.imageUrl),
-        sizes: "512x512",
-      },
-    ],
-  });
-  log.debug("mediaSession.metadata:", navigator.mediaSession.metadata);
-  navigator.mediaSession.playbackState = "playing";
-
-  log.debug("Setting action handlers...");
-  navigator.mediaSession.setActionHandler("nexttrack", player.skipNext.bind(player));
-  navigator.mediaSession.setActionHandler("pause", player.pause.bind(player));
-  navigator.mediaSession.setActionHandler("play", player.play.bind(player));
-  navigator.mediaSession.setActionHandler(
-    "previoustrack",
-    player.skipPrevious.bind(player)
-  );
-  navigator.mediaSession.setActionHandler("stop", player.stop.bind(player));
-  navigator.mediaSession.setActionHandler(
-    "seekbackward",
-    (ev: MediaSessionActionDetails) => {
-      log.debug("EV:", ev);
-      player.seekBy((ev.seekOffset || 10) * -1);
-    }
-  );
-  navigator.mediaSession.setActionHandler(
-    "seekforward",
-    (ev: MediaSessionActionDetails) => {
-      log.debug("EV:", ev);
-      player.seekBy(ev.seekOffset || 10);
-    }
-  );
-  navigator.mediaSession.setActionHandler("seekto", (ev: MediaSessionActionDetails) => {
-    log.debug("EV:", ev);
-    if (ev.seekTime !== null && ev.seekTime !== undefined) player.seekTo(ev.seekTime);
-  });
-};
 const requestScreenLock = () => {
   if (!("wakeLock" in navigator)) return;
   log.debug("Requesting screen lock...");
@@ -221,7 +167,6 @@ const usePlayer = () => {
           await this.audio.play();
           // navigator.mediaSession.playbackState = "playing";
           log.debug("Playing!");
-          setMediaMetadata(currentTrack, this);
           requestScreenLock();
         },
         pause() {
@@ -450,6 +395,72 @@ const usePlayer = () => {
       navigator.mediaSession.metadata = null;
     };
   }, [audio, player]);
+
+  useEffect(() => {
+    const track = player?.getCurrentTrack();
+    if (!track) navigator.mediaSession.metadata = null;
+    if (!playing || !player || !track) return;
+
+    log.debug("Setting mediasession metadata");
+    const getType = (url?: string | null) => {
+      if (!url) return "";
+      const i = url.lastIndexOf(".");
+      if (i === -1) return "";
+      const ext = url.substring(i + 1);
+      if (ext.length < 3 || ext.length > 4) return "";
+
+      return `image/${ext}`;
+    };
+    navigator.mediaSession.metadata = new window.MediaMetadata({
+      title: track.title || "N/A",
+      artist: (track.artists || []).map((a) => a.name).join(", "),
+      album: track.album.name || "N/A",
+      artwork: [
+        {
+          src: track.album.imageUrl || "",
+          type: getType(track.album.imageUrl),
+          sizes: "512x512",
+        },
+      ],
+    });
+    log.debug("mediaSession.metadata:", navigator.mediaSession.metadata);
+    navigator.mediaSession.playbackState = "playing";
+
+    log.debug("Setting action handlers...");
+    navigator.mediaSession.setActionHandler("nexttrack", player.skipNext.bind(player));
+    navigator.mediaSession.setActionHandler("pause", player.pause.bind(player));
+    navigator.mediaSession.setActionHandler("play", player.play.bind(player));
+    navigator.mediaSession.setActionHandler(
+      "previoustrack",
+      player.skipPrevious.bind(player)
+    );
+    navigator.mediaSession.setActionHandler("stop", player.stop.bind(player));
+    navigator.mediaSession.setActionHandler(
+      "seekbackward",
+      (ev: MediaSessionActionDetails) => {
+        log.debug("EV:", ev);
+        player.seekBy((ev.seekOffset || 10) * -1);
+        forceRender();
+      }
+    );
+    navigator.mediaSession.setActionHandler(
+      "seekforward",
+      (ev: MediaSessionActionDetails) => {
+        log.debug("EV:", ev);
+        player.seekBy(ev.seekOffset || 10);
+        forceRender();
+      }
+    );
+    navigator.mediaSession.setActionHandler("seekto", (ev: MediaSessionActionDetails) => {
+      log.debug("EV:", ev);
+      if (ev.seekTime !== null && ev.seekTime !== undefined) player.seekTo(ev.seekTime);
+      forceRender();
+    });
+
+    return () => {
+      navigator.mediaSession.metadata = null;
+    };
+  }, [playing]);
 
   return { player };
 };
