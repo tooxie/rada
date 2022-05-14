@@ -99,12 +99,12 @@ const Queue = ({ player, visible, onClick }: QueueProps) => {
       <Fragment>
         {showHeader && (
           <div class={style.header}>
-            <span class={artistName ? style.artists : style.missing}>
+            <span class={`${style.artists} ${artistName ? "" : style.missing}`}>
               {artistName || "<no artist>"}
             </span>
             &nbsp;
-            <span class={albumName ? style.album : style.missing}>
-              {albumName || "<no album>"}
+            <span class={`${style.album} ${albumName ? "" : style.missing}`}>
+              {albumName || "<no title>"}
             </span>
           </div>
         )}

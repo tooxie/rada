@@ -2,6 +2,10 @@
   overflow: hidden;
 }
 
+.missing {
+  font-style: italic;
+}
+
 .modal {
   transition: background-color 0.25s ease;
   background-color: transparent;
@@ -98,10 +102,6 @@ section.details .title a, section.details .title a:visited {
   font-weight: bold;
 }
 
-section.details .title .missing {
-  font-style: italic;
-}
-
 section.details .artists {
   font-size: 1.5rem;
   margin-top: 0.5rem;
@@ -157,7 +157,6 @@ section.tracklist .track .title {
 
 section.tracklist .title .missing {
   color: gray;
-  font-style: italic;
 }
 
 section.tracklist .track.current {
