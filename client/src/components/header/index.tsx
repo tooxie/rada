@@ -15,6 +15,7 @@ const Header = (props: HeaderProps) => {
 
   return (
     <header class={style.header}>
+      <div class={style.song2} />
       <Navigation hideControls={props.hideControls} key="navigation" />
       <Menu hideControls={props.hideControls} isAdmin={conf.isAdmin} key="menu" />
     </header>
