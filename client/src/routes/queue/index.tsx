@@ -20,6 +20,7 @@ import Vinyl from "./vinyl";
 
 const log = new Logger(__filename);
 let wasVisible: boolean;
+var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 interface QueueProps {
   player: IPlayer;
@@ -32,9 +33,14 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
   const { queue } = player;
   const ref = useRef<HTMLDivElement>(null);
   const [removeAnimation, setRemoveAnimation] = useState(true);
+  const [force, setForce] = useState(false);
 
   const preventBodyScroll = () => document.body.classList.add(style.noscroll);
   const enableBodyScroll = () => document.body.classList.remove(style.noscroll);
+  const dismissOnBack = () => {
+    if (isSafari) setForce(true);
+    onDismiss();
+  };
 
   // In mobile, when you click on the search and the keyboard is displayed, the
   // viewport height changes. When you dismiss the keyboard the queue had adapted
@@ -44,11 +50,17 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
   const handleVisibilityChange = () => {
     if (visible) setRemoveAnimation(false);
     else {
-      setTimeout(() => {
+      if (force) {
         setRemoveAnimation(true);
-        // We scroll back to the top when the queue is not visible any more.
         ref.current?.scrollTo({ top: 0 });
-      }, 250);
+        setForce(false);
+      } else {
+        setTimeout(() => {
+          setRemoveAnimation(true);
+          // We scroll back to the top when the queue is not visible any more.
+          ref.current?.scrollTo({ top: 0 });
+        }, 250);
+      }
     }
   };
   const listenForBackButton = (listener: EventListener) => {
@@ -62,10 +74,10 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
   useEffect(() => {
     if (visible) {
       preventBodyScroll();
-      listenForBackButton(onDismiss);
+      listenForBackButton(dismissOnBack);
     } else {
       enableBodyScroll();
-      removeHistoryStateListener(onDismiss);
+      removeHistoryStateListener(dismissOnBack);
     }
 
     const visibilityChanged = wasVisible !== visible;
@@ -74,7 +86,7 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
 
     return () => {
       enableBodyScroll();
-      removeHistoryStateListener(onDismiss);
+      removeHistoryStateListener(dismissOnBack);
     };
   }, [visible]);
 
