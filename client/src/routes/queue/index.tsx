@@ -47,20 +47,35 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
       setTimeout(() => {
         setRemoveAnimation(true);
         // We scroll back to the top when the queue is not visible any more.
-        if (ref.current) ref.current.scrollTo({ top: 0 });
+        ref.current?.scrollTo({ top: 0 });
       }, 250);
     }
   };
+  const listenForBackButton = (listener: EventListener) => {
+    history.pushState({ queueOpen: true }, "");
+    addEventListener("popstate", listener);
+  };
+  const removeHistoryStateListener = (listener: EventListener) => {
+    removeEventListener("popstate", listener);
+  };
 
   useEffect(() => {
-    if (visible) preventBodyScroll();
-    else enableBodyScroll();
+    if (visible) {
+      preventBodyScroll();
+      listenForBackButton(onDismiss);
+    } else {
+      enableBodyScroll();
+      removeHistoryStateListener(onDismiss);
+    }
 
     const visibilityChanged = wasVisible !== visible;
     if (visibilityChanged) handleVisibilityChange();
     wasVisible = visible;
 
-    return () => enableBodyScroll();
+    return () => {
+      enableBodyScroll();
+      removeHistoryStateListener(onDismiss);
+    };
   }, [visible]);
 
   const trackClickHandler = (index: number) => player.skipTo(index);
