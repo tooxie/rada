@@ -70,9 +70,13 @@ const renderAsList = (albums: Album[]) => (
         <img src={listIcon} />
         <div>
           <div class={style.artist}>
-            {album.isVa
-              ? "V/A"
-              : (album.artists || []).map((artist) => artist.name).join(", ")}
+            {album.isVa ? (
+              "V/A"
+            ) : (album.artists || []).length ? (
+              (album.artists || []).map((artist) => artist.name).join(", ")
+            ) : (
+              <span class={style.missing}>&lt;no artist&gt;</span>
+            )}
           </div>
           <div class={style.name}>{album.name}</div>
         </div>
@@ -90,9 +94,13 @@ const renderAsMosaic = (albums: Album[]) => (
           style={{ backgroundImage: `url("${album.imageUrl || DEFAULT_ALBUM_COVER}")` }}
         />
         <div class={style.artist}>
-          {album.isVa
-            ? "V/A"
-            : (album.artists || []).map((artist) => artist.name).join(", ")}
+          {album.isVa ? (
+            "V/A"
+          ) : (album.artists || []).length ? (
+            (album.artists || []).map((artist) => artist.name).join(", ")
+          ) : (
+            <span class={style.missing}>&lt;no artist&gt;</span>
+          )}
         </div>
         <div class={style.name}>{album.name}</div>
       </Link>
@@ -110,9 +118,13 @@ const renderAsThumbnails = (albums: Album[]) => (
         />
         <div class={style.details}>
           <div class={style.artist}>
-            {album.isVa
-              ? "V/A"
-              : (album.artists || []).map((artist) => artist.name).join(", ")}
+            {album.isVa ? (
+              "V/A"
+            ) : (album.artists || []).length ? (
+              (album.artists || []).map((artist) => artist.name).join(", ")
+            ) : (
+              <span class={style.missing}>&lt;no artist&gt;</span>
+            )}
           </div>
           <div class={style.name}>{album.name}</div>
         </div>

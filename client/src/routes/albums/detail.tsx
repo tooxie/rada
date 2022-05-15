@@ -46,6 +46,7 @@ const AlbumDetail = ({ id, trackId }: DetailProps) => {
       </Fragment>
     );
   }
+  if (!_album.artists) _album.artists = [];
 
   const trackList = ((_album.tracks || []) as Required<Track>[]).filter((t) => t.url);
   const getTracks = (i: number) => (i == 0 ? trackList : trackList.slice(i));
@@ -75,9 +76,13 @@ const AlbumDetail = ({ id, trackId }: DetailProps) => {
           <div class={style.va}>V/A&nbsp;</div>
         ) : (
           <div class={style.artist}>
-            {(_album.artists || []).map((artist: Artist) => (
-              <Link href={"/artist/" + artist.id.split(":")[1]}>{artist.name}</Link>
-            ))}
+            {_album.artists.length ? (
+              _album.artists.map((artist: Artist) => (
+                <Link href={"/artist/" + artist.id.split(":")[1]}>{artist.name}</Link>
+              ))
+            ) : (
+              <span class={style.missing}>&lt;no artist&gt;</span>
+            )}
             &nbsp;
           </div>
         )}

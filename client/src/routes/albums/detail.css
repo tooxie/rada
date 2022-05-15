@@ -28,6 +28,10 @@
   color: #742e12;
 }
 
+.details .artist .missing {
+  font-style: italic;
+}
+
 .header img {
   width: 2rem;
 }

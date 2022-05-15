@@ -33,7 +33,7 @@ section.mosaic a.album .name {
   word-break: break-word;
 }
 
-section.mosaic a.album .artist {
+section.mosaic .album .artist {
   color: #742e12;
   font-size: 0.8rem;
   margin-bottom: .5rem;
@@ -41,6 +41,10 @@ section.mosaic a.album .artist {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+section.mosaic .album .artist .missing {
+  font-style: italic;
 }
 
 section.list .album {
@@ -67,6 +71,10 @@ section.list .album .artist {
   color: #742e12;
   font-size: 0.8rem;
   margin-bottom: 0.2rem;
+}
+
+section.list .album .artist .missing {
+  font-style: italic;
 }
 
 section.thumbnails .album {
@@ -100,4 +108,8 @@ section.thumbnails .album .artist {
   color: #742e12;
   font-size: 0.8rem;
   margin-bottom: 0.2rem;
+}
+
+section.thumbnails .album .artist .missing {
+  font-style: italic;
 }
