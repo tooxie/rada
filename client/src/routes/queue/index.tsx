@@ -41,19 +41,23 @@ const Queue = ({ player, visible, onClick }: QueueProps) => {
   // to the new page height and it will show up where the keyboard used to be and
   // transition off the screen. That's why we need to remove the transition when
   // the queue is hidden.
-  const decideWhatToDoAboutTheAnimation = () => {
-    if (wasVisible !== visible) {
-      if (visible) setRemoveAnimation(false);
-      else setTimeout(() => setRemoveAnimation(true), 500);
+  const handleVisibilityChange = () => {
+    if (visible) setRemoveAnimation(false);
+    else {
+      setTimeout(() => {
+        setRemoveAnimation(true);
+        // We scroll back to the top when the queue is not visible any more.
+        if (ref.current) ref.current.scrollTo({ top: 0 });
+      }, 250);
     }
   };
 
   useEffect(() => {
     if (visible) preventBodyScroll();
     else enableBodyScroll();
-    decideWhatToDoAboutTheAnimation();
 
-    if (ref.current) ref.current.scrollTo({ top: 0 });
+    const visibilityChanged = wasVisible !== visible;
+    if (visibilityChanged) handleVisibilityChange();
     wasVisible = visible;
 
     return () => enableBodyScroll();
