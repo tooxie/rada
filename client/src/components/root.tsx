@@ -43,7 +43,7 @@ const Root = () => {
           <Queue
             player={player}
             visible={showQueue}
-            onClick={() => setShowQueue(false)}
+            onDismiss={() => setShowQueue(false)}
           />
         </div>
       </PlayerCtx.Provider>

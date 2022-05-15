@@ -24,10 +24,10 @@ let wasVisible: boolean;
 interface QueueProps {
   player: IPlayer;
   visible: boolean;
-  onClick: (ev?: Event) => void;
+  onDismiss: (ev?: Event) => void;
 }
 
-const Queue = ({ player, visible, onClick }: QueueProps) => {
+const Queue = ({ player, visible, onDismiss }: QueueProps) => {
   log.debug(`Queue.render()`);
   const { queue } = player;
   const ref = useRef<HTMLDivElement>(null);
@@ -66,7 +66,7 @@ const Queue = ({ player, visible, onClick }: QueueProps) => {
   const trackClickHandler = (index: number) => player.skipTo(index);
   const clearQueue = (ev: Event) => {
     player.pause();
-    onClick();
+    onDismiss();
     ev.stopPropagation();
     setTimeout(() => player.clearQueue(), 250);
   };
@@ -183,7 +183,7 @@ const Queue = ({ player, visible, onClick }: QueueProps) => {
           id={track.album.id as AlbumId}
           hidePlayButton={true}
           hideNav={true}
-          onClick={() => (onClick ? onClick() : null)}
+          onClick={() => (onDismiss ? onDismiss() : null)}
         >
           <Vinyl
             onPlay={() => player.play()}
@@ -211,7 +211,7 @@ const Queue = ({ player, visible, onClick }: QueueProps) => {
             <div class={style.title}>
               <Link
                 href={`/${toUrl(track.album.id)}/${toUrl(track.id)}`}
-                onClick={onClick}
+                onClick={onDismiss}
               >
                 {track.title ? (
                   track.title
@@ -220,11 +220,11 @@ const Queue = ({ player, visible, onClick }: QueueProps) => {
                 )}
               </Link>
             </div>
-            <div class={style.artists} onClick={onClick}>
-              {renderArtistLinks(track?.artists || [])}
+            <div class={style.artists}>
+              {renderArtistLinks(track?.artists || [], onDismiss)}
             </div>
             <div class={style.album}>
-              <Link href={`/album/${urlize(track.album.id)}`} onClick={onClick}>
+              <Link href={`/album/${urlize(track.album.id)}`} onClick={onDismiss}>
                 {track.album.name}
               </Link>
               &nbsp;
@@ -248,9 +248,11 @@ const Queue = ({ player, visible, onClick }: QueueProps) => {
   );
 };
 
-const renderArtistLinks = (artists: Artist[]) => {
+const renderArtistLinks = (artists: Artist[], handler: EventListener) => {
   const artistJsx = artists.map((artist: Artist) => (
-    <Link href={`/artist/${urlize(artist.id)}`}>{artist.name}</Link>
+    <Link href={`/artist/${urlize(artist.id)}`} onClick={handler}>
+      {artist.name}
+    </Link>
   ));
   if (artistJsx.length < 2) return artistJsx;
 
