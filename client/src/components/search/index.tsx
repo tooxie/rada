@@ -1,6 +1,7 @@
 import { h, Fragment } from "preact";
 import { useEffect, useState } from "preact/hooks";
 
+import useAppState from "../../state/hooks/useappstate";
 import useConf from "../../hooks/useconf";
 import Logger from "../../logger";
 
@@ -22,6 +23,7 @@ interface SearchProps {
 const Search = (props: SearchProps) => {
   log.debug(`Search.render()`);
   const { conf, setConf } = useConf();
+  const { appState } = useAppState();
   const [value, setValue] = useState("");
   const clear = () => updateValue("");
   const change = (ev: Event) => updateValue((ev.target as HTMLInputElement).value);
@@ -45,8 +47,7 @@ const Search = (props: SearchProps) => {
     if (!shoulder) return;
     const shoulderY = shoulder.getBoundingClientRect()["y"];
     const bodyY = document.body.getBoundingClientRect()["y"];
-    var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    const annoyingBrowserOffset = isSafari ? 6 : 0; // Sigh...
+    const annoyingBrowserOffset = appState.isSafari ? 6 : 0; // Sigh...
     const offset = Math.abs(shoulderY - bodyY) - annoyingBrowserOffset;
 
     if (offset !== window.pageYOffset - annoyingBrowserOffset) {

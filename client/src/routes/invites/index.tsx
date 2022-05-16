@@ -4,7 +4,7 @@ import { route } from "preact-router";
 import QrCode from "../../components/qrcode";
 import ErrorMsg from "../../components/error";
 import Spinner from "../../components/spinner";
-import useConf from "../../conf/hooks/useconf";
+import useAppState from "../../hooks/useappstate";
 
 import useListInvites from "./hooks/uselist";
 import useCreateInvite from "./hooks/usecreate";
@@ -15,11 +15,11 @@ const InviteList = () => {
   let note: HTMLInputElement | null;
   let adminCheck: HTMLInputElement | null;
 
-  const { conf } = useConf();
+  const { appState } = useAppState();
   const { loading, error, invites } = useListInvites();
   const [createInvite, { claimUrl, loading: creating }] = useCreateInvite();
 
-  if (!conf.isAdmin) route("/404");
+  if (!appState.isAdmin) route("/404");
 
   if (error) return <ErrorMsg error={error} />;
   if (loading) <Spinner />;

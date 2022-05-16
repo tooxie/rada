@@ -1,10 +1,10 @@
 import { h, Fragment } from "preact";
-import { useState } from "preact/hooks";
 import StatusAlert from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
 
 import Queue from "../routes/queue";
 import usePlayer from "../player/hooks/useplayer";
+import useAppState from "../state/hooks/useappstate";
 
 import PlayerCtx from "./player/context";
 import Shoulder from "./layout/shoulder";
@@ -16,7 +16,10 @@ import style from "./app.css";
 
 const Root = () => {
   const { player } = usePlayer();
-  const [showQueue, setShowQueue] = useState(false);
+  const { appState, dispatch, actions } = useAppState();
+
+  const openQueue = () => dispatch(actions.OpenQueue);
+  const closeQueue = () => dispatch(actions.CloseQueue);
 
   if (!player)
     return (
@@ -33,22 +36,8 @@ const Root = () => {
       <StatusAlert />
       <PlayerCtx.Provider value={player}>
         <Router />
-        <Player onClick={() => setShowQueue(true)} />
-        {/*
-          If I don't wrap the Queue component with a div I get the error:
-          TypeError: Cannot read properties of null (reading 'type')
-              at getPreviousSibling (async.js?7a7b:8:1)
-              at getPreviousSibling (async.js?7a7b:19:1)
-              at AsyncComponent.render (async.js?7a7b:48:1)
-          This is the @preact/async-loader package. Is this a preact bug?
-         */}
-        <div>
-          <Queue
-            player={player}
-            visible={showQueue}
-            onDismiss={() => setShowQueue(false)}
-          />
-        </div>
+        <Player onClick={openQueue} />
+        <Queue player={player} visible={appState.isQueueOpen} onDismiss={closeQueue} />
       </PlayerCtx.Provider>
     </div>
   );

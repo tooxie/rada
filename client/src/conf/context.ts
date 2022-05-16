@@ -10,7 +10,12 @@ const defaultConf = {
 
 export const getDefaultConf = (): Conf => {
   const persisted = localStorage.getItem("GawshiConf");
-  if (persisted) return JSON.parse(persisted) as Conf;
+  if (persisted) {
+    return {
+      ...defaultConf,
+      ...JSON.parse(persisted),
+    } as Conf;
+  }
 
   return defaultConf;
 };

@@ -1,6 +1,6 @@
 import { h } from "preact";
 
-import useConf from "../../conf/hooks/useconf";
+import useAppState from "../../state/hooks/useappstate";
 
 import Navigation from "../navigation";
 import Menu from "../menu";
@@ -12,7 +12,7 @@ interface HeaderProps {
 }
 
 const Header = (props: HeaderProps) => {
-  const { conf } = useConf();
+  const { appState } = useAppState();
 
   return (
     <header class={style.header}>
@@ -22,7 +22,7 @@ const Header = (props: HeaderProps) => {
         key="navigation"
         isDetail={props.isDetail}
       />
-      <Menu hideControls={props.hideControls} isAdmin={conf.isAdmin} key="menu" />
+      <Menu hideControls={props.hideControls} isAdmin={appState.isAdmin} key="menu" />
     </header>
   );
 };

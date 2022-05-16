@@ -26,7 +26,7 @@ let wasVisible: boolean;
 interface QueueProps {
   player: IPlayer;
   visible: boolean;
-  onDismiss: (ev?: Event) => void;
+  onDismiss: () => void;
 }
 
 const Queue = ({ player, visible, onDismiss }: QueueProps) => {
@@ -54,6 +54,7 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
     else setTimeout(onQueueHidden, HIDE_ANIMATION_DURATION);
   };
 
+  // Handle visibility (sliding in and out)
   useEffect(() => {
     if (visible) preventBodyScroll();
     else enableBodyScroll();
@@ -194,7 +195,7 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
           id={track.album.id as AlbumId}
           hidePlayButton={true}
           hideNav={true}
-          onClick={() => (onDismiss ? onDismiss() : null)}
+          onClick={onDismiss}
         >
           <Vinyl
             onPlay={() => player.play()}

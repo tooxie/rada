@@ -13,7 +13,6 @@ export enum AlbumListTypes {
 export interface Conf {
   [key: string]: any;
   searchEnabled: boolean;
-  isAdmin?: boolean;
   artistListType: ArtistListTypes;
   albumListType: AlbumListTypes;
 }
