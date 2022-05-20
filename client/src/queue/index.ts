@@ -1,12 +1,9 @@
-import { Track as ITrack } from "../graphql/api";
-
+import { Track } from "../graphql/api";
 import Logger from "../logger";
 
-const log = new Logger(__filename);
+import type { Storage } from "./types";
 
-interface Track extends ITrack {
-  [key: string]: any;
-}
+const log = new Logger(__filename);
 
 // Just a convenience
 const readLength = (): number => {
@@ -15,8 +12,7 @@ const readLength = (): number => {
   return parseInt(localStorage.getItem(key) || "0", 10);
 };
 
-// TODO: Write an interface for this
-const storage = {
+const storage: Storage = {
   __init: false,
   __length: 0,
   __index: -1,
