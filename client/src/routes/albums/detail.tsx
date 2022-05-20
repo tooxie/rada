@@ -5,7 +5,7 @@ import { Link } from "preact-router";
 import { DetailProps } from "../../components/layout/detail/types";
 import ErrorMsg from "../../components/error";
 import Spinner from "../../components/spinner";
-import { Artist, Album, Track } from "../../graphql/api";
+import { Artist, Track } from "../../graphql/api";
 import { AlbumId } from "../../types";
 import toMinutes from "../../utils/tominutes";
 import usePlayer from "../../hooks/useplayer";
@@ -18,8 +18,6 @@ import TrackOptions from "./trackoptions";
 
 const log = new Logger(__filename);
 
-let _album: Album | null = null;
-
 const AlbumDetail = ({ id, trackId }: DetailProps) => {
   const { loading, error, album } = useGetAlbum(id as AlbumId);
   const [faved, setFaved] = useState(false);
@@ -27,12 +25,9 @@ const AlbumDetail = ({ id, trackId }: DetailProps) => {
 
   useEffect(() => window.scrollTo(0, 0), []);
 
-  if (id !== _album?.id) _album = null;
-  if (!loading && album) _album = album;
-
   if (error) return <ErrorMsg error={error} margin={4} />;
   if (!loading && !album) return <p class={style.empty}>Album not found</p>;
-  if (!_album) {
+  if (!album) {
     return (
       <Fragment>
         <div class={style.header}>
@@ -46,25 +41,25 @@ const AlbumDetail = ({ id, trackId }: DetailProps) => {
       </Fragment>
     );
   }
-  if (!_album.artists) _album.artists = [];
+  if (!album.artists) album.artists = [];
 
-  const trackList = ((_album.tracks || []) as Required<Track>[]).filter((t) => t.url);
+  const trackList = ((album.tracks || []) as Required<Track>[]).filter((t) => t.url);
   const getTracks = (i: number) => (i == 0 ? trackList : trackList.slice(i));
   const appendFrom = (i: number) => player?.appendTracks(getTracks(i));
-  const isVa = (_album.artists || []).length > 1;
+  const isVa = (album.artists || []).length > 1;
   const durationInSeconds = trackList.reduce((total, track) => {
     return total + (track.lengthInSeconds || 0);
   }, 0);
   const duration = toMinutes(durationInSeconds);
   log.debug(`Duration: ${durationInSeconds}s (${duration})`);
   const shouldHighlight = (id: string): Boolean => `track:${trackId}` === id;
-  const noArtist = _album.artists.length === 0;
+  const noArtist = album.artists.length === 0;
 
   return (
     <Fragment>
       <div class={style.header}>
         <div class={style.name}>
-          <h1>{_album.name}</h1>
+          <h1>{album.name}</h1>
         </div>
         <AlbumOptions />
       </div>
@@ -78,13 +73,13 @@ const AlbumDetail = ({ id, trackId }: DetailProps) => {
             ? "<no artist>"
             : isVa
             ? "V/A"
-            : _album.artists.map((artist: Artist) => (
+            : album.artists.map((artist: Artist) => (
                 <Link href={"/artist/" + artist.id.split(":")[1]}>{artist.name}</Link>
               ))}
           &nbsp;
         </div>
         <div class={style.year}>
-          {!!_album.year && `| ${_album.year} `}
+          {!!album.year && `| ${album.year} `}
           {trackList.length > 0 && `| ${trackList.length} tracks | ${duration}`}
         </div>
       </div>
