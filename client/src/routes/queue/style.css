@@ -55,18 +55,19 @@ section.queue.hidden.noanim {
 }
 
 section.tracklist .header {
-  color: gray;
-  font-size: 0.8rem;
-  padding: .5rem 0.8rem 0 1rem;
-  display: flex;
   align-items: center;
+  color: gray;
+  display: flex;
+  flex-wrap: nowrap;
+  font-size: 0.8rem;
   justify-content: space-between;
+  padding: .5rem 0.8rem 0 1rem;
 }
 
 section.tracklist .header .rm {
+  color: #742e12;
   flex-grow: 1;
   text-align: right;
-  color: #742e12;
 }
 
 section.tracklist .rm {

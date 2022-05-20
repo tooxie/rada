@@ -58,6 +58,7 @@ const AlbumDetail = ({ id, trackId }: DetailProps) => {
   const duration = toMinutes(durationInSeconds);
   log.debug(`Duration: ${durationInSeconds}s (${duration})`);
   const shouldHighlight = (id: string): Boolean => `track:${trackId}` === id;
+  const noArtist = _album.artists.length === 0;
 
   return (
     <Fragment>
@@ -68,26 +69,22 @@ const AlbumDetail = ({ id, trackId }: DetailProps) => {
         <AlbumOptions />
       </div>
       <div class={style.details}>
-        {/* Some day we will be able to add albums to favorites... */}
-        <div class={style.fav} onClick={() => setFaved(!faved)}>
-          {faved ? <span>&#9825;</span> : <span>+</span>}&nbsp;
-        </div>
-        {isVa ? (
-          <div class={style.va}>V/A&nbsp;</div>
-        ) : (
-          <div class={style.artist}>
-            {_album.artists.length ? (
-              _album.artists.map((artist: Artist) => (
-                <Link href={"/artist/" + artist.id.split(":")[1]}>{artist.name}</Link>
-              ))
-            ) : (
-              <span class={style.missing}>&lt;no artist&gt;</span>
-            )}
-            &nbsp;
+        <div class={noArtist ? style.missing : isVa ? style.va : style.artist}>
+          {/* Some day we will be able to add albums to favorites... */}
+          <div class={style.fav} onClick={() => setFaved(!faved)}>
+            {faved ? <span>&#9825;</span> : "+"}&nbsp;
           </div>
-        )}
-        {!!_album.year && <div class={style.year}>|&nbsp;{_album.year}&nbsp;</div>}
-        <div class={style.duration}>
+          {noArtist
+            ? "<no artist>"
+            : isVa
+            ? "V/A"
+            : _album.artists.map((artist: Artist) => (
+                <Link href={"/artist/" + artist.id.split(":")[1]}>{artist.name}</Link>
+              ))}
+          &nbsp;
+        </div>
+        <div class={style.year}>
+          {!!_album.year && `| ${_album.year} `}
           {trackList.length > 0 && `| ${trackList.length} tracks | ${duration}`}
         </div>
       </div>

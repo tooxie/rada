@@ -2,6 +2,10 @@
   padding-top: 4rem;
 }
 
+.missing {
+  font-style: italic;
+}
+
 .header {
   align-items: center;
   display: flex;
@@ -18,7 +22,7 @@
 .details {
   color: #742e12;
   display: flex;
-  flex-direction: row;
+  flex-wrap: wrap;
   font-size: 0.8rem;
   font-weight: normal;
   margin-top: 1rem;
@@ -26,10 +30,6 @@
 
 .details .artist a {
   color: #742e12;
-}
-
-.details .artist .missing {
-  font-style: italic;
 }
 
 .header img {
@@ -75,7 +75,6 @@
 
 .tracklist .title .missing {
   color: gray;
-  font-style: italic;
 }
 
 .tracklist .title .info {
@@ -95,4 +94,14 @@
 .tracklist .track .artists {
   margin-left: 1rem;
   color: gray;
+}
+
+.nobreak {
+  white-space: nowrap;
+  display: flex;
+  flex-direction: row;
+}
+
+.fav {
+  display: inline-block;
 }

@@ -137,13 +137,15 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
       <Fragment>
         {showHeader && (
           <div class={style.header}>
-            <span class={`${style.artists} ${artistName ? "" : style.missing}`}>
-              {artistName || "<no artist>"}
-            </span>
-            &nbsp;
-            <span class={`${style.album} ${albumName ? "" : style.missing}`}>
-              {albumName || "<no title>"}
-            </span>
+            <div>
+              <span class={`${style.artists} ${artistName ? "" : style.missing}`}>
+                {artistName || "<no artist>"}
+              </span>
+              &nbsp;
+              <span class={`${style.album} ${albumName ? "" : style.missing}`}>
+                {albumName || "<no title>"}
+              </span>
+            </div>
             <div class={style.rm} onClick={rmAlbum(index)}>
               ×
             </div>
