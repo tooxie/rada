@@ -16,6 +16,6 @@ For detailed explanation on how things work, checkout the [CLI Readme](https://g
 
 Credits
 -------
-* Default album cover: https://www.reddit.com/r/pics/comments/1okjo8/youve_come_to_the_wrong_neighborhood/
+* Header background: https://www.piqsels.com/en/public-domain-photo-svyyj
 * Vinyl icon: https://commons.wikimedia.org/wiki/File:LP_Vinyl_Symbol_Icon.png
-* Vinyl spinner: https://www.deviantart.com/natleyn
+* Vinyl spinner: https://www.deviantart.com/natleyn/art/Vinyl-Scratch-s-Animated-Cursor-Set-Finally-339539046
