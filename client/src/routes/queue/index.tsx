@@ -19,8 +19,8 @@ import Timer from "./timer";
 import Vinyl from "./vinyl";
 
 const log = new Logger(__filename);
+const HIDE_ANIMATION_DURATION = 250;
 let wasVisible: boolean;
-var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 interface QueueProps {
   player: IPlayer;
@@ -33,14 +33,9 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
   const { queue } = player;
   const ref = useRef<HTMLDivElement>(null);
   const [removeAnimation, setRemoveAnimation] = useState(true);
-  const [force, setForce] = useState(false);
 
   const preventBodyScroll = () => document.body.classList.add(style.noscroll);
   const enableBodyScroll = () => document.body.classList.remove(style.noscroll);
-  const dismissOnBack = () => {
-    if (isSafari) setForce(true);
-    onDismiss();
-  };
 
   // In mobile, when you click on the search and the keyboard is displayed, the
   // viewport height changes. When you dismiss the keyboard the queue had adapted
@@ -48,46 +43,24 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
   // transition off the screen. That's why we need to remove the transition when
   // the queue is hidden.
   const handleVisibilityChange = () => {
+    // Changes to be applied when the queue is not visible any more.
+    const onQueueHidden = () => {
+      setRemoveAnimation(true);
+      ref.current?.scrollTo({ top: 0 });
+    };
+
     if (visible) setRemoveAnimation(false);
-    else {
-      if (force) {
-        setRemoveAnimation(true);
-        ref.current?.scrollTo({ top: 0 });
-        setForce(false);
-      } else {
-        setTimeout(() => {
-          setRemoveAnimation(true);
-          // We scroll back to the top when the queue is not visible any more.
-          ref.current?.scrollTo({ top: 0 });
-        }, 250);
-      }
-    }
-  };
-  const listenForBackButton = (listener: EventListener) => {
-    history.pushState({ queueOpen: true }, "");
-    addEventListener("popstate", listener);
-  };
-  const removeHistoryStateListener = (listener: EventListener) => {
-    removeEventListener("popstate", listener);
+    else setTimeout(onQueueHidden, HIDE_ANIMATION_DURATION);
   };
 
   useEffect(() => {
-    if (visible) {
-      preventBodyScroll();
-      listenForBackButton(dismissOnBack);
-    } else {
-      enableBodyScroll();
-      removeHistoryStateListener(dismissOnBack);
-    }
+    if (visible) preventBodyScroll();
+    else enableBodyScroll();
 
-    const visibilityChanged = wasVisible !== visible;
-    if (visibilityChanged) handleVisibilityChange();
+    if (wasVisible !== visible) handleVisibilityChange();
     wasVisible = visible;
 
-    return () => {
-      enableBodyScroll();
-      removeHistoryStateListener(dismissOnBack);
-    };
+    return () => enableBodyScroll();
   }, [visible]);
 
   const trackClickHandler = (index: number) => player.skipTo(index);
@@ -95,7 +68,7 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
     player.pause();
     onDismiss();
     ev.stopPropagation();
-    setTimeout(() => player.clearQueue(), 250);
+    setTimeout(() => player.clearQueue(), HIDE_ANIMATION_DURATION);
   };
   const toUrl = (id: string) => id.split(":").join("/");
   const track = player.getCurrentTrack();
