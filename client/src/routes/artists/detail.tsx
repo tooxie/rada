@@ -1,7 +1,6 @@
 import { Fragment, FunctionComponent, h } from "preact";
 import { Link } from "preact-router";
 
-import Options from "../../components/options";
 import { DetailProps } from "../../components/layout/detail/types";
 import ErrorMsg from "../../components/error";
 import Spinner from "../../components/spinner";
@@ -44,7 +43,6 @@ const ArtistDetail: FunctionComponent<DetailProps> = ({ id }) => {
     <div key={`detail-${id}`}>
       <div class={style.name}>
         <h1>{_artist.name}</h1>
-        <Options>Hola from the artist detail options 👋🏽</Options>
       </div>
       <div class={style.albums}>
         {albums.length === 0 && <p>No albums</p>}

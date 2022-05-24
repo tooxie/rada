@@ -3,7 +3,7 @@ import { h } from "preact";
 import Options from "../../components/options";
 
 const AlbumOptions = () => {
-  return <Options>Hola from the album options option</Options>;
+  return <Options>Not implemented</Options>;
 };
 
 export default AlbumOptions;

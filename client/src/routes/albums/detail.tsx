@@ -13,8 +13,6 @@ import Logger from "../../logger";
 
 import useGetAlbum from "./hooks/usegetalbum";
 import style from "./detail.css";
-import AlbumOptions from "./albumoptions";
-import TrackOptions from "./trackoptions";
 
 const log = new Logger(__filename);
 
@@ -61,7 +59,6 @@ const AlbumDetail = ({ id, trackId }: DetailProps) => {
         <div class={style.name}>
           <h1>{album.name}</h1>
         </div>
-        <AlbumOptions />
       </div>
       <div class={style.details}>
         <div class={noArtist ? style.missing : isVa ? style.va : style.artist}>
@@ -116,7 +113,6 @@ const AlbumDetail = ({ id, trackId }: DetailProps) => {
                 </div>
               </div>
             </div>
-            <TrackOptions />
           </div>
         ))}
       </div>

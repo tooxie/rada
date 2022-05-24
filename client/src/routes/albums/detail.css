@@ -9,6 +9,7 @@
 .header {
   align-items: center;
   display: flex;
+  height: 3rem;
   max-height: 3rem;
   overflow-y: hidden;
   padding: .5rem 0;

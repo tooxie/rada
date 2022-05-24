@@ -3,7 +3,7 @@ import { h } from "preact";
 import Options from "../../components/options";
 
 const TrackOptions = () => {
-  return <Options>Hola Manola 🥁</Options>;
+  return <Options>Not implemented</Options>;
 };
 
 export default TrackOptions;
