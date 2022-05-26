@@ -1,5 +1,7 @@
 import { h, Fragment } from "preact";
 import { useState } from "preact/hooks";
+import StatusAlert from "react-status-alert";
+import "react-status-alert/dist/status-alert.css";
 
 import Queue from "../routes/queue";
 import usePlayer from "../player/hooks/useplayer";
@@ -28,6 +30,7 @@ const Root = () => {
 
   return (
     <div id="preact_root" key="preact_root" class={style.root}>
+      <StatusAlert />
       <PlayerCtx.Provider value={player}>
         <Router />
         <Player onClick={() => setShowQueue(true)} />

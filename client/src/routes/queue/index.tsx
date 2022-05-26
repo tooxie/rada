@@ -1,6 +1,7 @@
 import { h, Fragment } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
 import { Link } from "preact-router";
+import { StatusAlertService } from "react-status-alert";
 
 import type { IPlayer } from "../../player/types";
 
@@ -66,9 +67,14 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
   const trackClickHandler = (index: number) => player.skipTo(index);
   const clearQueue = (ev: Event) => {
     player.pause();
-    onDismiss();
     ev.stopPropagation();
+    hideAndClear();
+    StatusAlertService.showInfo("Queue cleared");
+  };
+  const hideAndClear = () => {
+    onDismiss();
     setTimeout(() => player.clearQueue(), HIDE_ANIMATION_DURATION);
+    StatusAlertService.showInfo("Queue cleared");
   };
   const toUrl = (id: string) => id.split(":").join("/");
   const track = player.getCurrentTrack();
@@ -92,19 +98,22 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
         ev.stopPropagation();
         // When we are removing the last track in the queue we treat it as a
         // clearQueue() instead, because it's the same for all practical purposes.
-        if (player.getQueueLength() === 1) clearQueue(ev);
+        if (player.getQueueLength() === 1) hideAndClear();
         else player.removeTrackAt(index);
+        StatusAlertService.showInfo("Track removed");
+      };
+    };
+    const rmAlbum = (startingAt: number) => {
+      return (ev: Event) => {
+        ev.stopPropagation();
+        if (player.getAlbumCount() === 1) hideAndClear();
+        else player.removeAlbum(startingAt);
+        StatusAlertService.showInfo("Album removed");
       };
     };
     // If the album is V/A then we ignore the artist because it will obviously
     // be different for every track.
     const showHeader = track.album.isVa ? albumChanged : artistChanged || albumChanged;
-    const rmAlbum = (startingAt: number) => {
-      return (ev: Event) => {
-        if (player.getAlbumCount() === 1) clearQueue(ev);
-        else player.removeAlbum(startingAt);
-      };
-    };
 
     const trackJsx = (
       <Fragment>

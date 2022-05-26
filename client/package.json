@@ -49,6 +49,7 @@
     "preact-render-to-string": "^5.1.4",
     "preact-router": "^3.2.1",
     "prettier": "2.3.0",
+    "react-status-alert": "^1.1.2",
     "typescript": "4.6.3",
     "webpack-strip-block": "^0.3.0"
   },
