@@ -1,6 +1,7 @@
 import { h, Fragment } from "preact";
 import { route } from "preact-router";
 
+import QrCode from "../../components/qrcode";
 import ErrorMsg from "../../components/error";
 import Spinner from "../../components/spinner";
 import useConf from "../../conf/hooks/useconf";
@@ -58,7 +59,7 @@ const InviteList = () => {
             <input type="checkbox" id="invite-admin" />
             Admin user?
           </label>
-          <div class={style.details}>An admin user can create invitations</div>
+          <div class={style.details}>An admin user can invite other people too</div>
         </div>
 
         <div class={`${style.input} ${style.validity}`}>
@@ -91,11 +92,16 @@ const InviteList = () => {
         </div>
         {claimUrl ? (
           <Fragment>
-            <p>
-              {window.location.origin}
-              {claimUrl}
+            <div class={style.qrcode}>
+              <QrCode value={`${window.location.origin}${claimUrl}`} />
+            </div>
+            <p class={style.url}>
+              Note:
+              <ul>
+                <li>Do not lose this link nor open it yourself. It's a 1-time link.</li>
+                <li>If you reload or navigate away you will lose the code.</li>
+              </ul>
             </p>
-            <p>Note: Do not lose this link nor open it yourself. It's a 1-time link.</p>
           </Fragment>
         ) : (
           <button

@@ -81,3 +81,20 @@ section.create .validity input {
 .empty {
   padding-top: 1rem;
 }
+
+.qrcode {
+  text-align: center;
+}
+
+.url {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+}
+
+.url ul {
+  margin-left: 1rem;
+}
+
+.url ul li {
+  list-style-type: disc;
+}
