@@ -19,3 +19,4 @@ Credits
 * Header background: https://www.piqsels.com/en/public-domain-photo-svyyj
 * Vinyl icon: https://commons.wikimedia.org/wiki/File:LP_Vinyl_Symbol_Icon.png
 * Vinyl spinner: https://www.deviantart.com/natleyn/art/Vinyl-Scratch-s-Animated-Cursor-Set-Finally-339539046
+* Raleway font: https://github.com/impallari/Raleway
