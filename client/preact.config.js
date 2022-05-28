@@ -14,9 +14,6 @@ export default {
     var { rule } = helpers.getLoadersByName(config, "babel-loader")[0];
     var babelConfig = rule.options;
 
-    // var vConsoleWebpackPlugin = require("./webpack/vconsole-webpack-plugin").default;
-    // config.plugins.push(new vConsoleWebpackPlugin());
-
     // https://github.com/prateekbh/preact-cli-workbox-plugin/blob/master/README.md
     generateSw(config, helpers, {});
 
