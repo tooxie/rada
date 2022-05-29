@@ -293,4 +293,5 @@ type InviteConnection {
 input CreateInviteInput {
   note: String
   validity: Int
+  isAdmin: Boolean
 }

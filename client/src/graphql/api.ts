@@ -130,6 +130,7 @@ export type UpdatePlaylistInput = {
 export type CreateInviteInput = {
   note?: string | null;
   validity?: number | null;
+  isAdmin?: boolean | null;
 };
 
 export type InviteUrl = {
@@ -242,6 +243,7 @@ export type GetAlbumWithTracksQuery = {
       id: string;
       url: string;
       title?: string | null;
+      info?: string | null;
       lengthInSeconds?: number | null;
       ordinal?: number | null;
       hash: string;

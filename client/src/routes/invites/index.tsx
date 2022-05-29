@@ -13,6 +13,7 @@ import style from "./style.css";
 const InviteList = () => {
   let validity: HTMLInputElement | null;
   let note: HTMLInputElement | null;
+  let adminCheck: HTMLInputElement | null;
 
   const { conf } = useConf();
   const { loading, error, invites } = useListInvites();
@@ -56,7 +57,11 @@ const InviteList = () => {
         <h2 class={style.heading}>Create invitation</h2>
         <div class={`${style.input} ${style.admin}`}>
           <label for="invite-admin">
-            <input type="checkbox" id="invite-admin" />
+            <input
+              type="checkbox"
+              id="invite-admin"
+              ref={(node) => (adminCheck = node)}
+            />
             Admin user?
           </label>
           <div class={style.details}>An admin user can invite other people too</div>
@@ -110,6 +115,7 @@ const InviteList = () => {
               createInvite({
                 note: note?.value || "",
                 validity: parseInt(validity?.value || "") || null,
+                isAdmin: Boolean(adminCheck?.checked),
               });
             }}
           >

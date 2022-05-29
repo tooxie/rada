@@ -31,13 +31,14 @@ def handler(event, context):
     link = get_invite_link(id, time, salt)
     note = get_note(event)
     hash = hashlib.sha256(seed).hexdigest()
+    is_admin = get_is_admin(event)
 
-    persist(table_name, id, time, hash, validity, note)
+    persist(table_name, id, time, hash, validity, note, is_admin)
 
     return json.dumps({ "claimUrl": link })
 
 
-def persist(table_name, id, timestamp, hash, validity, note):
+def persist(table_name, id, timestamp, hash, validity, note, is_admin):
     client = boto3.resource('dynamodb').Table(table_name)
     item = {
         "id": id,
@@ -45,6 +46,7 @@ def persist(table_name, id, timestamp, hash, validity, note):
         "validity": validity,
         "hash": hash,
         "note": note,
+        "isAdmin": is_admin,
         # "visited": <timestamp | None>,
         # "installed": <timestamp | None>,
         # "unsolicited": <timestamp | None>,
@@ -60,6 +62,10 @@ def salt_generator(size=24, chars=SALT_CHARS):
 
 def get_note(event):
     return get_input(event, "note", None)
+
+
+def get_is_admin(event):
+    return get_input(event, "isAdmin", False)
 
 
 def get_validity(event, default_validity=24):

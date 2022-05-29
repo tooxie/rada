@@ -105,6 +105,8 @@ resource "aws_lambda_function" "claim_invite" {
       COGNITO_ROOT_PASSWORD = aws_cognito_user.root.password
       COGNITO_ROOT_USERNAME = aws_cognito_user.root.username
       COGNITO_USER_POOL_ID = aws_cognito_user_pool.gawshi.id
+      COGNITO_USER_POOL_ID = aws_cognito_user_pool.gawshi.id
+      COGNITO_ADMIN_GROUP_NAME = aws_cognito_user_group.admin_users.name
       INVITATIONS_TABLE_NAME = aws_dynamodb_table.invitations.name
     }
   }

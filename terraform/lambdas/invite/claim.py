@@ -54,7 +54,7 @@ def handler(event, context):
     if was_visited(invite):
         if was_installed(event):
             mark_installed(client, iid, ts)
-            password = create_user(iid)
+            password = create_user(iid, is_admin=invite.get("isAdmin", False))
             return ok(password)
         elif was_unsolicited(event):
             mark_unsolicited(client, iid, ts)
@@ -177,7 +177,7 @@ def get_invite(client, invite_id, timestamp):
     return response["Item"]
 
 
-def create_user(username):
+def create_user(username, *, is_admin):
     region = os.environ["AWS_REGION"]
     user_pool_id = os.environ["COGNITO_USER_POOL_ID"]
     client = boto3.client('cognito-idp', region_name=region)
@@ -192,5 +192,13 @@ def create_user(username):
         Password=password,
         Permanent=True,
     )
+
+    if is_admin:
+        admin_group_name = os.environ["COGNITO_ADMIN_GROUP_NAME"]
+        client.admin_add_user_to_group(
+            UserPoolId=user_pool_id,
+            Username=username,
+            GroupName=admin_group_name,
+        )
 
     return password
