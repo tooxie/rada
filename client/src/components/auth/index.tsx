@@ -30,6 +30,25 @@ const Auth = ({ onLogin, onFailedAuth }: AuthProps) => {
   const [loading, setLoading] = useState(true);
   const [credentials, setCredentials] = useState<Credentials>();
   const [secret, setSecret] = useState<string>();
+  const [online, setOnline] = useState(true);
+  const [retries, setRetries] = useState(1);
+  const [error, setError] = useState<Error>();
+
+  const onlineHandler = () => setOnline(true);
+  const offlineHandler = () => setOnline(false);
+  useEffect(() => {
+    window.addEventListener("online", onlineHandler);
+    window.addEventListener("offline", offlineHandler);
+
+    return () => {
+      if (authorized) {
+        window.removeEventListener("online", onlineHandler);
+        window.removeEventListener("offline", offlineHandler);
+      }
+    };
+  }, [online]);
+
+  setOnline(window.navigator.onLine);
 
   useEffect(() => {
     try {
@@ -68,6 +87,11 @@ const Auth = ({ onLogin, onFailedAuth }: AuthProps) => {
 
   useEffect(() => {
     if (!credentials || authorized) return;
+    if (retries > 3) {
+      setLoading(false);
+      if (onFailedAuth) onFailedAuth();
+      return;
+    }
 
     log.debug("Authenticating against cognito");
     setLoading(true);
@@ -83,35 +107,54 @@ const Auth = ({ onLogin, onFailedAuth }: AuthProps) => {
         setLoading(false);
       })
       .catch((error) => {
-        log.error("Unauthorized");
         log.error(error);
-        if (onFailedAuth) onFailedAuth();
-        setAuthorized(false);
-        setLoading(false);
+        if (error.name.includes("NotAuthorizedException")) {
+          setAuthorized(false);
+          setRetries(retries + 1);
+          if (retries === 3) setError(error);
+        } else {
+          setError(error);
+          setLoading(false);
+        }
       });
-  }, [credentials]);
+  }, [credentials, retries]);
+
+  const offlineMsg = <div>You are offline.</div>;
+  const secretInput = (
+    <Fragment>
+      <label for="secret">
+        If you have a <i>secret</i> paste it below:
+      </label>
+      <div>
+        <input
+          type="text"
+          id="secret"
+          onInput={(ev) => setSecret((ev.target as HTMLInputElement).value)}
+        />
+      </div>
+    </Fragment>
+  );
+  const errorMsg = (
+    <Fragment>
+      <p>{error ? error.message : "Unknown error"}</p>
+      <button onClick={() => location.reload()}>Retry?</button>
+    </Fragment>
+  );
 
   return (
     <Fragment>
       <Header hideControls={true} />
       <Shoulder>
         <section class={style.auth}>
-          {loading
-            ? "Loading..."
-            : !authorized && (
-                <Fragment>
-                  <label for="secret">
-                    If you have a <i>secret</i> paste it below:
-                  </label>
-                  <div>
-                    <input
-                      type="text"
-                      id="secret"
-                      onInput={(ev) => setSecret((ev.target as HTMLInputElement).value)}
-                    />
-                  </div>
-                </Fragment>
-              )}
+          {online
+            ? loading
+              ? "Loading..."
+              : error
+              ? errorMsg
+              : authorized
+              ? null
+              : secretInput
+            : offlineMsg}
         </section>
       </Shoulder>
     </Fragment>
