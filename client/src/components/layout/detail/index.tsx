@@ -22,7 +22,7 @@ const Detail = (
     return (
       <Fragment>
         <Header key={`detail-header-${props.id}`} id={getId(props)} />
-        <Shoulder key={`detail-shoulder-${props.id}`} detail={true}>
+        <Shoulder key={`detail-shoulder-${props.id}`} detail={true} noPadding={true}>
           <Component {...props} id={getId(props)} />
         </Shoulder>
       </Fragment>
