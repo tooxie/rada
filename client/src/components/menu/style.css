@@ -12,6 +12,7 @@
 .collections a {
   color: black;
   padding: 0.5rem 1rem;
+  border-bottom: 3px solid transparent;
 }
 
 .collections a.active {
