@@ -35,12 +35,12 @@ const Menu = ({ hideControls, isAdmin }: MenuProps) => {
   if (hideControls) return null;
 
   return (
-    <section class={style.collections}>
+    <nav class={style.collections}>
       <Item href="/artists" name="Artists" />
       <Item href="/albums" name="Albums" />
 
       <AdminItem href="/invitations" name="Invitations" admin={isAdmin} />
-    </section>
+    </nav>
   );
 };
 
