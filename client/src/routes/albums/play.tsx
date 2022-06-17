@@ -1,6 +1,6 @@
 import { h } from "preact";
 
-import { AlbumId } from "../../types";
+import { AlbumId, ServerId } from "../../types";
 import style from "./play.css";
 import playIcon from "../../assets/icons/svg/play.svg";
 import useGetAlbum from "./hooks/usegetalbum";
@@ -8,11 +8,12 @@ import usePlayer from "../../hooks/useplayer";
 
 interface PlayAlbumProps {
   albumId: AlbumId;
+  serverId: ServerId;
 }
 
-const PlayAlbum = ({ albumId }: PlayAlbumProps) => {
+const PlayAlbum = ({ albumId, serverId }: PlayAlbumProps) => {
   const player = usePlayer();
-  const { album } = useGetAlbum(albumId as AlbumId);
+  const { album } = useGetAlbum(serverId, albumId);
 
   const clickHandler = () => {
     if (!album || !player) return;
@@ -21,8 +22,6 @@ const PlayAlbum = ({ albumId }: PlayAlbumProps) => {
 
     player.replaceQueue(tracks);
     player.play();
-
-    // TODO: Show queue
   };
 
   return (

@@ -7,7 +7,7 @@ import type { IPlayer } from "../../player/types";
 import Header from "../albums/header";
 import Shoulder from "../../components/layout/shoulder";
 import toMinutes from "../../utils/tominutes";
-import { urlize, nillId } from "../../utils/id";
+import { toHref } from "../../utils/id";
 import { AlbumId } from "../../types";
 import { Artist, Track } from "../../graphql/api";
 import Logger from "../../logger";
@@ -74,7 +74,6 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
     onDismiss();
     setTimeout(() => player.clearQueue(), HIDE_ANIMATION_DURATION);
   };
-  const toUrl = (id: string) => id.split(":").join("/");
   const track = player.getCurrentTrack();
   if (!track) return null;
 
@@ -188,6 +187,27 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
   const qLength = queue.getTracks().length;
   const qDuration = queue.getDuration();
 
+  const renderArtistLinks = (artists: Artist[], handler: EventListener) => {
+    const artistJsx = artists.map((artist: Artist) => (
+      <Link href={toHref(artist)} onClick={handler}>
+        {artist.name}
+      </Link>
+    ));
+    if (artistJsx.length < 2) return artistJsx;
+
+    let commaSeparatedList: JSX.Element[] = [];
+    for (let x = 0; x <= artistJsx.length; x++) {
+      const artist = artistJsx[x];
+      const isEven = x % 2 === 0;
+      if (!isEven) {
+        commaSeparatedList = commaSeparatedList.concat(<span>, </span>);
+      }
+      commaSeparatedList = commaSeparatedList.concat(artist);
+    }
+
+    return commaSeparatedList;
+  };
+
   return (
     <Fragment>
       <div class={`${style.modal} ${visible ? style.visible : ""}`} />
@@ -202,6 +222,7 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
       >
         <Header
           key="queue-header"
+          serverId={track.serverId}
           id={track.album?.id as AlbumId}
           hidePlayButton={true}
           hideNav={true}
@@ -231,10 +252,7 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
 
           <section class={style.details}>
             <div class={style.title}>
-              <Link
-                href={`/${toUrl(track.album?.id || nillId)}/${toUrl(track.id)}`}
-                onClick={onDismiss}
-              >
+              <Link href={toHref(track)} onClick={onDismiss}>
                 {track.title ? (
                   track.title
                 ) : (
@@ -246,7 +264,7 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
               {renderArtistLinks(track?.artists || [], onDismiss)}
             </div>
             <div class={style.album}>
-              <Link href={`/album/${urlize(track.album?.id)}`} onClick={onDismiss}>
+              <Link href={toHref(track.album)} onClick={onDismiss}>
                 {track.album?.name}
               </Link>
               &nbsp;
@@ -268,27 +286,6 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
       </section>
     </Fragment>
   );
-};
-
-const renderArtistLinks = (artists: Artist[], handler: EventListener) => {
-  const artistJsx = artists.map((artist: Artist) => (
-    <Link href={`/artist/${urlize(artist.id)}`} onClick={handler}>
-      {artist.name}
-    </Link>
-  ));
-  if (artistJsx.length < 2) return artistJsx;
-
-  let commaSeparatedList: JSX.Element[] = [];
-  for (let x = 0; x <= artistJsx.length; x++) {
-    const artist = artistJsx[x];
-    const isEven = x % 2 === 0;
-    if (!isEven) {
-      commaSeparatedList = commaSeparatedList.concat(<span>, </span>);
-    }
-    commaSeparatedList = commaSeparatedList.concat(artist);
-  }
-
-  return commaSeparatedList;
 };
 
 export default Queue;

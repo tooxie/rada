@@ -89,6 +89,9 @@ resource "aws_iam_role_policy" "lambda_dynamodb" {
 
              aws_dynamodb_table.invitations.arn,
           "${aws_dynamodb_table.invitations.arn}/*",
+
+             aws_dynamodb_table.servers.arn,
+          "${aws_dynamodb_table.servers.arn}/*",
         ]
       }
     ]
@@ -116,6 +119,9 @@ resource "aws_iam_role_policy" "appsync_dynamodb" {
 
              aws_dynamodb_table.invitations.arn,
           "${aws_dynamodb_table.invitations.arn}/*",
+
+             aws_dynamodb_table.servers.arn,
+          "${aws_dynamodb_table.servers.arn}/*",
         ]
       }
     ]

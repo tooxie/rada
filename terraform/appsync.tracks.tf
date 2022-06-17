@@ -25,7 +25,9 @@ resource "aws_appsync_resolver" "create_track" {
   field = "createTrack"
   data_source = aws_appsync_datasource.gawshi_tracks.name
 
-  request_template = file("./resolvers/request/puttrack.vm")
+  request_template = templatefile("./resolvers/request/puttrack.vm", {
+    server_id: random_uuid.server_id.result,
+  })
   response_template = file("./resolvers/response/getitem.vm")
 }
 

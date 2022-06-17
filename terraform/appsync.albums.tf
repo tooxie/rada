@@ -16,7 +16,8 @@ resource "aws_appsync_resolver" "list_albums" {
   data_source = aws_appsync_datasource.gawshi_albums.name
 
   request_template = templatefile("./resolvers/request/listbyentity.vm", {
-    entity: "album"
+    entity: "album",
+    server_id: random_uuid.server_id.result,
   })
   response_template = file("./resolvers/response/page.vm")
 }

@@ -1,8 +1,7 @@
 import { h } from "preact";
 
-import { DetailProps } from "../../components/layout/detail/types";
+import { DetailProps } from "../../components/layout/types";
 import Navigation from "../../components/navigation";
-import { AlbumId } from "../../types";
 import { Album } from "../../graphql/api";
 import Logger from "../../logger";
 
@@ -17,9 +16,8 @@ let backgroundImage = `url(${defaultBackground})`;
 let _album: Album | null = null;
 
 const Header = (props: DetailProps) => {
-  log.debug(`Loading album "${props.id}"`);
-  const albumId = props.id as AlbumId;
-  const { album } = useGetAlbum(albumId);
+  log.debug(`Albums.Header("${props.serverId}", "${props.id}")`);
+  const { album } = useGetAlbum(props.serverId, props.id);
   const clickHandler = (ev: Event) => {
     ev.stopPropagation();
     if (props.onClick) props.onClick(ev);
@@ -37,7 +35,9 @@ const Header = (props: DetailProps) => {
       onClick={clickHandler}
     >
       {!props.hideNav && <Navigation isDetail={true} />}
-      {_album && !props.hidePlayButton && <PlayAlbum albumId={albumId} />}
+      {_album && !props.hidePlayButton && (
+        <PlayAlbum albumId={props.id} serverId={props.serverId} />
+      )}
       {props.children}
     </header>
   );

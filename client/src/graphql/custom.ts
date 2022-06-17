@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 export const getAlbum = gql`
   query GetAlbumOnly($id: ID!) {
     getAlbum(id: $id) {
+      serverId
       id
       name
       imageUrl
@@ -16,16 +17,19 @@ export const getAlbum = gql`
 export const getAlbumWithTracks = gql`
   query GetAlbumWithTracks($id: ID!) {
     getAlbum(id: $id) {
+      serverId
       id
       name
       imageUrl
       year
       isVa
       artists {
+        serverId
         id
         name
       }
       tracks {
+        serverId
         id
         url
         title
@@ -35,10 +39,12 @@ export const getAlbumWithTracks = gql`
         hash
         features
         artists {
+          serverId
           id
           name
         }
         album {
+          serverId
           id
           name
           imageUrl
@@ -52,15 +58,18 @@ export const getAlbumWithTracks = gql`
 export const getArtist = gql`
   query GetArtistInAlbum($id: ID!) {
     getArtist(id: $id) {
+      serverId
       id
       name
       imageUrl
       albums {
+        serverId
         id
         name
         imageUrl
         year
         artists {
+          serverId
           id
         }
       }
@@ -72,12 +81,14 @@ export const listAlbumsWithArtists = gql`
   query ListAlbumsWithArtists($filter: TableAlbumFilterInput) {
     listAlbums(filter: $filter) {
       items {
+        serverId
         id
         name
         imageUrl
         year
         isVa
         artists {
+          serverId
           id
           name
         }
@@ -109,8 +120,10 @@ export const listArtists = gql`
   query ListArtistsWithAlbums($filter: TableArtistFilterInput) {
     listArtists(filter: $filter) {
       items {
+        serverId
         id
         albums {
+          serverId
           id
           name
           imageUrl

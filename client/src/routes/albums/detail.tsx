@@ -2,11 +2,11 @@ import { Fragment, h } from "preact";
 import { useEffect } from "preact/hooks";
 import { Link } from "preact-router";
 
-import { DetailProps } from "../../components/layout/detail/types";
+import { toHref } from "../../utils/id";
+import { DetailProps } from "../../components/layout/types";
 import ErrorMsg from "../../components/error";
 import Spinner from "../../components/spinner";
 import { Artist, Track } from "../../graphql/api";
-import { AlbumId } from "../../types";
 import toMinutes from "../../utils/tominutes";
 import usePlayer from "../../hooks/useplayer";
 import { TrackSelectionTypes } from "../../conf/types";
@@ -18,8 +18,8 @@ import style from "./detail.css";
 
 const log = new Logger(__filename);
 
-const AlbumDetail = ({ id, trackId }: DetailProps) => {
-  const { loading, error, album } = useGetAlbum(id as AlbumId);
+const AlbumDetail = ({ id, trackId, serverId }: DetailProps) => {
+  const { loading, error, album } = useGetAlbum(serverId, id);
   const { conf } = useConf();
   const player = usePlayer();
 
@@ -82,7 +82,7 @@ const AlbumDetail = ({ id, trackId }: DetailProps) => {
             : isVa
             ? "V/A"
             : album.artists.map((artist: Artist) => (
-                <Link href={"/artist/" + artist.id.split(":")[1]}>{artist.name}</Link>
+                <Link href={toHref(artist)}>{artist.name}</Link>
               ))}
           &nbsp;
         </div>

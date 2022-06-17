@@ -1,4 +1,27 @@
+import { Album, Artist, Track } from "../graphql/api";
+
 const nillId = "00000000-0000-0000-0000-000000000000";
+
+const toHref = (entity?: Album | Artist | Track | null) => {
+  if (!entity) return "";
+
+  const sId = entity.serverId;
+  const name = entity.__typename.toLowerCase();
+  const id = urlize(entity.id);
+
+  let path: string;
+  if (name === "track") {
+    const track = entity as Track;
+    const albumId = urlize(track.album?.id);
+    const trackId = urlize(track.id);
+
+    path = `/album/${albumId}/track/${trackId}`;
+  } else {
+    path = `/${name}/${id}`;
+  }
+
+  return `/server/${sId}${path}`;
+};
 
 const urlize = (id?: string): string => {
   if (!id) return "";
@@ -26,4 +49,4 @@ const toDbId = (entity: string, id?: string): string => {
 
 const getNillId = (entity: string) => `${entity}:${nillId}`;
 
-export { toDbId, urlize, nillId, getNillId };
+export { toDbId, urlize, nillId, getNillId, toHref };

@@ -1,14 +1,15 @@
-import { h, Fragment, FunctionComponent } from "preact";
+import { h, Fragment } from "preact";
 
 import Header from "../../header";
 import Shoulder from "../shoulder";
+import { ListComponent } from "../types";
 
-const Collection = (Component: FunctionComponent): FunctionComponent => {
+const Collection = (Component: ListComponent): ListComponent => {
   return (props) => (
     <Fragment>
       <Header key="collection-header" />
       <Shoulder key="collection-shoulder">
-        <Component {...props} />
+        <Component {...props} serverId={props.serverId} />
       </Shoulder>
     </Fragment>
   );

@@ -1,10 +1,12 @@
 import { h } from "preact";
 import { route } from "preact-router";
 
+import useAppState from "../../hooks/useappstate";
 import Spinner from "../../components/spinner";
 
 const Home = () => {
-  route("/artists");
+  const { appState } = useAppState();
+  route(`/server/${appState.serverId}/artists`);
 
   return <Spinner />;
 };

@@ -1,6 +1,7 @@
 import gql from "graphql-tag";
 
 import { Album, ListAlbumsQuery, ListAlbumsQueryVariables } from "../../../graphql/api";
+import { ServerId } from "../../../types";
 import useQuery from "../../../hooks/usequery";
 import Logger from "../../../logger";
 
@@ -10,12 +11,14 @@ const listAlbums = gql`
   query ListAlbums($filter: TableAlbumFilterInput) {
     listAlbums(filter: $filter) {
       items {
+        serverId
         id
         name
         imageUrl
         year
         isVa
         artists {
+          serverId
           id
           name
         }
@@ -29,10 +32,12 @@ interface UseListAlbumsReturn extends UseQueryReturnType {
   albums: Album[];
 }
 
-const useListAlbums = (): UseListAlbumsReturn => {
-  log.debug("useListAlbums");
-  const { loading, error, data } =
-    useQuery<ListAlbumsQuery, ListAlbumsQueryVariables>(listAlbums);
+const useListAlbums = (serverId: ServerId): UseListAlbumsReturn => {
+  log.debug(`useListAlbums("${serverId}")`);
+  const { loading, error, data } = useQuery<ListAlbumsQuery, ListAlbumsQueryVariables>(
+    listAlbums,
+    {}
+  );
   const albums = data?.listAlbums?.items || [];
 
   const result = { loading, error, albums };

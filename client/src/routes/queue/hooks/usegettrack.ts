@@ -1,8 +1,9 @@
 import { Track, GetTrackQueryVariables } from "../../../graphql/api";
 import useGet from "../../../hooks/useget";
 import { getTrack } from "../../../graphql/queries";
-import { TrackId, AlbumId } from "../../../types";
+import { TrackId, AlbumId, ServerId } from "../../../types";
 import Logger from "../../../logger";
+import { toDbId } from "../../../utils/id";
 
 const log = new Logger(__filename);
 
@@ -11,19 +12,19 @@ interface UseGetTrackType extends UseGetReturnType {
   track: Track | null;
 }
 
-const useGetTrack = (trackId: TrackId, albumId: AlbumId): UseGetTrackType => {
-  if (!trackId || !albumId) {
-    throw new Error(
-      `useGetTrack requires 2 parameters, trackId and albumId. Got "${trackId}" and "${albumId}"`
-    );
+const useGetTrack = (serverId: ServerId, tId: TrackId, aId: AlbumId): UseGetTrackType => {
+  if (!serverId || !tId || !aId) {
+    throw new Error(`useGetTrack requires 3 parameters, serverId, trackId and albumId`);
   }
-  log.debug(`useGetTrack("${trackId}", "${albumId}")`);
-  const pk: GetTrackQueryVariables = { albumId, id: trackId };
+  log.debug(`useGetTrack(serverId:"${serverId}", trackId:"${tId}", albumId:"${aId}")`);
+  const albumId = toDbId("album", aId);
+  const id = toDbId("track", tId);
+  const pk: GetTrackQueryVariables = { albumId, id };
   const {
     loading,
     error,
     item: track,
-  } = useGet<Track, GetTrackQueryVariables>(getTrack, pk);
+  } = useGet<Track, GetTrackQueryVariables>(serverId, getTrack, pk);
 
   const result = { loading, error, track };
   log.debug("useGetTrack.return:", result);

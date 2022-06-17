@@ -1,22 +1,24 @@
 import { Fragment, FunctionComponent, h } from "preact";
 import { Link } from "preact-router";
 
-import { DetailProps } from "../../components/layout/detail/types";
+import { DetailProps } from "../../components/layout/types";
 import ErrorMsg from "../../components/error";
 import Spinner from "../../components/spinner";
 import compareYear from "../../utils/compareyear";
-import { urlize } from "../../utils/id";
+import { toHref } from "../../utils/id";
 import { Album, Artist } from "../../graphql/api";
-import { ArtistId } from "../../types";
+import Logger from "../../logger";
 
 import style from "./detail.css";
 import useGetArtist from "./hooks/usegetartist";
 
+const log = new Logger(__filename);
 let _artist: Artist | null = null;
 
 const DEFAULT_ALBUM_COVER = "/assets/img/no-cover.jpeg";
-const ArtistDetail: FunctionComponent<DetailProps> = ({ id }) => {
-  const { loading, error, artist } = useGetArtist(id as ArtistId);
+const ArtistDetail: FunctionComponent<DetailProps> = ({ id, serverId }) => {
+  log.debug(`ArtistDetail("${id}", "${serverId}")`);
+  const { loading, error, artist } = useGetArtist(serverId, id);
 
   if (id !== _artist?.id) _artist = null;
   if (!loading && artist) _artist = artist;
@@ -48,7 +50,7 @@ const ArtistDetail: FunctionComponent<DetailProps> = ({ id }) => {
         {albums.length === 0 && <p>No albums</p>}
         {albums.map((album) => (
           <div class={style.album} key={album.id}>
-            <Link href={`/album/${urlize(album.id)}`}>
+            <Link href={toHref(album)}>
               <div class={style.thumb} style={{ backgroundImage: bgImg(album) }} />
               <div class={style.sub}>
                 {!!album.year && <h3 class={style.year}>{album.year}</h3>}

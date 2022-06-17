@@ -13,6 +13,9 @@ type Mutation {
   updateTrack(id: ID!, input: UpdateTrackInput!): Track
   deleteTrack(id: ID!): Track
 
+  registerServer(input: CreateServerInput): Server
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
+
   createInvite(input: CreateInviteInput!): InviteUrl
     @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
   revokeInvite(id: ID!): Boolean
@@ -31,6 +34,9 @@ type Query {
 
   getTrack(albumId: ID!, id: ID!): Track
   listOrphanTracks: TrackConnection
+
+  listServers: ServerConnection
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
 
   getInvite(id: ID!): Invite
     @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
@@ -122,6 +128,7 @@ input TableArtistFilterInput {
 }
 
 type Artist {
+  serverId: ID!
   id: ID!
   name: String
   imageUrl: AWSURL
@@ -149,6 +156,7 @@ input TableAlbumFilterInput {
 }
 
 type Album {
+  serverId: ID!
   id: ID!
   artists: [Artist!]
   name: String
@@ -181,6 +189,7 @@ input TableTrackFilterInput {
 }
 
 type Track {
+  serverId: ID!
   id: ID!
   album: Album
   artists: [Artist!]
@@ -249,4 +258,29 @@ input CreateInviteInput {
   note: String
   validity: Int
   isAdmin: Boolean
+}
+
+# --- Server
+type Server {
+  id: ID!
+  name: String!
+  note: String
+  apiUrl: String
+  headerUrl: String
+  timestamp: Int!
+  banned: Boolean
+  handshakeCompleted: Boolean
+}
+
+type ServerConnection {
+  items: [Server!]
+}
+
+input CreateServerInput {
+  id: ID!
+  name: String!
+  note: String
+  apiUrl: String!
+  idpUrl: String!
+  headerUrl: String
 }

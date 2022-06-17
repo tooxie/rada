@@ -7,13 +7,13 @@ export type Client = ApolloClient<NormalizedCacheObject>;
 
 let client: Client;
 
-const getClient = async (): Promise<Client> => {
+const getClient = async (url?: string): Promise<Client> => {
   if (client) return client;
 
   const { ApolloClient, createHttpLink, InMemoryCache } = await import("@apollo/client");
   const { setContext } = await import("@apollo/client/link/context");
 
-  const httpLink = createHttpLink({ uri: config.graphql.url });
+  const httpLink = createHttpLink({ uri: url || config.graphql.url });
   const authLink = setContext((_, { headers }) => {
     return {
       headers: {

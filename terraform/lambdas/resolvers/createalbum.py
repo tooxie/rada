@@ -16,6 +16,10 @@ def handler(event, _):
     if not table_name:
         return error(RuntimeError("Missing environment variable 'DYNAMODB_ALBUMS_TABLE'"))
 
+    server_id = os.getenv('SERVER_ID')
+    if not server_id:
+        return error(RuntimeError("Missing environment variable 'SERVER_ID'"))
+
     try:
         artists = get_artists(event)
     except Exception as e:
@@ -24,6 +28,7 @@ def handler(event, _):
     album = {
         "adjacentId": "album:",
         "id": f"album:{str(uuid.uuid4())}",
+        "serverId": server_id,
     }
     try:
         album.update(get_album_attributes(event))

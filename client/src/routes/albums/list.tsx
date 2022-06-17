@@ -2,7 +2,7 @@ import { h, Fragment } from "preact";
 import { Link } from "preact-router";
 
 import { Album } from "../../graphql/api";
-import { urlize } from "../../utils/id";
+import { toHref } from "../../utils/id";
 import Search from "../../components/search";
 import ErrorMsg from "../../components/error";
 import Spinner from "../../components/spinner";
@@ -13,11 +13,12 @@ import style from "./list.css";
 import listIcon from "./disc.svg";
 import useListAlbums from "./hooks/uselistalbums";
 import { AlbumListTypes } from "../../conf/types";
+import { ListProps } from "../../components/layout/types";
 
 const DEFAULT_ALBUM_COVER = "/assets/img/no-cover.jpeg";
 
-const AlbumList = () => {
-  const { loading, error, albums } = useListAlbums();
+const AlbumList = ({ serverId }: ListProps) => {
+  const { loading, error, albums } = useListAlbums(serverId);
   const { conf } = useConf();
   const filterFn = (album: Album, s: string) => {
     const name = (album.name || "").toLowerCase();
@@ -66,7 +67,7 @@ const renderAs = (listType: string, albums: Album[]): JSX.Element | JSX.Element[
 const renderAsList = (albums: Album[]) => (
   <section class={style.list}>
     {albums.map((album) => (
-      <Link class={style.album} href={`/album/${urlize(album.id)}`} key={album.id}>
+      <Link class={style.album} href={toHref(album)} key={album.id}>
         <img src={listIcon} />
         <div>
           <div class={style.artist}>
@@ -88,7 +89,7 @@ const renderAsList = (albums: Album[]) => (
 const renderAsMosaic = (albums: Album[]) => (
   <section class={style.mosaic}>
     {albums.map((album: Album) => (
-      <Link class={style.album} href={`/album/${urlize(album.id)}`} key={album.id}>
+      <Link class={style.album} href={toHref(album)} key={album.id}>
         <div
           class={style.cover}
           style={{ backgroundImage: `url("${album.imageUrl || DEFAULT_ALBUM_COVER}")` }}
@@ -111,7 +112,7 @@ const renderAsMosaic = (albums: Album[]) => (
 const renderAsThumbnails = (albums: Album[]) => (
   <section class={style.thumbnails}>
     {albums.map((album) => (
-      <Link class={style.album} href={`/album/${urlize(album.id)}`} key={album.id}>
+      <Link class={style.album} href={toHref(album)} key={album.id}>
         <div
           class={style.thumb}
           style={{ backgroundImage: `url("${album.imageUrl || DEFAULT_ALBUM_COVER}")` }}

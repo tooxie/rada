@@ -1,7 +1,7 @@
 import { Album, GetAlbumQueryVariables } from "../../../graphql/api";
 import useGet from "../../../hooks/useget";
 import { getAlbumWithTracks } from "../../../graphql/custom";
-import { AlbumId } from "../../../types";
+import { AlbumId, ServerId } from "../../../types";
 import { toDbId } from "../../../utils/id";
 import Logger from "../../../logger";
 
@@ -12,17 +12,17 @@ interface UseGetAlbumReturn extends UseGetReturnType {
   album: Album | null;
 }
 
-const useGetAlbum = (id?: AlbumId): UseGetAlbumReturn => {
-  log.debug(`useGetAlbum("${id}")`);
-  const dbId = toDbId("album", id);
-  const pk: GetAlbumQueryVariables = { id: dbId };
+const useGetAlbum = (serverId: ServerId, albumId?: AlbumId): UseGetAlbumReturn => {
+  log.debug(`useGetAlbum(serverId:"${serverId}", albumId:"${albumId}")`);
+  const id = toDbId("album", albumId);
+  const pk: GetAlbumQueryVariables = { id };
   const {
     loading,
     error,
     item: album,
-  } = useGet<Album, GetAlbumQueryVariables>(getAlbumWithTracks, pk);
+  } = useGet<Album, GetAlbumQueryVariables>(serverId, getAlbumWithTracks, pk);
 
-  const NOT_FOUND = `Album '${dbId}' not found`;
+  const NOT_FOUND = `Album '${id}' not found`;
   if (error === NOT_FOUND) {
     return { loading, error: null, album: null };
   }

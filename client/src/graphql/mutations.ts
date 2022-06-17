@@ -6,10 +6,12 @@ import gql from "graphql-tag";
 export const createArtist = gql`
   mutation CreateArtist($input: CreateArtistInput!) {
     createArtist(input: $input) {
+      serverId
       id
       name
       imageUrl
       albums {
+        serverId
         id
         name
         imageUrl
@@ -22,10 +24,12 @@ export const createArtist = gql`
 export const updateArtist = gql`
   mutation UpdateArtist($id: ID!, $input: UpdateArtistInput!) {
     updateArtist(id: $id, input: $input) {
+      serverId
       id
       name
       imageUrl
       albums {
+        serverId
         id
         name
         imageUrl
@@ -38,10 +42,12 @@ export const updateArtist = gql`
 export const deleteArtist = gql`
   mutation DeleteArtist($id: ID!) {
     deleteArtist(id: $id) {
+      serverId
       id
       name
       imageUrl
       albums {
+        serverId
         id
         name
         imageUrl
@@ -54,10 +60,12 @@ export const deleteArtist = gql`
 export const deleteCascadeArtist = gql`
   mutation DeleteCascadeArtist($id: ID!) {
     deleteCascadeArtist(id: $id) {
+      serverId
       id
       name
       imageUrl
       albums {
+        serverId
         id
         name
         imageUrl
@@ -70,8 +78,10 @@ export const deleteCascadeArtist = gql`
 export const createAlbum = gql`
   mutation CreateAlbum($input: CreateAlbumInput!) {
     createAlbum(input: $input) {
+      serverId
       id
       artists {
+        serverId
         id
         name
         imageUrl
@@ -80,6 +90,7 @@ export const createAlbum = gql`
       imageUrl
       year
       tracks {
+        serverId
         id
         url
         title
@@ -96,8 +107,10 @@ export const createAlbum = gql`
 export const updateAlbum = gql`
   mutation UpdateAlbum($id: ID!, $input: UpdateAlbumInput!) {
     updateAlbum(id: $id, input: $input) {
+      serverId
       id
       artists {
+        serverId
         id
         name
         imageUrl
@@ -106,6 +119,7 @@ export const updateAlbum = gql`
       imageUrl
       year
       tracks {
+        serverId
         id
         url
         title
@@ -122,8 +136,10 @@ export const updateAlbum = gql`
 export const deleteAlbum = gql`
   mutation DeleteAlbum($id: ID!) {
     deleteAlbum(id: $id) {
+      serverId
       id
       artists {
+        serverId
         id
         name
         imageUrl
@@ -132,6 +148,7 @@ export const deleteAlbum = gql`
       imageUrl
       year
       tracks {
+        serverId
         id
         url
         title
@@ -148,8 +165,10 @@ export const deleteAlbum = gql`
 export const deleteCascadeAlbum = gql`
   mutation DeleteCascadeAlbum($id: ID!) {
     deleteCascadeAlbum(id: $id) {
+      serverId
       id
       artists {
+        serverId
         id
         name
         imageUrl
@@ -158,6 +177,7 @@ export const deleteCascadeAlbum = gql`
       imageUrl
       year
       tracks {
+        serverId
         id
         url
         title
@@ -174,8 +194,10 @@ export const deleteCascadeAlbum = gql`
 export const createTrack = gql`
   mutation CreateTrack($input: CreateTrackInput!) {
     createTrack(input: $input) {
+      serverId
       id
       album {
+        serverId
         id
         name
         imageUrl
@@ -183,6 +205,7 @@ export const createTrack = gql`
         isVa
       }
       artists {
+        serverId
         id
         name
         imageUrl
@@ -200,8 +223,10 @@ export const createTrack = gql`
 export const updateTrack = gql`
   mutation UpdateTrack($id: ID!, $input: UpdateTrackInput!) {
     updateTrack(id: $id, input: $input) {
+      serverId
       id
       album {
+        serverId
         id
         name
         imageUrl
@@ -209,6 +234,7 @@ export const updateTrack = gql`
         isVa
       }
       artists {
+        serverId
         id
         name
         imageUrl
@@ -226,8 +252,10 @@ export const updateTrack = gql`
 export const deleteTrack = gql`
   mutation DeleteTrack($id: ID!) {
     deleteTrack(id: $id) {
+      serverId
       id
       album {
+        serverId
         id
         name
         imageUrl
@@ -235,6 +263,7 @@ export const deleteTrack = gql`
         isVa
       }
       artists {
+        serverId
         id
         name
         imageUrl
@@ -246,6 +275,20 @@ export const deleteTrack = gql`
       ordinal
       hash
       features
+    }
+  }
+`;
+export const registerServer = gql`
+  mutation RegisterServer($input: CreateServerInput) {
+    registerServer(input: $input) {
+      id
+      name
+      note
+      apiUrl
+      headerUrl
+      timestamp
+      banned
+      handshakeCompleted
     }
   }
 `;

@@ -1,6 +1,8 @@
 import { h } from "preact";
 import { Link } from "preact-router/match";
 
+import useAppState from "../../state/hooks/useappstate";
+
 import style from "./style.css";
 
 interface MenuProps {
@@ -14,6 +16,7 @@ interface ItemProps {
   hidden?: boolean;
 }
 
+interface ServerItemProps extends Exclude<ItemProps, "hidden"> {}
 interface AdminItemProps extends Exclude<ItemProps, "hidden"> {
   admin?: boolean;
 }
@@ -31,16 +34,24 @@ const AdminItem = ({ href, name, admin }: AdminItemProps) => (
   <Item href={href} name={name} hidden={!admin} />
 );
 
+const ServerItem = ({ href, name }: ServerItemProps) => {
+  const { appState } = useAppState();
+  const serverPath = appState.serverId ? `/server/${appState.serverId}` : "";
+
+  return <Item href={`${serverPath}${href}`} name={name} />;
+};
+
 const Menu = ({ hideControls, isAdmin }: MenuProps) => {
   if (hideControls) return null;
 
   return (
     <nav class={style.menu}>
-      <Item href="/artists" name="Artists" />
-      <Item href="/albums" name="Albums" />
-      <Item href="/tracks" name="Tracks" />
+      <ServerItem href="/artists" name="Artists" />
+      <ServerItem href="/albums" name="Albums" />
+      <ServerItem href="/tracks" name="Tracks" />
 
       <AdminItem href="/friends" name="Friends" admin={isAdmin} />
+      <AdminItem href="/servers" name="Servers" admin={isAdmin} />
     </nav>
   );
 };

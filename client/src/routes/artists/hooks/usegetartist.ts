@@ -3,7 +3,7 @@ import useGet from "../../../hooks/useget";
 import { GetArtistQueryVariables } from "../../../graphql/api";
 import { getArtist } from "../../../graphql/custom";
 import { toDbId } from "../../../utils/id";
-import { ArtistId } from "../../../types";
+import { ArtistId, ServerId } from "../../../types";
 import Logger from "../../../logger";
 
 const log = new Logger(__filename);
@@ -13,17 +13,20 @@ interface UseGetArtistReturn extends UseGetReturnType {
   artist: Artist | null;
 }
 
-export const useGetArtist = (id: ArtistId): UseGetArtistReturn => {
-  log.debug(`useGetArtist("${id}")`);
-  const dbId = toDbId("artist", id);
-  const pk: GetArtistQueryVariables = { id: dbId };
+export const useGetArtist = (
+  serverId: ServerId,
+  artistId: ArtistId
+): UseGetArtistReturn => {
+  log.debug(`useGetArtist(serverId:"${serverId}", artistId:"${artistId}")`);
+  const id = toDbId("artist", artistId);
+  const pk: GetArtistQueryVariables = { id };
   const {
     loading,
     error,
     item: artist,
-  } = useGet<Artist, GetArtistQueryVariables>(getArtist, pk);
+  } = useGet<Artist, GetArtistQueryVariables>(serverId, getArtist, pk);
 
-  const NOT_FOUND = `Artist '${dbId}' not found`;
+  const NOT_FOUND = `Artist '${id}' not found`;
   if (error === NOT_FOUND) {
     return { loading, error: null, artist: null };
   }

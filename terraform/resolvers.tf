@@ -47,6 +47,7 @@ resource "aws_lambda_function" "create_album" {
   environment {
     variables = {
       DYNAMODB_ALBUMS_TABLE = aws_dynamodb_table.artists_albums.name
+      SERVER_ID = random_uuid.server_id.result
     }
   }
 
@@ -107,6 +108,7 @@ resource "aws_lambda_function" "create_artist" {
   environment {
     variables = {
       DYNAMODB_ARTISTS_TABLE = aws_dynamodb_table.artists_albums.name
+      SERVER_ID = random_uuid.server_id.result
     }
   }
 
@@ -442,5 +444,27 @@ module "create_invite" {
 
   environment = {
       INVITATIONS_TABLE_NAME = aws_dynamodb_table.invitations.name
+  }
+}
+
+module "register_server" {
+  source = "./modules/aws_appsync_lambda_resolver"
+
+  type = "Mutation"
+  field = "registerServer"
+
+  appsync_graphql_api_id = aws_appsync_graphql_api.gawshi.id
+  appsync_graphql_api_arn = aws_appsync_graphql_api.gawshi.arn
+  datasource_service_role_arn = aws_iam_role.appsync.arn
+  lambda_role_arn = aws_iam_role.lambda_exec.arn
+
+  source_file = "${path.module}/lambdas/resolvers/registerserver.py"
+  output_path = "${path.module}/dist/lambdas/resolvers/registerserver.zip"
+  lambda_handler = "registerserver.handler"
+  function_name = "Gawshi-AppSyncResolver-RegisterServer-${local.suffix}"
+
+  environment = {
+    SERVERS_TABLE_NAME = aws_dynamodb_table.servers.name
+    PUBLIC_URL = aws_api_gateway_stage.gawshi.invoke_url
   }
 }

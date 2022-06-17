@@ -16,9 +16,14 @@ def handler(event, _):
     if not table_name:
         return error(RuntimeError("Missing environment variable 'DYNAMODB_ARTISTS_TABLE'"))
 
+    server_id = os.getenv('SERVER_ID')
+    if not server_id:
+        return error(RuntimeError("Missing environment variable 'SERVER_ID'"))
+
     artist = {
         "adjacentId": "artist:",
         "id": f"artist:{str(uuid.uuid4())}",
+        "serverId": server_id,
     }
     try:
         artist.update(get_artist_attributes(event))

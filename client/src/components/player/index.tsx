@@ -45,7 +45,7 @@ let _album: Album | null = null;
 
 const Player = ({ player, track, onClick }: PlayerProps) => {
   log.debug(`Player.render(${track.id})`);
-  const { album } = useGetAlbum(track.album?.id);
+  const { album } = useGetAlbum(track.serverId, track.album?.id);
   const albumChanged = _album?.id !== track.album?.id;
 
   if (albumChanged) _album = album;

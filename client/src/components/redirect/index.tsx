@@ -1,16 +1,13 @@
-import { Component } from "preact";
+import { h } from "preact";
 import { route } from "preact-router";
 
-interface RedirectProps {
-  path: string;
-  to: string;
-}
+import useAppState from "../../hooks/useappstate";
 
-class Redirect extends Component<RedirectProps> {
-  render() {
-    route(this.props.to, true);
-    return null;
-  }
-}
+const Redirect = () => {
+  const { appState } = useAppState();
+  route(`/server/${appState.serverId}${window.location.pathname}`);
+
+  return null;
+};
 
 export default Redirect;

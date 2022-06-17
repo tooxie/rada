@@ -1,7 +1,7 @@
 import { h, Fragment } from "preact";
 import { Link } from "preact-router";
 
-import { urlize } from "../../utils/id";
+import { toHref } from "../../utils/id";
 import { Artist } from "../../graphql/api";
 import ErrorMsg from "../../components/error";
 import Spinner from "../../components/spinner";
@@ -65,7 +65,7 @@ const renderAs = (listType: string, artists: Artist[]): JSX.Element | JSX.Elemen
 const renderAsList = (artists: Artist[]) => (
   <section class={style.list}>
     {artists.map((artist: Artist) => (
-      <Link href={`/artist/${urlize(artist.id)}`} class={style.artist}>
+      <Link href={toHref(artist)} class={style.artist}>
         <img src={listIcon} /> {artist.name}
       </Link>
     ))}
@@ -76,7 +76,7 @@ const renderAsMosaic = (artists: Artist[]) => (
   <section class={style.grid}>
     {artists.map((artist: Artist) => (
       <Link
-        href={`/artist/${urlize(artist.id)}`}
+        href={toHref(artist)}
         style={{ backgroundImage: `url(${artist.imageUrl || "none"})` }}
       >
         <div class={style.artist}>
@@ -91,7 +91,7 @@ const renderAsMosaic = (artists: Artist[]) => (
 const renderAsThumbnails = (artists: Artist[]) => (
   <section class={style.thumbnails}>
     {artists.map((artist: Artist) => (
-      <Link href={`/artist/${urlize(artist.id)}`} class={style.artist}>
+      <Link href={toHref(artist)} class={style.artist}>
         <div
           class={style.thumb}
           style={{ backgroundImage: `url(${artist.imageUrl || listIcon})` }}

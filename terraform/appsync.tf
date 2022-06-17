@@ -44,6 +44,7 @@ resource "null_resource" "codegen_config" {
     appsync_id = aws_appsync_graphql_api.gawshi.id
     appsync_url = lookup(aws_appsync_graphql_api.gawshi.uris, "GRAPHQL")
     s3_bucket_url = aws_s3_bucket.gawshi_music.bucket_domain_name
+    server_id = random_uuid.server_id.result
   }
 
   provisioner "local-exec" {
@@ -61,6 +62,7 @@ resource "null_resource" "codegen_config" {
       "--api-id", aws_appsync_graphql_api.gawshi.id,
       "--api-url", lookup(aws_appsync_graphql_api.gawshi.uris, "GRAPHQL"),
       "--region", var.region,
+      "--server-id", random_uuid.server_id.result,
     ])
   }
 }

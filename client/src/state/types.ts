@@ -4,6 +4,7 @@ export interface AppState {
   isAdmin: boolean;
   isSafari: boolean;
   isQueueOpen: boolean;
+  serverId: string;
 }
 
 export interface AppStateHook {

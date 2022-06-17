@@ -40,6 +40,7 @@ terraform {
   }
 }
 
+resource "random_uuid" "server_id" { }
 resource "random_string" "suffix" {
   length = 6
   special = false
@@ -49,4 +50,8 @@ resource "random_string" "suffix" {
 locals {
   suffix = var.suffix != "" ? var.suffix : random_string.suffix.result
   mime_types = jsondecode(file("${path.module}/mime.json"))
+}
+
+output "server_id" {
+  value = random_uuid.server_id.result
 }

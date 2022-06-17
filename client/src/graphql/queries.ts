@@ -6,8 +6,10 @@ import gql from "graphql-tag";
 export const getAlbum = gql`
   query GetAlbum($id: ID!) {
     getAlbum(id: $id) {
+      serverId
       id
       artists {
+        serverId
         id
         name
         imageUrl
@@ -16,6 +18,7 @@ export const getAlbum = gql`
       imageUrl
       year
       tracks {
+        serverId
         id
         url
         title
@@ -33,6 +36,7 @@ export const listAlbums = gql`
   query ListAlbums($filter: TableAlbumFilterInput) {
     listAlbums(filter: $filter) {
       items {
+        serverId
         id
         name
         imageUrl
@@ -45,10 +49,12 @@ export const listAlbums = gql`
 export const getArtist = gql`
   query GetArtist($id: ID!) {
     getArtist(id: $id) {
+      serverId
       id
       name
       imageUrl
       albums {
+        serverId
         id
         name
         imageUrl
@@ -62,6 +68,7 @@ export const listArtists = gql`
   query ListArtists($filter: TableArtistFilterInput) {
     listArtists(filter: $filter) {
       items {
+        serverId
         id
         name
         imageUrl
@@ -72,10 +79,12 @@ export const listArtists = gql`
 export const listArtistsForAlbum = gql`
   query ListArtistsForAlbum($id: ID!) {
     listArtistsForAlbum(id: $id) {
+      serverId
       id
       name
       imageUrl
       albums {
+        serverId
         id
         name
         imageUrl
@@ -88,8 +97,10 @@ export const listArtistsForAlbum = gql`
 export const getTrack = gql`
   query GetTrack($albumId: ID!, $id: ID!) {
     getTrack(albumId: $albumId, id: $id) {
+      serverId
       id
       album {
+        serverId
         id
         name
         imageUrl
@@ -97,6 +108,7 @@ export const getTrack = gql`
         isVa
       }
       artists {
+        serverId
         id
         name
         imageUrl
@@ -115,6 +127,7 @@ export const listOrphanTracks = gql`
   query ListOrphanTracks {
     listOrphanTracks {
       items {
+        serverId
         id
         url
         title
@@ -123,6 +136,22 @@ export const listOrphanTracks = gql`
         ordinal
         hash
         features
+      }
+    }
+  }
+`;
+export const listServers = gql`
+  query ListServers {
+    listServers {
+      items {
+        id
+        name
+        note
+        apiUrl
+        headerUrl
+        timestamp
+        banned
+        handshakeCompleted
       }
     }
   }

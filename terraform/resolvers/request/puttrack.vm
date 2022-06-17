@@ -2,18 +2,20 @@
   #set( $context.arguments.input.ordinal = 0 )
 #end
 
+#set( $context.arguments.input.serverId = "${server_id}" )
+
 {
   "version": "2017-02-28",
   "operation": "PutItem",
   "key": {
     "albumId": $util.dynamodb.toDynamoDBJson($context.arguments.input.albumId),
-    "id": $util.dynamodb.toDynamoDBJson("track:$util.autoId()")
+    "id": $util.dynamodb.toDynamoDBJson("track:$util.autoId()"),
   },
   "attributeValues": $util.dynamodb.toMapValuesJson($context.arguments.input),
   "condition": {
     "expression": "attribute_not_exists(#id)",
     "expressionNames": {
-      "#id": "id"
-    }
-  }
+      "#id": "id",
+    },
+  },
 }

@@ -1,9 +1,8 @@
 import { FunctionComponent, h } from "preact";
 
-import { DetailProps } from "../../components/layout/detail/types";
+import { DetailProps } from "../../components/layout/types";
 import Navigation from "../../components/navigation";
 import Logger from "../../logger";
-import { ArtistId } from "../../types";
 
 import useGetArtist from "./hooks/usegetartist";
 import style from "./header.css";
@@ -14,9 +13,9 @@ let currentArtist: string | null = null;
 const defaultBackground = "/assets/img/black.png";
 let backgroundImage = `url(${defaultBackground})`;
 
-const Header: FunctionComponent<DetailProps> = ({ id }) => {
-  log.debug(`artists.Header("${id}")`);
-  const { artist } = useGetArtist(id as ArtistId);
+const Header: FunctionComponent<DetailProps> = ({ id, serverId }) => {
+  log.debug(`artists.Header("${id}", "${serverId}")`);
+  const { artist } = useGetArtist(serverId, id);
 
   if (currentArtist != id) backgroundImage = `url(${defaultBackground})`;
   if (artist) backgroundImage = `url("${artist?.imageUrl || defaultBackground}")`;

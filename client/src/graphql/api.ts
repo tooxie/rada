@@ -4,6 +4,7 @@
 
 export type Album = {
   __typename: "Album";
+  serverId: string;
   id: string;
   artists?: Array<Artist> | null;
   name?: string | null;
@@ -15,6 +16,7 @@ export type Album = {
 
 export type Artist = {
   __typename: "Artist";
+  serverId: string;
   id: string;
   name?: string | null;
   imageUrl?: string | null;
@@ -23,6 +25,7 @@ export type Artist = {
 
 export type Track = {
   __typename: "Track";
+  serverId: string;
   id: string;
   album?: Album | null;
   artists?: Array<Artist> | null;
@@ -110,6 +113,27 @@ export type UpdateTrackInput = {
   hash: string;
 };
 
+export type CreateServerInput = {
+  id: string;
+  name: string;
+  note?: string | null;
+  apiUrl: string;
+  idpUrl: string;
+  headerUrl?: string | null;
+};
+
+export type Server = {
+  __typename: "Server";
+  id: string;
+  name: string;
+  note?: string | null;
+  apiUrl?: string | null;
+  headerUrl?: string | null;
+  timestamp: number;
+  banned?: boolean | null;
+  handshakeCompleted?: boolean | null;
+};
+
 export type CreateInviteInput = {
   note?: string | null;
   validity?: number | null;
@@ -124,6 +148,11 @@ export type InviteUrl = {
 export type TrackConnection = {
   __typename: "TrackConnection";
   items?: Array<Track> | null;
+};
+
+export type ServerConnection = {
+  __typename: "ServerConnection";
+  items?: Array<Server> | null;
 };
 
 export type Invite = {
@@ -183,6 +212,7 @@ export type GetAlbumOnlyQueryVariables = {
 export type GetAlbumOnlyQuery = {
   getAlbum?: {
     __typename: "Album";
+    serverId: string;
     id: string;
     name?: string | null;
     imageUrl?: string | null;
@@ -198,6 +228,7 @@ export type GetAlbumWithTracksQueryVariables = {
 export type GetAlbumWithTracksQuery = {
   getAlbum?: {
     __typename: "Album";
+    serverId: string;
     id: string;
     name?: string | null;
     imageUrl?: string | null;
@@ -205,11 +236,13 @@ export type GetAlbumWithTracksQuery = {
     isVa?: boolean | null;
     artists?: Array<{
       __typename: "Artist";
+      serverId: string;
       id: string;
       name?: string | null;
     }> | null;
     tracks?: Array<{
       __typename: "Track";
+      serverId: string;
       id: string;
       url: string;
       title?: string | null;
@@ -220,11 +253,13 @@ export type GetAlbumWithTracksQuery = {
       features?: Array<string> | null;
       artists?: Array<{
         __typename: "Artist";
+        serverId: string;
         id: string;
         name?: string | null;
       }> | null;
       album?: {
         __typename: "Album";
+        serverId: string;
         id: string;
         name?: string | null;
         imageUrl?: string | null;
@@ -241,17 +276,20 @@ export type GetArtistInAlbumQueryVariables = {
 export type GetArtistInAlbumQuery = {
   getArtist?: {
     __typename: "Artist";
+    serverId: string;
     id: string;
     name?: string | null;
     imageUrl?: string | null;
     albums?: Array<{
       __typename: "Album";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
       year?: number | null;
       artists?: Array<{
         __typename: "Artist";
+        serverId: string;
         id: string;
       }> | null;
     }> | null;
@@ -267,6 +305,7 @@ export type ListAlbumsWithArtistsQuery = {
     __typename: "AlbumConnection";
     items?: Array<{
       __typename: "Album";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -274,6 +313,7 @@ export type ListAlbumsWithArtistsQuery = {
       isVa?: boolean | null;
       artists?: Array<{
         __typename: "Artist";
+        serverId: string;
         id: string;
         name?: string | null;
       }> | null;
@@ -290,9 +330,11 @@ export type ListArtistsWithAlbumsQuery = {
     __typename: "ArtistConnection";
     items?: Array<{
       __typename: "Artist";
+      serverId: string;
       id: string;
       albums?: Array<{
         __typename: "Album";
+        serverId: string;
         id: string;
         name?: string | null;
         imageUrl?: string | null;
@@ -309,11 +351,13 @@ export type CreateArtistMutationVariables = {
 export type CreateArtistMutation = {
   createArtist?: {
     __typename: "Artist";
+    serverId: string;
     id: string;
     name?: string | null;
     imageUrl?: string | null;
     albums?: Array<{
       __typename: "Album";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -331,11 +375,13 @@ export type UpdateArtistMutationVariables = {
 export type UpdateArtistMutation = {
   updateArtist?: {
     __typename: "Artist";
+    serverId: string;
     id: string;
     name?: string | null;
     imageUrl?: string | null;
     albums?: Array<{
       __typename: "Album";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -352,11 +398,13 @@ export type DeleteArtistMutationVariables = {
 export type DeleteArtistMutation = {
   deleteArtist?: {
     __typename: "Artist";
+    serverId: string;
     id: string;
     name?: string | null;
     imageUrl?: string | null;
     albums?: Array<{
       __typename: "Album";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -373,11 +421,13 @@ export type DeleteCascadeArtistMutationVariables = {
 export type DeleteCascadeArtistMutation = {
   deleteCascadeArtist?: {
     __typename: "Artist";
+    serverId: string;
     id: string;
     name?: string | null;
     imageUrl?: string | null;
     albums?: Array<{
       __typename: "Album";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -394,9 +444,11 @@ export type CreateAlbumMutationVariables = {
 export type CreateAlbumMutation = {
   createAlbum?: {
     __typename: "Album";
+    serverId: string;
     id: string;
     artists?: Array<{
       __typename: "Artist";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -406,6 +458,7 @@ export type CreateAlbumMutation = {
     year?: number | null;
     tracks?: Array<{
       __typename: "Track";
+      serverId: string;
       id: string;
       url: string;
       title?: string | null;
@@ -427,9 +480,11 @@ export type UpdateAlbumMutationVariables = {
 export type UpdateAlbumMutation = {
   updateAlbum?: {
     __typename: "Album";
+    serverId: string;
     id: string;
     artists?: Array<{
       __typename: "Artist";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -439,6 +494,7 @@ export type UpdateAlbumMutation = {
     year?: number | null;
     tracks?: Array<{
       __typename: "Track";
+      serverId: string;
       id: string;
       url: string;
       title?: string | null;
@@ -459,9 +515,11 @@ export type DeleteAlbumMutationVariables = {
 export type DeleteAlbumMutation = {
   deleteAlbum?: {
     __typename: "Album";
+    serverId: string;
     id: string;
     artists?: Array<{
       __typename: "Artist";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -471,6 +529,7 @@ export type DeleteAlbumMutation = {
     year?: number | null;
     tracks?: Array<{
       __typename: "Track";
+      serverId: string;
       id: string;
       url: string;
       title?: string | null;
@@ -491,9 +550,11 @@ export type DeleteCascadeAlbumMutationVariables = {
 export type DeleteCascadeAlbumMutation = {
   deleteCascadeAlbum?: {
     __typename: "Album";
+    serverId: string;
     id: string;
     artists?: Array<{
       __typename: "Artist";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -503,6 +564,7 @@ export type DeleteCascadeAlbumMutation = {
     year?: number | null;
     tracks?: Array<{
       __typename: "Track";
+      serverId: string;
       id: string;
       url: string;
       title?: string | null;
@@ -523,9 +585,11 @@ export type CreateTrackMutationVariables = {
 export type CreateTrackMutation = {
   createTrack?: {
     __typename: "Track";
+    serverId: string;
     id: string;
     album?: {
       __typename: "Album";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -534,6 +598,7 @@ export type CreateTrackMutation = {
     } | null;
     artists?: Array<{
       __typename: "Artist";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -556,9 +621,11 @@ export type UpdateTrackMutationVariables = {
 export type UpdateTrackMutation = {
   updateTrack?: {
     __typename: "Track";
+    serverId: string;
     id: string;
     album?: {
       __typename: "Album";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -567,6 +634,7 @@ export type UpdateTrackMutation = {
     } | null;
     artists?: Array<{
       __typename: "Artist";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -588,9 +656,11 @@ export type DeleteTrackMutationVariables = {
 export type DeleteTrackMutation = {
   deleteTrack?: {
     __typename: "Track";
+    serverId: string;
     id: string;
     album?: {
       __typename: "Album";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -599,6 +669,7 @@ export type DeleteTrackMutation = {
     } | null;
     artists?: Array<{
       __typename: "Artist";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -610,6 +681,24 @@ export type DeleteTrackMutation = {
     ordinal?: number | null;
     hash: string;
     features?: Array<string> | null;
+  } | null;
+};
+
+export type RegisterServerMutationVariables = {
+  input?: CreateServerInput | null;
+};
+
+export type RegisterServerMutation = {
+  registerServer?: {
+    __typename: "Server";
+    id: string;
+    name: string;
+    note?: string | null;
+    apiUrl?: string | null;
+    headerUrl?: string | null;
+    timestamp: number;
+    banned?: boolean | null;
+    handshakeCompleted?: boolean | null;
   } | null;
 };
 
@@ -647,9 +736,11 @@ export type GetAlbumQueryVariables = {
 export type GetAlbumQuery = {
   getAlbum?: {
     __typename: "Album";
+    serverId: string;
     id: string;
     artists?: Array<{
       __typename: "Artist";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -659,6 +750,7 @@ export type GetAlbumQuery = {
     year?: number | null;
     tracks?: Array<{
       __typename: "Track";
+      serverId: string;
       id: string;
       url: string;
       title?: string | null;
@@ -681,6 +773,7 @@ export type ListAlbumsQuery = {
     __typename: "AlbumConnection";
     items?: Array<{
       __typename: "Album";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -697,11 +790,13 @@ export type GetArtistQueryVariables = {
 export type GetArtistQuery = {
   getArtist?: {
     __typename: "Artist";
+    serverId: string;
     id: string;
     name?: string | null;
     imageUrl?: string | null;
     albums?: Array<{
       __typename: "Album";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -720,6 +815,7 @@ export type ListArtistsQuery = {
     __typename: "ArtistConnection";
     items?: Array<{
       __typename: "Artist";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -734,11 +830,13 @@ export type ListArtistsForAlbumQueryVariables = {
 export type ListArtistsForAlbumQuery = {
   listArtistsForAlbum?: Array<{
     __typename: "Artist";
+    serverId: string;
     id: string;
     name?: string | null;
     imageUrl?: string | null;
     albums?: Array<{
       __typename: "Album";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -756,9 +854,11 @@ export type GetTrackQueryVariables = {
 export type GetTrackQuery = {
   getTrack?: {
     __typename: "Track";
+    serverId: string;
     id: string;
     album?: {
       __typename: "Album";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -767,6 +867,7 @@ export type GetTrackQuery = {
     } | null;
     artists?: Array<{
       __typename: "Artist";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -786,6 +887,7 @@ export type ListOrphanTracksQuery = {
     __typename: "TrackConnection";
     items?: Array<{
       __typename: "Track";
+      serverId: string;
       id: string;
       url: string;
       title?: string | null;
@@ -794,6 +896,23 @@ export type ListOrphanTracksQuery = {
       ordinal?: number | null;
       hash: string;
       features?: Array<string> | null;
+    }> | null;
+  } | null;
+};
+
+export type ListServersQuery = {
+  listServers?: {
+    __typename: "ServerConnection";
+    items?: Array<{
+      __typename: "Server";
+      id: string;
+      name: string;
+      note?: string | null;
+      apiUrl?: string | null;
+      headerUrl?: string | null;
+      timestamp: number;
+      banned?: boolean | null;
+      handshakeCompleted?: boolean | null;
     }> | null;
   } | null;
 };
@@ -843,11 +962,13 @@ export type OnCreateArtistSubscriptionVariables = {
 export type OnCreateArtistSubscription = {
   onCreateArtist?: {
     __typename: "Artist";
+    serverId: string;
     id: string;
     name?: string | null;
     imageUrl?: string | null;
     albums?: Array<{
       __typename: "Album";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -865,11 +986,13 @@ export type OnUpdateArtistSubscriptionVariables = {
 export type OnUpdateArtistSubscription = {
   onUpdateArtist?: {
     __typename: "Artist";
+    serverId: string;
     id: string;
     name?: string | null;
     imageUrl?: string | null;
     albums?: Array<{
       __typename: "Album";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -887,11 +1010,13 @@ export type OnDeleteArtistSubscriptionVariables = {
 export type OnDeleteArtistSubscription = {
   onDeleteArtist?: {
     __typename: "Artist";
+    serverId: string;
     id: string;
     name?: string | null;
     imageUrl?: string | null;
     albums?: Array<{
       __typename: "Album";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -909,9 +1034,11 @@ export type OnCreateAlbumSubscriptionVariables = {
 export type OnCreateAlbumSubscription = {
   onCreateAlbum?: {
     __typename: "Album";
+    serverId: string;
     id: string;
     artists?: Array<{
       __typename: "Artist";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -921,6 +1048,7 @@ export type OnCreateAlbumSubscription = {
     year?: number | null;
     tracks?: Array<{
       __typename: "Track";
+      serverId: string;
       id: string;
       url: string;
       title?: string | null;
@@ -942,9 +1070,11 @@ export type OnUpdateAlbumSubscriptionVariables = {
 export type OnUpdateAlbumSubscription = {
   onUpdateAlbum?: {
     __typename: "Album";
+    serverId: string;
     id: string;
     artists?: Array<{
       __typename: "Artist";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -954,6 +1084,7 @@ export type OnUpdateAlbumSubscription = {
     year?: number | null;
     tracks?: Array<{
       __typename: "Track";
+      serverId: string;
       id: string;
       url: string;
       title?: string | null;
@@ -975,9 +1106,11 @@ export type OnDeleteAlbumSubscriptionVariables = {
 export type OnDeleteAlbumSubscription = {
   onDeleteAlbum?: {
     __typename: "Album";
+    serverId: string;
     id: string;
     artists?: Array<{
       __typename: "Artist";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -987,6 +1120,7 @@ export type OnDeleteAlbumSubscription = {
     year?: number | null;
     tracks?: Array<{
       __typename: "Track";
+      serverId: string;
       id: string;
       url: string;
       title?: string | null;
@@ -1008,9 +1142,11 @@ export type OnCreateTrackSubscriptionVariables = {
 export type OnCreateTrackSubscription = {
   onCreateTrack?: {
     __typename: "Track";
+    serverId: string;
     id: string;
     album?: {
       __typename: "Album";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -1019,6 +1155,7 @@ export type OnCreateTrackSubscription = {
     } | null;
     artists?: Array<{
       __typename: "Artist";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -1041,9 +1178,11 @@ export type OnUpdateTrackSubscriptionVariables = {
 export type OnUpdateTrackSubscription = {
   onUpdateTrack?: {
     __typename: "Track";
+    serverId: string;
     id: string;
     album?: {
       __typename: "Album";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -1052,6 +1191,7 @@ export type OnUpdateTrackSubscription = {
     } | null;
     artists?: Array<{
       __typename: "Artist";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -1074,9 +1214,11 @@ export type OnDeleteTrackSubscriptionVariables = {
 export type OnDeleteTrackSubscription = {
   onDeleteTrack?: {
     __typename: "Track";
+    serverId: string;
     id: string;
     album?: {
       __typename: "Album";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;
@@ -1085,6 +1227,7 @@ export type OnDeleteTrackSubscription = {
     } | null;
     artists?: Array<{
       __typename: "Artist";
+      serverId: string;
       id: string;
       name?: string | null;
       imageUrl?: string | null;

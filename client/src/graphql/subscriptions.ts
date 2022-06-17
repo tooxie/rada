@@ -5,10 +5,12 @@
 export const onCreateArtist = /* GraphQL */ `
   subscription OnCreateArtist($id: ID, $name: String) {
     onCreateArtist(id: $id, name: $name) {
+      serverId
       id
       name
       imageUrl
       albums {
+        serverId
         id
         name
         imageUrl
@@ -21,10 +23,12 @@ export const onCreateArtist = /* GraphQL */ `
 export const onUpdateArtist = /* GraphQL */ `
   subscription OnUpdateArtist($id: ID, $name: String) {
     onUpdateArtist(id: $id, name: $name) {
+      serverId
       id
       name
       imageUrl
       albums {
+        serverId
         id
         name
         imageUrl
@@ -37,10 +41,12 @@ export const onUpdateArtist = /* GraphQL */ `
 export const onDeleteArtist = /* GraphQL */ `
   subscription OnDeleteArtist($id: ID, $name: String) {
     onDeleteArtist(id: $id, name: $name) {
+      serverId
       id
       name
       imageUrl
       albums {
+        serverId
         id
         name
         imageUrl
@@ -53,8 +59,10 @@ export const onDeleteArtist = /* GraphQL */ `
 export const onCreateAlbum = /* GraphQL */ `
   subscription OnCreateAlbum($id: ID, $name: String) {
     onCreateAlbum(id: $id, name: $name) {
+      serverId
       id
       artists {
+        serverId
         id
         name
         imageUrl
@@ -63,6 +71,7 @@ export const onCreateAlbum = /* GraphQL */ `
       imageUrl
       year
       tracks {
+        serverId
         id
         url
         title
@@ -79,8 +88,10 @@ export const onCreateAlbum = /* GraphQL */ `
 export const onUpdateAlbum = /* GraphQL */ `
   subscription OnUpdateAlbum($id: ID, $name: String) {
     onUpdateAlbum(id: $id, name: $name) {
+      serverId
       id
       artists {
+        serverId
         id
         name
         imageUrl
@@ -89,6 +100,7 @@ export const onUpdateAlbum = /* GraphQL */ `
       imageUrl
       year
       tracks {
+        serverId
         id
         url
         title
@@ -105,8 +117,10 @@ export const onUpdateAlbum = /* GraphQL */ `
 export const onDeleteAlbum = /* GraphQL */ `
   subscription OnDeleteAlbum($id: ID, $name: String) {
     onDeleteAlbum(id: $id, name: $name) {
+      serverId
       id
       artists {
+        serverId
         id
         name
         imageUrl
@@ -115,6 +129,7 @@ export const onDeleteAlbum = /* GraphQL */ `
       imageUrl
       year
       tracks {
+        serverId
         id
         url
         title
@@ -131,8 +146,10 @@ export const onDeleteAlbum = /* GraphQL */ `
 export const onCreateTrack = /* GraphQL */ `
   subscription OnCreateTrack($id: ID, $title: String) {
     onCreateTrack(id: $id, title: $title) {
+      serverId
       id
       album {
+        serverId
         id
         name
         imageUrl
@@ -140,6 +157,7 @@ export const onCreateTrack = /* GraphQL */ `
         isVa
       }
       artists {
+        serverId
         id
         name
         imageUrl
@@ -157,8 +175,10 @@ export const onCreateTrack = /* GraphQL */ `
 export const onUpdateTrack = /* GraphQL */ `
   subscription OnUpdateTrack($id: ID, $title: String) {
     onUpdateTrack(id: $id, title: $title) {
+      serverId
       id
       album {
+        serverId
         id
         name
         imageUrl
@@ -166,6 +186,7 @@ export const onUpdateTrack = /* GraphQL */ `
         isVa
       }
       artists {
+        serverId
         id
         name
         imageUrl
@@ -183,8 +204,10 @@ export const onUpdateTrack = /* GraphQL */ `
 export const onDeleteTrack = /* GraphQL */ `
   subscription OnDeleteTrack($id: ID, $title: String) {
     onDeleteTrack(id: $id, title: $title) {
+      serverId
       id
       album {
+        serverId
         id
         name
         imageUrl
@@ -192,6 +215,7 @@ export const onDeleteTrack = /* GraphQL */ `
         isVa
       }
       artists {
+        serverId
         id
         name
         imageUrl

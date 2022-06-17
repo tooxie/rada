@@ -3,6 +3,7 @@ import { Link } from "preact-router/match";
 
 import BackLink from "../backlink";
 import useConf from "../../hooks/useconf";
+import useAppState from "../../hooks/useappstate";
 
 import back from "./back.svg";
 import searchIn from "./search-in.svg";
@@ -17,6 +18,7 @@ interface NavigationProps {
 }
 
 const Navigation = (props: NavigationProps) => {
+  const { appState } = useAppState();
   const { conf, setConf } = useConf();
   const noop = (ev: Event) => {
     ev.preventDefault();
@@ -50,7 +52,7 @@ const Navigation = (props: NavigationProps) => {
           </div>
 
           <div class={style.title}>
-            <Link href="/artists">Gawshi</Link>
+            <Link href={`/server/${appState.serverId}/artists`}>Gawshi</Link>
           </div>
 
           {/* Only show if we have at least 1 server */}

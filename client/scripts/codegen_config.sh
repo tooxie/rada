@@ -12,6 +12,9 @@ while [ "$1" != "" ]; do
     --region ) shift
       REGION="$1"
     ;;
+    --server-id ) shift
+      SERVER_ID="$1"
+    ;;
   esac
 
   shift
@@ -19,7 +22,8 @@ done
 
 if [ -z "$API_ID" ] ||
    [ -z "$API_URL" ] ||
-   [ -z "$REGION" ]
+   [ -z "$REGION" ] ||
+   [ -z "$SERVER_ID" ]
 then
   echo "Parameter missing"
   exit 1
@@ -59,7 +63,8 @@ CONFIG="{
   \"graphql\": {
     \"url\": \"$API_URL\"
   },
-  \"region\": \"$REGION\"
+  \"region\": \"$REGION\",
+  \"serverId\": \"$SERVER_ID\"
 }
 "
 if [ "`uname`" = "Darwin" ]; then

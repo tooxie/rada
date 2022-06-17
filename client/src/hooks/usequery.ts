@@ -23,7 +23,7 @@ const useQuery = <T, V = void>(query: Q, vars?: V) => {
       try {
         data = await client.query({ query, variables: vars });
       } catch (error: any) {
-        log.error("useQuery got error:", error);
+        log.error(error);
         log.debug(`vars: (${typeof vars}) ${JSON.stringify(vars)}`);
         setLoading(false);
         setError(normalizeMessage(error.message));
