@@ -103,7 +103,3 @@
   display: flex;
   flex-direction: row;
 }
-
-.fav {
-  display: inline-block;
-}

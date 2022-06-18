@@ -84,14 +84,8 @@ resource "aws_iam_role_policy" "lambda_dynamodb" {
              aws_dynamodb_table.artists_albums.arn,
           "${aws_dynamodb_table.artists_albums.arn}/*",
 
-             aws_dynamodb_table.playlists.arn,
-          "${aws_dynamodb_table.playlists.arn}/*",
-
              aws_dynamodb_table.tracks.arn,
           "${aws_dynamodb_table.tracks.arn}/*",
-
-             aws_dynamodb_table.favourites.arn,
-          "${aws_dynamodb_table.favourites.arn}/*",
 
              aws_dynamodb_table.invitations.arn,
           "${aws_dynamodb_table.invitations.arn}/*",
@@ -117,14 +111,8 @@ resource "aws_iam_role_policy" "appsync_dynamodb" {
              aws_dynamodb_table.artists_albums.arn,
           "${aws_dynamodb_table.artists_albums.arn}/*",
 
-             aws_dynamodb_table.playlists.arn,
-          "${aws_dynamodb_table.playlists.arn}/*",
-
              aws_dynamodb_table.tracks.arn,
           "${aws_dynamodb_table.tracks.arn}/*",
-
-             aws_dynamodb_table.favourites.arn,
-          "${aws_dynamodb_table.favourites.arn}/*",
 
              aws_dynamodb_table.invitations.arn,
           "${aws_dynamodb_table.invitations.arn}/*",

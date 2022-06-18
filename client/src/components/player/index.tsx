@@ -7,7 +7,7 @@ import usePlayer from "../../hooks/useplayer";
 import Logger from "../../logger";
 
 import style from "./style.css";
-import icon from "./playlist.svg";
+import icon from "./queue.svg";
 import playIcon from "./play.svg";
 import pauseIcon from "./pause.svg";
 import wifiIcon from "./wifi.svg";

@@ -64,10 +64,6 @@ const QueueOptions = ({ track, index }: QueueOptionsProps) => {
         <Action on={untilHere}>
           <img src={stopAfterIcon} /> Stop playback after this track
         </Action>
-        // TODO: Add playlists
-        <Step ref={ref} on={_getPls} next={renderPlaylists}>
-          <img src={playlistIcon} /> Add to playlist
-        </Step>
         */}
       </div>
     </Options>

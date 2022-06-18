@@ -249,53 +249,6 @@ export const deleteTrack = gql`
     }
   }
 `;
-export const createPlaylist = gql`
-  mutation CreatePlaylist($input: CreatePlaylistInput!) {
-    createPlaylist(input: $input) {
-      id
-      name
-      imageUrl
-    }
-  }
-`;
-export const updatePlaylist = gql`
-  mutation UpdatePlaylist($id: ID!, $input: UpdatePlaylistInput!) {
-    updatePlaylist(id: $id, input: $input) {
-      id
-      name
-      imageUrl
-    }
-  }
-`;
-export const deletePlaylist = gql`
-  mutation DeletePlaylist($id: ID!) {
-    deletePlaylist(id: $id) {
-      id
-      name
-      imageUrl
-    }
-  }
-`;
-export const addToPlaylist = gql`
-  mutation AddToPlaylist($id: ID!, $targetId: ID!) {
-    addToPlaylist(id: $id, targetId: $targetId)
-  }
-`;
-export const removeFromPlaylist = gql`
-  mutation RemoveFromPlaylist($id: ID!, $targetId: ID!) {
-    removeFromPlaylist(id: $id, targetId: $targetId)
-  }
-`;
-export const addToFavorites = gql`
-  mutation AddToFavorites($id: ID!) {
-    addToFavorites(id: $id)
-  }
-`;
-export const removeFromFavorites = gql`
-  mutation RemoveFromFavorites($id: ID!) {
-    removeFromFavorites(id: $id)
-  }
-`;
 export const createInvite = gql`
   mutation CreateInvite($input: CreateInviteInput!) {
     createInvite(input: $input) {

@@ -206,30 +206,3 @@ export const onDeleteTrack = /* GraphQL */ `
     }
   }
 `;
-export const onCreatePlaylist = /* GraphQL */ `
-  subscription OnCreatePlaylist($id: ID, $name: String) {
-    onCreatePlaylist(id: $id, name: $name) {
-      id
-      name
-      imageUrl
-    }
-  }
-`;
-export const onUpdatePlaylist = /* GraphQL */ `
-  subscription OnUpdatePlaylist($id: ID, $name: String) {
-    onUpdatePlaylist(id: $id, name: $name) {
-      id
-      name
-      imageUrl
-    }
-  }
-`;
-export const onDeletePlaylist = /* GraphQL */ `
-  subscription OnDeletePlaylist($id: ID, $name: String) {
-    onDeletePlaylist(id: $id, name: $name) {
-      id
-      name
-      imageUrl
-    }
-  }
-`;

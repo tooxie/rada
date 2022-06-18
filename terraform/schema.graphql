@@ -13,16 +13,6 @@ type Mutation {
   updateTrack(id: ID!, input: UpdateTrackInput!): Track
   deleteTrack(id: ID!): Track
 
-  # TODO: https://docs.aws.amazon.com/appsync/latest/devguide/security-authz.html#fine-grained-access-control
-  createPlaylist(input: CreatePlaylistInput!): Playlist
-  updatePlaylist(id: ID!, input: UpdatePlaylistInput!): Playlist
-  deletePlaylist(id: ID!): Playlist
-  addToPlaylist(id: ID!, targetId: ID!): Boolean
-  removeFromPlaylist(id: ID!, targetId: ID!): Boolean
-
-  addToFavorites(id: ID!): Boolean
-  removeFromFavorites(id: ID!): Boolean
-
   createInvite(input: CreateInviteInput!): InviteUrl
     @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
   revokeInvite(id: ID!): Boolean
@@ -38,9 +28,6 @@ type Query {
   getArtist(id: ID!): Artist
   listArtists(filter: TableArtistFilterInput): ArtistConnection
   listArtistsForAlbum(id: ID!): [Artist!]
-
-  getPlaylist(id: ID!): Playlist
-  listPlaylists(filter: TablePlaylistFilterInput): PlaylistConnection
 
   getTrack(albumId: ID!, id: ID!): Track
   listTracks(filter: TableTrackFilterInput): TrackConnection
@@ -72,13 +59,6 @@ type Subscription {
     @aws_subscribe(mutations: ["updateTrack"])
   onDeleteTrack(id: ID, title: String): Track
     @aws_subscribe(mutations: ["deleteTrack"])
-
-  onCreatePlaylist(id: ID, name: String): Playlist
-    @aws_subscribe(mutations: ["createPlaylist"])
-  onUpdatePlaylist(id: ID, name: String): Playlist
-    @aws_subscribe(mutations: ["updatePlaylist"])
-  onDeletePlaylist(id: ID, name: String): Playlist
-    @aws_subscribe(mutations: ["deletePlaylist"])
 }
 
 input TableBooleanFilterInput {
@@ -193,31 +173,6 @@ input UpdateAlbumInput {
   name: String
   imageUrl: AWSURL
   year: Int
-}
-
-# --- Playlist
-input TablePlaylistFilterInput {
-  name: TableStringFilterInput
-}
-
-type Playlist {
-  id: ID!
-  name: String!
-  imageUrl: AWSURL
-}
-
-type PlaylistConnection {
-  items: [Playlist!]
-}
-
-input CreatePlaylistInput {
-  name: String!
-  imageUrl: AWSURL
-}
-
-input UpdatePlaylistInput {
-  name: String
-  imageUrl: AWSURL
 }
 
 # --- Track

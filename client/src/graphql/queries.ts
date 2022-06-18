@@ -85,26 +85,6 @@ export const listArtistsForAlbum = gql`
     }
   }
 `;
-export const getPlaylist = gql`
-  query GetPlaylist($id: ID!) {
-    getPlaylist(id: $id) {
-      id
-      name
-      imageUrl
-    }
-  }
-`;
-export const listPlaylists = gql`
-  query ListPlaylists($filter: TablePlaylistFilterInput) {
-    listPlaylists(filter: $filter) {
-      items {
-        id
-        name
-        imageUrl
-      }
-    }
-  }
-`;
 export const getTrack = gql`
   query GetTrack($albumId: ID!, $id: ID!) {
     getTrack(albumId: $albumId, id: $id) {

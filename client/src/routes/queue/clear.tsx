@@ -1,6 +1,6 @@
 import { h } from "preact";
 
-import icon from "./delete_list_playlist_remove.svg";
+import icon from "./clear.svg";
 import style from "./clear.css";
 
 interface Props {

@@ -1,5 +1,5 @@
 import { Fragment, h } from "preact";
-import { useEffect, useState } from "preact/hooks";
+import { useEffect } from "preact/hooks";
 import { Link } from "preact-router";
 import { StatusAlertService } from "react-status-alert";
 
@@ -19,7 +19,6 @@ const log = new Logger(__filename);
 
 const AlbumDetail = ({ id, trackId }: DetailProps) => {
   const { loading, error, album } = useGetAlbum(id as AlbumId);
-  const [faved, setFaved] = useState(false);
   const player = usePlayer();
 
   useEffect(() => window.scrollTo(0, 0), []);
@@ -70,10 +69,6 @@ const AlbumDetail = ({ id, trackId }: DetailProps) => {
       </div>
       <div class={style.details}>
         <div class={noArtist ? style.missing : isVa ? style.va : style.artist}>
-          {/* Some day we will be able to add albums to favorites... */}
-          <div class={style.fav} onClick={() => setFaved(!faved)}>
-            {faved ? <span>&#9825;</span> : "+"}&nbsp;
-          </div>
           {noArtist
             ? "<no artist>"
             : isVa

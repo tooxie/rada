@@ -13,7 +13,7 @@ import { AlbumId } from "../../types";
 import { Artist, Track } from "../../graphql/api";
 import Logger from "../../logger";
 
-import clearQueueIcon from "./delete_list_playlist_remove.svg";
+import clearQueueIcon from "./clear.svg";
 import style from "./style.css";
 import playSmallIcon from "./play-small.svg";
 import Timer from "./timer";

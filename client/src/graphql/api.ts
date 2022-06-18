@@ -110,23 +110,6 @@ export type UpdateTrackInput = {
   hash: string;
 };
 
-export type CreatePlaylistInput = {
-  name: string;
-  imageUrl?: string | null;
-};
-
-export type Playlist = {
-  __typename: "Playlist";
-  id: string;
-  name: string;
-  imageUrl?: string | null;
-};
-
-export type UpdatePlaylistInput = {
-  name?: string | null;
-  imageUrl?: string | null;
-};
-
 export type CreateInviteInput = {
   note?: string | null;
   validity?: number | null;
@@ -136,15 +119,6 @@ export type CreateInviteInput = {
 export type InviteUrl = {
   __typename: "InviteUrl";
   claimUrl: string;
-};
-
-export type TablePlaylistFilterInput = {
-  name?: TableStringFilterInput | null;
-};
-
-export type PlaylistConnection = {
-  __typename: "PlaylistConnection";
-  items?: Array<Playlist> | null;
 };
 
 export type TableTrackFilterInput = {
@@ -643,80 +617,6 @@ export type DeleteTrackMutation = {
   } | null;
 };
 
-export type CreatePlaylistMutationVariables = {
-  input: CreatePlaylistInput;
-};
-
-export type CreatePlaylistMutation = {
-  createPlaylist?: {
-    __typename: "Playlist";
-    id: string;
-    name: string;
-    imageUrl?: string | null;
-  } | null;
-};
-
-export type UpdatePlaylistMutationVariables = {
-  id: string;
-  input: UpdatePlaylistInput;
-};
-
-export type UpdatePlaylistMutation = {
-  updatePlaylist?: {
-    __typename: "Playlist";
-    id: string;
-    name: string;
-    imageUrl?: string | null;
-  } | null;
-};
-
-export type DeletePlaylistMutationVariables = {
-  id: string;
-};
-
-export type DeletePlaylistMutation = {
-  deletePlaylist?: {
-    __typename: "Playlist";
-    id: string;
-    name: string;
-    imageUrl?: string | null;
-  } | null;
-};
-
-export type AddToPlaylistMutationVariables = {
-  id: string;
-  targetId: string;
-};
-
-export type AddToPlaylistMutation = {
-  addToPlaylist?: boolean | null;
-};
-
-export type RemoveFromPlaylistMutationVariables = {
-  id: string;
-  targetId: string;
-};
-
-export type RemoveFromPlaylistMutation = {
-  removeFromPlaylist?: boolean | null;
-};
-
-export type AddToFavoritesMutationVariables = {
-  id: string;
-};
-
-export type AddToFavoritesMutation = {
-  addToFavorites?: boolean | null;
-};
-
-export type RemoveFromFavoritesMutationVariables = {
-  id: string;
-};
-
-export type RemoveFromFavoritesMutation = {
-  removeFromFavorites?: boolean | null;
-};
-
 export type CreateInviteMutationVariables = {
   input: CreateInviteInput;
 };
@@ -850,35 +750,6 @@ export type ListArtistsForAlbumQuery = {
       isVa?: boolean | null;
     }> | null;
   }> | null;
-};
-
-export type GetPlaylistQueryVariables = {
-  id: string;
-};
-
-export type GetPlaylistQuery = {
-  getPlaylist?: {
-    __typename: "Playlist";
-    id: string;
-    name: string;
-    imageUrl?: string | null;
-  } | null;
-};
-
-export type ListPlaylistsQueryVariables = {
-  filter?: TablePlaylistFilterInput | null;
-};
-
-export type ListPlaylistsQuery = {
-  listPlaylists?: {
-    __typename: "PlaylistConnection";
-    items?: Array<{
-      __typename: "Playlist";
-      id: string;
-      name: string;
-      imageUrl?: string | null;
-    }> | null;
-  } | null;
 };
 
 export type GetTrackQueryVariables = {
@@ -1233,47 +1104,5 @@ export type OnDeleteTrackSubscription = {
     ordinal?: number | null;
     hash: string;
     features?: Array<string> | null;
-  } | null;
-};
-
-export type OnCreatePlaylistSubscriptionVariables = {
-  id?: string | null;
-  name?: string | null;
-};
-
-export type OnCreatePlaylistSubscription = {
-  onCreatePlaylist?: {
-    __typename: "Playlist";
-    id: string;
-    name: string;
-    imageUrl?: string | null;
-  } | null;
-};
-
-export type OnUpdatePlaylistSubscriptionVariables = {
-  id?: string | null;
-  name?: string | null;
-};
-
-export type OnUpdatePlaylistSubscription = {
-  onUpdatePlaylist?: {
-    __typename: "Playlist";
-    id: string;
-    name: string;
-    imageUrl?: string | null;
-  } | null;
-};
-
-export type OnDeletePlaylistSubscriptionVariables = {
-  id?: string | null;
-  name?: string | null;
-};
-
-export type OnDeletePlaylistSubscription = {
-  onDeletePlaylist?: {
-    __typename: "Playlist";
-    id: string;
-    name: string;
-    imageUrl?: string | null;
   } | null;
 };
