@@ -1,7 +1,4 @@
-import { ApolloQueryResult } from "@apollo/client";
-
-import { Album, GetAlbumQuery, GetAlbumQueryVariables } from "../../../graphql/api";
-import getClient from "../../../graphql/client";
+import { Album, GetAlbumQueryVariables } from "../../../graphql/api";
 import useGet from "../../../hooks/useget";
 import { getAlbumWithTracks } from "../../../graphql/custom";
 import { AlbumId } from "../../../types";
@@ -15,17 +12,6 @@ interface UseGetAlbumReturn extends UseGetReturnType {
   album: Album | null;
 }
 
-const doGetAlbum = async (variables: GetAlbumQueryVariables) => {
-  const client = await getClient();
-  const result = (await client.query({
-    query: getAlbumWithTracks,
-    variables,
-  })) as ApolloQueryResult<GetAlbumQuery>;
-  const item = result.data?.getAlbum as Album;
-
-  return item || null;
-};
-
 const useGetAlbum = (id: AlbumId): UseGetAlbumReturn => {
   log.debug(`useGetAlbum("${id}")`);
   const dbId = toDbId("album", id);
@@ -34,7 +20,7 @@ const useGetAlbum = (id: AlbumId): UseGetAlbumReturn => {
     loading,
     error,
     item: album,
-  } = useGet<Album, GetAlbumQueryVariables>(doGetAlbum, pk);
+  } = useGet<Album, GetAlbumQueryVariables>(getAlbumWithTracks, pk);
 
   const NOT_FOUND = `Album '${dbId}' not found`;
   if (error?.message === NOT_FOUND) {

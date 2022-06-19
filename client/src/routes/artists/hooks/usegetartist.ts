@@ -1,9 +1,6 @@
-import { ApolloQueryResult } from "@apollo/client";
-
 import { Artist } from "../../../graphql/api";
-import getClient from "../../../graphql/client";
 import useGet from "../../../hooks/useget";
-import { GetArtistQuery, GetArtistQueryVariables } from "../../../graphql/api";
+import { GetArtistQueryVariables } from "../../../graphql/api";
 import { getArtist } from "../../../graphql/custom";
 import { toDbId } from "../../../utils/id";
 import { ArtistId } from "../../../types";
@@ -16,17 +13,6 @@ interface UseGetArtistReturn extends UseGetReturnType {
   artist: Artist | null;
 }
 
-const doGetArtist = async (variables: { [k: string]: string }) => {
-  const client = await getClient();
-  const result = (await client.query({
-    query: getArtist,
-    variables,
-  })) as ApolloQueryResult<GetArtistQuery>;
-  const item = result.data?.getArtist as Artist;
-
-  return item || null;
-};
-
 export const useGetArtist = (id: ArtistId): UseGetArtistReturn => {
   log.debug(`useGetArtist("${id}")`);
   const dbId = toDbId("artist", id);
@@ -35,7 +21,7 @@ export const useGetArtist = (id: ArtistId): UseGetArtistReturn => {
     loading,
     error,
     item: artist,
-  } = useGet<Artist, GetArtistQueryVariables>(doGetArtist, pk);
+  } = useGet<Artist, GetArtistQueryVariables>(getArtist, pk);
 
   const NOT_FOUND = `Artist '${dbId}' not found`;
   if (error?.message === NOT_FOUND) {

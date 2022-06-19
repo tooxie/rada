@@ -12,8 +12,7 @@ interface UseReturn<T> {
 }
 
 const use = <T, V>(fn: Function, vars: V): UseReturn<T> => {
-  const fnName = fn.toString().split("\n")[0].split(" ")[1];
-  log.debug(`use("${fnName}", ${JSON.stringify(vars)})`);
+  log.debug(`fn(${JSON.stringify(vars)})`);
 
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<T | null>(null);
@@ -23,14 +22,13 @@ const use = <T, V>(fn: Function, vars: V): UseReturn<T> => {
     fn(vars)
       .then((data: T) => {
         log.debug("use.useEffect.fn data:", data);
-        setData(data);
+        setData((data as any).data);
         setLoading(false);
         if (error) setError(null);
       })
       .catch(async (error: Error) => {
-        log.error("use.useEffect.fn error:", error);
-        log.debug(`vars: (${typeof vars}) ${JSON.stringify(vars)}`);
-        log.debug(fn.toString().split("{")[0]);
+        log.error(error);
+        log.error(`fn(${JSON.stringify(vars)}`);
         setLoading(false);
         const msg = error.message.toLowerCase();
 
@@ -44,7 +42,7 @@ const use = <T, V>(fn: Function, vars: V): UseReturn<T> => {
           oldError = error;
         }
       });
-  }, [vars]);
+  }, [fn, vars]);
 
   const result = { loading, error, data };
   log.debug("use.return:", result);
