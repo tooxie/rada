@@ -43,6 +43,7 @@ const InviteList = () => {
 
   return (
     <Fragment>
+      <h1 class={style.heading}>Invitations</h1>
       <section class={style.invites}>
         {Object.keys(stats).map((key) => {
           return (
@@ -54,7 +55,7 @@ const InviteList = () => {
         })}
       </section>
       <section class={style.create}>
-        <h2 class={style.heading}>Create invitation</h2>
+        <h2 class={style.heading}>Invite a friend</h2>
         <div class={`${style.input} ${style.admin}`}>
           <label for="invite-admin">
             <input
@@ -62,9 +63,9 @@ const InviteList = () => {
               id="invite-admin"
               ref={(node) => (adminCheck = node)}
             />
-            Admin user?
+            Admin?
           </label>
-          <div class={style.details}>An admin user can invite other people too</div>
+          <div class={style.details}>An admin can invite other people too.</div>
         </div>
 
         <div class={`${style.input} ${style.validity}`}>
@@ -91,8 +92,8 @@ const InviteList = () => {
             />
           </label>
           <div class={style.details}>
-            Add a note just for yourself, to keep a reference of who you sent invites to.
-            Will not be seen by the user.
+            Add a note for yourself about who is this for. It will be seen by other admins
+            only, but nobody else.
           </div>
         </div>
         {claimUrl ? (

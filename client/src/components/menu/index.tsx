@@ -39,7 +39,7 @@ const Menu = ({ hideControls, isAdmin }: MenuProps) => {
       <Item href="/artists" name="Artists" />
       <Item href="/albums" name="Albums" />
 
-      <AdminItem href="/invitations" name="Invitations" admin={isAdmin} />
+      <AdminItem href="/friends" name="Friends" admin={isAdmin} />
     </nav>
   );
 };

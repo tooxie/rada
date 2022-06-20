@@ -1,3 +1,8 @@
+.heading {
+  font-size: 1.5rem;
+  padding-top: 1rem;
+}
+
 section.invites {
   padding-top: 1rem;
   display: grid;
@@ -47,15 +52,10 @@ section.create .input {
   margin-bottom: 1rem;
 }
 
-section.create .heading {
-  font-size: 1.5rem;
-  margin: 1rem 0;
-}
-
 section.create .details {
   color: gray;
   font-size: 0.8rem;
-  margin: .5rem 0 0 1rem;
+  margin: 0.25rem 0 0 1rem;
 }
 
 section.create .admin label {
