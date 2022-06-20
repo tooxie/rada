@@ -1,12 +1,13 @@
 import { h } from "preact";
 import { Route, Router } from "preact-router";
 
+import useAppState from "../hooks/useappstate";
+import Collection from "./layout/collection";
+import Detail from "./layout/detail";
+
 import Home from "../routes/home";
 import Unauthorized from "../routes/unauthorized";
 import NotFoundPage from "../routes/notfound";
-
-import Collection from "./layout/collection";
-import Detail from "./layout/detail";
 
 import AlbumDetail from "../routes/albums/detail";
 import AlbumHeader from "../routes/albums/header";
@@ -28,6 +29,8 @@ const NotFound = Collection(NotFoundPage);
 const Root = Collection(Home);
 
 const AppRouter = () => {
+  const { appState } = useAppState();
+
   return (
     <Router key="preact_router">
       <Route path="/" component={Root} />
@@ -35,7 +38,9 @@ const AppRouter = () => {
 
       <Route path="/artists" key="artists" component={Artists} />
       <Route path="/albums" key="albums" component={Albums} />
-      <Route path="/invitations" key="invites" component={Invitations} />
+      {appState.isAdmin && (
+        <Route path="/invitations" key="invites" component={Invitations} />
+      )}
 
       <Route path="/artist/:id" key="artist" component={Artist} />
       <Route path="/album/:id" key="album" component={Album} />
