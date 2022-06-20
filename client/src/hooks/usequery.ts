@@ -5,13 +5,12 @@ import getClient from "../graphql/client";
 import Logger from "../logger";
 
 const log = new Logger(__filename);
-let oldError: Error | null = null;
 
 type Q = DocumentNode | TypedDocumentNode;
 const useQuery = <T, V = void>(query: Q, vars?: V) => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<T | null>();
-  const [error, setError] = useState<Error | null>();
+  const [error, setError] = useState<string | null>();
 
   log.debug(
     `useQuery(query:${(query.definitions[0] as any).name.value}, vars:${JSON.stringify(
@@ -27,17 +26,7 @@ const useQuery = <T, V = void>(query: Q, vars?: V) => {
         log.error("useQuery got error:", error);
         log.debug(`vars: (${typeof vars}) ${JSON.stringify(vars)}`);
         setLoading(false);
-        const msg = error.message.toLowerCase();
-
-        // If we always set the error we end up in an infinite loop because
-        // each error is a different object in memory, which triggers a new
-        // render and a new query to graphql.
-        if (msg === oldError?.message.toLowerCase()) {
-          setError(oldError);
-        } else {
-          setError(error);
-          oldError = error;
-        }
+        setError(normalizeMessage(error.message));
       }
 
       if (data) {
@@ -53,6 +42,17 @@ const useQuery = <T, V = void>(query: Q, vars?: V) => {
 
   log.debug("useQuery.return:", { loading, error, data });
   return { loading, error, data };
+};
+
+// DynamoDB adds a random request ID with every error message which breaks
+// our check to prevent infinite loops, that's why we have to do this hack.
+const normalizeMessage = (message: string): string => {
+  const i = message.indexOf(", Request ID");
+  if (i > -1) {
+    return message.substring(0, i);
+  }
+
+  return message;
 };
 
 export default useQuery;

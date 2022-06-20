@@ -1,14 +1,20 @@
 import { Fragment, h } from "preact";
 
+import style from "./style.css";
+
 interface ErrorMsgProps {
-  error: Error;
+  error: string;
   margin?: number;
 }
 
 const ErrorMsg = ({ error, margin }: ErrorMsgProps) => (
   <Fragment>
-    <p style={{ paddingTop: margin ? `${margin}rem` : "1rem" }}>{error.message}</p>
-    <button onClick={() => location.reload()}>Retry?</button>
+    <p class={style.error} style={{ paddingTop: margin ? `${margin}rem` : "1rem" }}>
+      {error}
+    </p>
+    <p class={style.error}>
+      <button onClick={() => location.reload()}>Retry?</button>
+    </p>
   </Fragment>
 );
 

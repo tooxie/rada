@@ -23,7 +23,7 @@ const useGetAlbum = (id: AlbumId): UseGetAlbumReturn => {
   } = useGet<Album, GetAlbumQueryVariables>(getAlbumWithTracks, pk);
 
   const NOT_FOUND = `Album '${dbId}' not found`;
-  if (error?.message === NOT_FOUND) {
+  if (error === NOT_FOUND) {
     return { loading, error: null, album: null };
   }
 

@@ -24,7 +24,7 @@ export const useGetArtist = (id: ArtistId): UseGetArtistReturn => {
   } = useGet<Artist, GetArtistQueryVariables>(getArtist, pk);
 
   const NOT_FOUND = `Artist '${dbId}' not found`;
-  if (error?.message === NOT_FOUND) {
+  if (error === NOT_FOUND) {
     return { loading, error: null, artist: null };
   }
 

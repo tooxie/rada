@@ -3,11 +3,10 @@ import { useState, useEffect } from "preact/hooks";
 import Logger from "../logger";
 
 const log = new Logger(__filename);
-let oldError: Error | null = null;
 
 interface UseReturn<T> {
   loading: boolean;
-  error: Error | null;
+  error: string | null;
   data: T | null;
 }
 
@@ -16,7 +15,7 @@ const use = <T, V>(fn: Function, vars: V): UseReturn<T> => {
 
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<T | null>(null);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fn(vars)
@@ -30,17 +29,7 @@ const use = <T, V>(fn: Function, vars: V): UseReturn<T> => {
         log.error(error);
         log.error(`fn(${JSON.stringify(vars)}`);
         setLoading(false);
-        const msg = error.message.toLowerCase();
-
-        // If we always set the error we end up in an infinite loop because
-        // each error is a different object in memory, which triggers a new
-        // render and a new query to graphql.
-        if (msg === oldError?.message.toLowerCase()) {
-          setError(oldError);
-        } else {
-          setError(error);
-          oldError = error;
-        }
+        setError(error.message);
       });
   }, [fn, vars]);
 
