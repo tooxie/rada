@@ -46,37 +46,21 @@ section.grid .artist .name {
 }
 
 section.list .artist {
-  padding: 0.5rem 0;
-  display: flex;
   color: black;
+  display: flex;
+  padding-top: 1rem;
 }
 
 section.list .artist img {
-  width: 1rem;
   margin-right: 0.5rem;
-}
-
-section.list .artist:first-of-type {
-  padding-top: 1rem;
-}
-
-section.list .artist:last-of-type {
-  padding-bottom: 0;
+  width: 1rem;
 }
 
 section.thumbnails .artist {
-  display: flex;
-  color: black;
-  padding: 0.25rem 0;
   align-items: center;
-}
-
-section.thumbnails .artist:first-of-type {
+  color: black;
+  display: flex;
   padding-top: 1rem;
-}
-
-section.thumbnails .artist:last-of-type {
-  padding-bottom: 0;
 }
 
 section.thumbnails .artist .thumb {

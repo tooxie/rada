@@ -2,15 +2,12 @@
   padding-top: 1rem;
 }
 
-section.mosaic, section.list, section.thumbnails {
-  padding-top: 1rem;
-}
-
 section.mosaic {
   column-gap: 1rem;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   row-gap: 1rem;
+  padding-top: 1rem;
 }
 
 section.mosaic a {
@@ -48,18 +45,10 @@ section.mosaic .album .artist .missing {
 }
 
 section.list .album {
-  display: flex;
   align-items: center;
   color: black;
-  padding: 0.5rem 0;
-}
-
-section.list .album:first-of-type {
-  padding-top: 0;
-}
-
-section.list .album:last-of-type {
-  padding-bottom: 0;
+  display: flex;
+  padding-top: 1rem;
 }
 
 section.list .album img {
@@ -81,14 +70,6 @@ section.thumbnails .album {
   padding-top: 1rem;
   display: flex;
   color: black;
-}
-
-section.thumbnails .album:first-of-type {
-  padding-top: 0;
-}
-
-section.thumbnails .album:last-of-type {
-  padding-bottom: 0;
 }
 
 section.thumbnails .thumb {
