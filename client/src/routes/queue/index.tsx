@@ -248,7 +248,7 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
               <h2>
                 Queue | {qLength} tracks | {toMinutes(qDuration)}
               </h2>
-              <div class={style.clearQueueIcon} onClick={clearQueue}>
+              <div onClick={clearQueue}>
                 <img src={clearQueueIcon} />
               </div>
             </div>

@@ -1,11 +1,16 @@
-.empty {
+section.list .artist,
+section.thumbnails .artist {
   padding-top: 1rem;
+}
+
+section.list .artist:first-of-type,
+section.thumbnails .artist:first-of-type {
+  padding-top: 0;
 }
 
 section.grid {
   column-count: 2;
   min-height: 100%;
-  padding-top: 1rem;
   width: 100%;
 }
 
@@ -48,7 +53,6 @@ section.grid .artist .name {
 section.list .artist {
   color: black;
   display: flex;
-  padding-top: 1rem;
 }
 
 section.list .artist img {
@@ -60,7 +64,6 @@ section.thumbnails .artist {
   align-items: center;
   color: black;
   display: flex;
-  padding-top: 1rem;
 }
 
 section.thumbnails .artist .thumb {
@@ -83,3 +86,10 @@ section.thumbnails .artist .name {
   min-height: 3rem;
   width: 100%;
 }
+
+/* This is not working, it doesn't apply it only to the last element, but it
+ * removes the border from every artist name.
+section.thumbnails .artist .name:last-of-type {
+  border-bottom: 0;
+}
+*/

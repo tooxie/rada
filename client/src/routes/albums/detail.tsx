@@ -23,7 +23,7 @@ const AlbumDetail = ({ id, trackId }: DetailProps) => {
 
   useEffect(() => window.scrollTo(0, 0), []);
 
-  if (error) return <ErrorMsg error={error} margin={4} />;
+  if (error) return <ErrorMsg error={error} margins={true} />;
   if (!loading && !album) return <p class={style.empty}>Album not found</p>;
   if (!album) {
     return (

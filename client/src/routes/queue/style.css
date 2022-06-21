@@ -61,7 +61,7 @@ section.tracklist .header {
   flex-wrap: nowrap;
   font-size: 0.8rem;
   justify-content: space-between;
-  padding: .5rem 0.8rem 0 1rem;
+  padding: 0.5rem 0.8rem 0 1rem;
 }
 
 section.tracklist .header .rm {
@@ -127,10 +127,6 @@ section.details .artists, section.details .album {
   margin-bottom: 0.5rem;
 }
 
-h2 {
-  margin: 1rem 0;
-}
-
 section.tracklist {
   margin-top: 1rem;
 }
@@ -146,7 +142,7 @@ section.tracklist .heading h2 {
   flex-grow: 1;
 }
 
-section.tracklist .heading .clearQueueIcon img {
+section.tracklist .heading img {
   width: 1.5rem;
   align-items: center;
 }

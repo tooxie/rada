@@ -1,5 +1,13 @@
-.empty {
+section.list .album,
+section.mosaic .name,
+section.thumbnails .album {
   padding-top: 1rem;
+}
+
+section.list .album:first-of-type,
+section.mosaic .name:first-of-type,
+section.thumbnails .album:first-of-type {
+  padding-top: 0;
 }
 
 section.mosaic {
@@ -7,7 +15,6 @@ section.mosaic {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   row-gap: 1rem;
-  padding-top: 1rem;
 }
 
 section.mosaic a {
@@ -48,7 +55,6 @@ section.list .album {
   align-items: center;
   color: black;
   display: flex;
-  padding-top: 1rem;
 }
 
 section.list .album img {
@@ -67,7 +73,6 @@ section.list .album .artist .missing {
 }
 
 section.thumbnails .album {
-  padding-top: 1rem;
   display: flex;
   color: black;
 }

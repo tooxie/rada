@@ -17,14 +17,15 @@ import style from "./list.css";
 const ArtistList = () => {
   const { conf } = useConf();
   const { loading, error, artists } = useListArtists();
+
+  if (error) return <ErrorMsg error={error} />;
+  if (loading) return <Spinner />;
+  if ((artists || []).length < 1) return <p>No Artists</p>;
+
   const filterFn = (artist: Artist, s: string): boolean => {
     const name = (artist.name || "").toLowerCase();
     return name.includes(s.toLowerCase());
   };
-
-  if (error) return <ErrorMsg error={error} />;
-  if (loading) return <Spinner />;
-  if ((artists || []).length < 1) return <p class={style.empty}>No Artists</p>;
 
   return (
     <Search

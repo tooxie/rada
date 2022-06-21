@@ -1,12 +1,13 @@
-import { FunctionComponent, h } from "preact";
+import { h } from "preact";
+
 import style from "./style.css";
 import spinner from "./spinner.gif";
 
-const Header: FunctionComponent = () => (
+const Spinner = () => (
   <div class={style.spinner}>
     <img src={spinner} />
     <p>Loading...</p>
   </div>
 );
 
-export default Header;
+export default Spinner;

@@ -22,7 +22,7 @@ const InviteList = () => {
   if (!appState.isAdmin) route("/404");
 
   if (error) return <ErrorMsg error={error} />;
-  if (loading) <Spinner />;
+  if (loading) return <Spinner />;
 
   const stats = invites.reduce(
     (acc, invite) => {

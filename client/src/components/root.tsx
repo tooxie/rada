@@ -21,15 +21,14 @@ const Root = () => {
   const openQueue = () => dispatch(actions.OpenQueue);
   const closeQueue = () => dispatch(actions.CloseQueue);
 
-  if (!player)
+  if (!player) {
     return (
       <Fragment>
         <Header />
-        <Shoulder>
-          <div style={{ padding: "1rem 0 3rem" }}>Loading...</div>
-        </Shoulder>
+        <Shoulder>Loading...</Shoulder>
       </Fragment>
     );
+  }
 
   return (
     <div id="preact_root" key="preact_root" class={style.root}>

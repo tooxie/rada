@@ -1,4 +1,4 @@
-import { Fragment, FunctionComponent, h } from "preact";
+import { h, Fragment } from "preact";
 import { Link } from "preact-router";
 
 import { Album } from "../../graphql/api";
@@ -26,7 +26,7 @@ const AlbumList = () => {
 
   if (error) return <ErrorMsg error={error} />;
   if (loading) return <Spinner />;
-  if (albums.length < 1) return <p class={style.empty}>No Albums</p>;
+  if (albums.length < 1) return <p>No Albums</p>;
 
   return (
     <Search

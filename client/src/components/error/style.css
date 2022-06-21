@@ -1,4 +1,7 @@
-.error {
-  padding-left: 1rem;
-  padding-right: 1rem;
+.margins {
+  padding: 4rem 1rem 0;
+}
+
+.retry {
+  padding-top: 1rem;
 }

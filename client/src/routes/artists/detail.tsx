@@ -21,7 +21,7 @@ const ArtistDetail: FunctionComponent<DetailProps> = ({ id }) => {
   if (id !== _artist?.id) _artist = null;
   if (!loading && artist) _artist = artist;
 
-  if (error) return <ErrorMsg error={error} margin={4} />;
+  if (error) return <ErrorMsg error={error} margins={true} />;
   if (!loading && !artist) return <p class={style.empty}>Artist not found</p>;
   if (!_artist) {
     return (

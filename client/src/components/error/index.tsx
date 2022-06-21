@@ -4,15 +4,13 @@ import style from "./style.css";
 
 interface ErrorMsgProps {
   error: string;
-  margin?: number;
+  margins?: boolean;
 }
 
-const ErrorMsg = ({ error, margin }: ErrorMsgProps) => (
+const ErrorMsg = ({ error, margins }: ErrorMsgProps) => (
   <Fragment>
-    <p class={style.error} style={{ paddingTop: margin ? `${margin}rem` : "1rem" }}>
-      {error}
-    </p>
-    <p class={style.error}>
+    <p class={margins ? style.margins : ""}>{error}</p>
+    <p class={style.retry}>
       <button onClick={() => location.reload()}>Retry?</button>
     </p>
   </Fragment>
