@@ -20,6 +20,6 @@ const toDbId = (entity: string, id: string): string => {
   return `${_entity}:${id}`;
 };
 
-const getNilId = (entity: string) => `${entity}:00000000-0000-0000-0000-000000000000`;
+const getNillId = (entity: string) => `${entity}:00000000-0000-0000-0000-000000000000`;
 
-export { toDbId, urlize, getNilId };
+export { toDbId, urlize, getNillId };
