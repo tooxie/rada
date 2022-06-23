@@ -1,7 +1,6 @@
 import { h, Fragment } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
 import { Link } from "preact-router";
-import { StatusAlertService } from "react-status-alert";
 
 import type { IPlayer } from "../../player/types";
 
@@ -70,12 +69,10 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
     player.pause();
     ev.stopPropagation();
     hideAndClear();
-    StatusAlertService.showInfo("Queue cleared");
   };
   const hideAndClear = () => {
     onDismiss();
     setTimeout(() => player.clearQueue(), HIDE_ANIMATION_DURATION);
-    StatusAlertService.showInfo("Queue cleared");
   };
   const toUrl = (id: string) => id.split(":").join("/");
   const track = player.getCurrentTrack();
@@ -101,7 +98,6 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
         // clearQueue() instead, because it's the same for all practical purposes.
         if (player.getQueueLength() === 1) hideAndClear();
         else player.removeTrackAt(index);
-        StatusAlertService.showInfo("Track removed");
       };
     };
     const rmAlbum = (startingAt: number) => {
@@ -109,7 +105,6 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
         ev.stopPropagation();
         if (player.getAlbumCount() === 1) hideAndClear();
         else player.removeAlbum(startingAt);
-        StatusAlertService.showInfo("Album removed");
       };
     };
     // If the album is V/A then we ignore the artist because it will obviously

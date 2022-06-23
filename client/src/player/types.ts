@@ -58,6 +58,10 @@ export interface IPlayer {
   skipPrevious: () => void;
   skipTo: (i: number) => void;
   togglePlayback: () => void;
-  clearQueue: () => void;
+  clearQueue: (options?: ClearQueueOptions) => void;
   stopAfter: (i: number) => void;
+}
+
+interface ClearQueueOptions {
+  silent?: boolean;
 }

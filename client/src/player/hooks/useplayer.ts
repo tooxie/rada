@@ -1,4 +1,5 @@
 import { useState, useEffect } from "preact/hooks";
+import { StatusAlertService } from "react-status-alert";
 
 import { getSignedUrl } from "../../utils/s3";
 import { Track } from "../../graphql/api";
@@ -133,15 +134,18 @@ const usePlayer = () => {
         setIndex(i: number) {
           this.queue.setIndex(i);
         },
-        clearQueue() {
+        clearQueue(options) {
           log.debug("player.clearQueue()");
           this.stop();
           this.queue.clear();
           forceRender();
+          if (!options?.silent) {
+            StatusAlertService.showInfo("Queue cleared");
+          }
         },
         replaceQueue(tracks) {
-          this.clearQueue();
-          this.queue.append(tracks);
+          this.clearQueue({ silent: true });
+          this.appendTracks(tracks);
           forceRender();
         },
         getTrackAt(index: number) {
@@ -252,8 +256,12 @@ const usePlayer = () => {
           this.play();
         },
         appendTracks(tracks: Track[]) {
+          const l = tracks.length;
+          const msg = `${l} track${l === 1 ? "" : "s"} added to queue`;
+
           this.queue.append(tracks);
           forceRender();
+          StatusAlertService.showInfo(msg, { removeAllBeforeShow: false });
         },
         removeTrackAt(index: number) {
           log.debug(`player.removeTrackAt(${index})`);
@@ -261,6 +269,7 @@ const usePlayer = () => {
           if (trackIsPlaying) this.stop();
           this.queue.removeAt(index);
           forceRender();
+          StatusAlertService.showInfo("Track removed");
         },
         removeAlbum(startingAt: number) {
           let track = this.getTrackAt(startingAt);
@@ -271,6 +280,7 @@ const usePlayer = () => {
             track = this.getTrackAt(startingAt);
             if (!track) return;
           } while (track.album.id === album);
+          StatusAlertService.showInfo("Album removed");
         },
       } as IPlayer);
     }
