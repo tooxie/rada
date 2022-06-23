@@ -1,11 +1,14 @@
+.album .name.missing {
+  color: gray;
+  font-style: italic;
+}
+
 section.list .album,
-section.mosaic .name,
 section.thumbnails .album {
   padding-top: 1rem;
 }
 
 section.list .album:first-of-type,
-section.mosaic .name:first-of-type,
 section.thumbnails .album:first-of-type {
   padding-top: 0;
 }

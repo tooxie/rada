@@ -56,7 +56,9 @@ const AlbumDetail = ({ id, trackId }: DetailProps) => {
     <Fragment>
       <div class={style.header}>
         <div class={style.name}>
-          <h1>{album.name}</h1>
+          <h1>
+            {album.name ? album.name : <span class={style.missing}>{"<no title>"}</span>}
+          </h1>
         </div>
       </div>
       <div class={style.details}>

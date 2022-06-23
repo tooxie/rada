@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-import { Album, ListAlbumsQuery } from "../../../graphql/api";
+import { Album, ListAlbumsQuery, ListAlbumsQueryVariables } from "../../../graphql/api";
 import useQuery from "../../../hooks/usequery";
 import Logger from "../../../logger";
 
@@ -31,7 +31,8 @@ interface UseListAlbumsReturn extends UseQueryReturnType {
 
 const useListAlbums = (): UseListAlbumsReturn => {
   log.debug("useListAlbums");
-  const { loading, error, data } = useQuery<ListAlbumsQuery>(listAlbums);
+  const { loading, error, data } =
+    useQuery<ListAlbumsQuery, ListAlbumsQueryVariables>(listAlbums);
   const albums = data?.listAlbums?.items || [];
 
   const result = { loading, error, albums };

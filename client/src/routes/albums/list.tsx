@@ -66,7 +66,7 @@ const renderAs = (listType: string, albums: Album[]): JSX.Element | JSX.Element[
 const renderAsList = (albums: Album[]) => (
   <section class={style.list}>
     {albums.map((album) => (
-      <Link href={`/album/${urlize(album.id)}`} class={style.album}>
+      <Link class={style.album} href={`/album/${urlize(album.id)}`} key={album.id}>
         <img src={listIcon} />
         <div>
           <div class={style.artist}>
@@ -78,7 +78,7 @@ const renderAsList = (albums: Album[]) => (
               <span class={style.missing}>{"<no artist>"}</span>
             )}
           </div>
-          <div class={style.name}>{album.name}</div>
+          {renderName(album)}
         </div>
       </Link>
     ))}
@@ -88,7 +88,7 @@ const renderAsList = (albums: Album[]) => (
 const renderAsMosaic = (albums: Album[]) => (
   <section class={style.mosaic}>
     {albums.map((album: Album) => (
-      <Link key={album.id} href={`/album/${urlize(album.id)}`} class={style.album}>
+      <Link class={style.album} href={`/album/${urlize(album.id)}`} key={album.id}>
         <div
           class={style.cover}
           style={{ backgroundImage: `url("${album.imageUrl || DEFAULT_ALBUM_COVER}")` }}
@@ -102,7 +102,7 @@ const renderAsMosaic = (albums: Album[]) => (
             <span class={style.missing}>{"<no artist>"}</span>
           )}
         </div>
-        <div class={style.name}>{album.name}</div>
+        {renderName(album)}
       </Link>
     ))}
   </section>
@@ -111,7 +111,7 @@ const renderAsMosaic = (albums: Album[]) => (
 const renderAsThumbnails = (albums: Album[]) => (
   <section class={style.thumbnails}>
     {albums.map((album) => (
-      <Link href={`/album/${urlize(album.id)}`} class={style.album}>
+      <Link class={style.album} href={`/album/${urlize(album.id)}`} key={album.id}>
         <div
           class={style.thumb}
           style={{ backgroundImage: `url("${album.imageUrl || DEFAULT_ALBUM_COVER}")` }}
@@ -123,14 +123,19 @@ const renderAsThumbnails = (albums: Album[]) => (
             ) : (album.artists || []).length ? (
               (album.artists || []).map((artist) => artist.name).join(", ")
             ) : (
-              <span class={style.missing}>&lt;no artist&gt;</span>
+              <span class={style.missing}>{"<no artist>"}</span>
             )}
           </div>
-          <div class={style.name}>{album.name}</div>
+          {renderName(album)}
         </div>
       </Link>
     ))}
   </section>
 );
+
+const renderName = (album: Album): JSX.Element => {
+  const classes = [style.name, album.name ? "" : style.missing].join(" ");
+  return <div class={classes}>{album.name || "<no title>"}</div>;
+};
 
 export default AlbumList;
