@@ -44,7 +44,7 @@ const QueueOptions = ({ track, index }: QueueOptionsProps) => {
           {track.title ? (
             <div class={style.title}>{track.title}</div>
           ) : (
-            <div class={style.missing}>&lt;no title&gt;</div>
+            <div class={style.missing}>{"<no title>"}</div>
           )}
           {artists && <div>{artists}</div>}
         </div>

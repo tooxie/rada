@@ -73,7 +73,7 @@ const Player = ({ player, track, onClick }: PlayerProps) => {
         </div>
         <div class={style.info}>
           <div class={style.title} key={`player-title`}>
-            {title || <span class={style.missing}>&lt;no title&gt;</span>}
+            {title || <span class={style.missing}>{"<no title>"}</span>}
           </div>
           <div class={style.artist} key={`player-artist`}>
             {artists.map((a) => a.name).join(", ")}

@@ -156,7 +156,7 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
             {track.title ? (
               track.title
             ) : (
-              <span class={style.missing}>&lt;no title&gt;</span>
+              <span class={style.missing}>{"<no title>"}</span>
             )}
             <span class={style.artists}>
               {track.album.isVa ? ` ${getArtistName(track)}` : ""}
@@ -228,7 +228,7 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
                 {track.title ? (
                   track.title
                 ) : (
-                  <span class={style.missing}>&lt;no title&gt;</span>
+                  <span class={style.missing}>{"<no title>"}</span>
                 )}
               </Link>
             </div>

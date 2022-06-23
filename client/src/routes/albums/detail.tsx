@@ -97,7 +97,7 @@ const AlbumDetail = ({ id, trackId }: DetailProps) => {
                   {track.title ? (
                     <span>{track.title}</span>
                   ) : (
-                    <span class={style.missing}>&lt;no title&gt;</span>
+                    <span class={style.missing}>{"<no title>"}</span>
                   )}
                   {track.info && <span class={style.info}>&nbsp;{track.info}</span>}
                   {track.features && (

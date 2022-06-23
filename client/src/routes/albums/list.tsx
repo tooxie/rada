@@ -75,7 +75,7 @@ const renderAsList = (albums: Album[]) => (
             ) : (album.artists || []).length ? (
               (album.artists || []).map((artist) => artist.name).join(", ")
             ) : (
-              <span class={style.missing}>&lt;no artist&gt;</span>
+              <span class={style.missing}>{"<no artist>"}</span>
             )}
           </div>
           <div class={style.name}>{album.name}</div>
@@ -99,7 +99,7 @@ const renderAsMosaic = (albums: Album[]) => (
           ) : (album.artists || []).length ? (
             (album.artists || []).map((artist) => artist.name).join(", ")
           ) : (
-            <span class={style.missing}>&lt;no artist&gt;</span>
+            <span class={style.missing}>{"<no artist>"}</span>
           )}
         </div>
         <div class={style.name}>{album.name}</div>
