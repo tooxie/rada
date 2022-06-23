@@ -2,6 +2,7 @@ import { useState, useEffect } from "preact/hooks";
 import { StatusAlertService } from "react-status-alert";
 
 import { getSignedUrl } from "../../utils/s3";
+import { getNillId } from "../../utils/id";
 import { Track } from "../../graphql/api";
 import q from "../../queue";
 import { States } from "../../queue/types";
@@ -159,10 +160,12 @@ const usePlayer = () => {
           return this.audio.currentTime;
         },
         getAlbumCount(): number {
+          const nillId = getNillId("album");
+
           return this.getQueue().reduce((albums, track) => {
-            return albums.includes(track.album.id)
+            return albums.includes(track.album?.id || nillId)
               ? albums
-              : albums.concat(track.album.id);
+              : albums.concat(track.album?.id || nillId);
           }, <string[]>[]).length;
         },
         async play() {
@@ -274,12 +277,12 @@ const usePlayer = () => {
         removeAlbum(startingAt: number) {
           let track = this.getTrackAt(startingAt);
           if (!track) return;
-          const album = track.album.id;
+          const album = track.album?.id;
           do {
             this.removeTrackAt(startingAt);
             track = this.getTrackAt(startingAt);
             if (!track) return;
-          } while (track.album.id === album);
+          } while (track.album?.id === album);
           StatusAlertService.showInfo("Album removed");
         },
       } as IPlayer);
@@ -440,11 +443,11 @@ const usePlayer = () => {
     navigator.mediaSession.metadata = new window.MediaMetadata({
       title: track.title || "N/A",
       artist: (track.artists || []).map((a) => a.name).join(", "),
-      album: track.album.name || "N/A",
+      album: track.album?.name || "N/A",
       artwork: [
         {
-          src: track.album.imageUrl || "",
-          type: getType(track.album.imageUrl),
+          src: track.album?.imageUrl || "",
+          type: getType(track.album?.imageUrl),
           sizes: "512x512",
         },
       ],

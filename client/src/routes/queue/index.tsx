@@ -7,7 +7,7 @@ import type { IPlayer } from "../../player/types";
 import Header from "../albums/header";
 import Shoulder from "../../components/layout/shoulder";
 import toMinutes from "../../utils/tominutes";
-import { urlize } from "../../utils/id";
+import { urlize, nillId } from "../../utils/id";
 import { AlbumId } from "../../types";
 import { Artist, Track } from "../../graphql/api";
 import Logger from "../../logger";
@@ -84,10 +84,24 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
     (track?.artists || []).map((a) => a.name).join(", ");
 
   const renderTrackList = (track: Track, index: number) => {
-    const artistName = track.album.isVa ? "V/A" : getArtistName(track);
-    const albumName = track.album.name;
-    let artistChanged = artistName !== getArtistName(prevTrack);
-    let albumChanged = track.album.id !== prevTrack?.album.id;
+    const artistName = track.album?.isVa ? "V/A" : getArtistName(track);
+    const getAlbumName = (track: Track): string => {
+      if (!track.album) return "<no album>";
+      if (!track.album?.name) return "<no title>";
+
+      return track.album.name;
+    };
+    let artistChanged: boolean = true;
+    let albumChanged: boolean = true;
+    // If the first track in the list has no album the check
+    // `track.album?.id !== prevTrack?.album?.id` will always be true.
+    // To mitigate this we make an explicit check for `undefined` to
+    // discriminate between "this is the first track" and "the previous track
+    // has no album".
+    if (prevTrack !== undefined) {
+      artistChanged = artistName !== getArtistName(prevTrack);
+      albumChanged = track.album?.id !== prevTrack?.album?.id;
+    }
     const isCurrentTrack = queue.getIndex() === index;
     const trackClasses = style.track + (isCurrentTrack ? ` ${style.current}` : "");
     const clickHandler = isCurrentTrack ? undefined : () => trackClickHandler(index);
@@ -109,7 +123,7 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
     };
     // If the album is V/A then we ignore the artist because it will obviously
     // be different for every track.
-    const showHeader = track.album.isVa ? albumChanged : artistChanged || albumChanged;
+    const showHeader = track.album?.isVa ? albumChanged : artistChanged || albumChanged;
 
     const trackJsx = (
       <Fragment>
@@ -120,8 +134,8 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
                 {artistName || "<no artist>"}
               </span>
               &nbsp;
-              <span class={`${style.album} ${albumName ? "" : style.missing}`}>
-                {albumName || "<no title>"}
+              <span class={`${style.album} ${track.album?.name ? "" : style.missing}`}>
+                {getAlbumName(track)}
               </span>
             </div>
             <div class={style.rm} onClick={rmAlbum(index)}>
@@ -154,7 +168,7 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
               <span class={style.missing}>{"<no title>"}</span>
             )}
             <span class={style.artists}>
-              {track.album.isVa ? ` ${getArtistName(track)}` : ""}
+              {track.album?.isVa ? ` ${getArtistName(track)}` : ""}
               {track.features ? ` ft. ${(track.features || []).join(", ")}` : ""}
             </span>
             {track.info && <div class={style.info}>{track.info}</div>}
@@ -187,7 +201,7 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
       >
         <Header
           key="queue-header"
-          id={track.album.id as AlbumId}
+          id={track.album?.id as AlbumId}
           hidePlayButton={true}
           hideNav={true}
           onClick={onDismiss}
@@ -217,7 +231,7 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
           <section class={style.details}>
             <div class={style.title}>
               <Link
-                href={`/${toUrl(track.album.id)}/${toUrl(track.id)}`}
+                href={`/${toUrl(track.album?.id || nillId)}/${toUrl(track.id)}`}
                 onClick={onDismiss}
               >
                 {track.title ? (
@@ -231,8 +245,8 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
               {renderArtistLinks(track?.artists || [], onDismiss)}
             </div>
             <div class={style.album}>
-              <Link href={`/album/${urlize(track.album.id)}`} onClick={onDismiss}>
-                {track.album.name}
+              <Link href={`/album/${urlize(track.album?.id)}`} onClick={onDismiss}>
+                {track.album?.name}
               </Link>
               &nbsp;
             </div>

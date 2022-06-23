@@ -24,7 +24,7 @@ export type Artist = {
 export type Track = {
   __typename: "Track";
   id: string;
-  album: Album;
+  album?: Album | null;
   artists?: Array<Artist> | null;
   url: string;
   title?: string | null;
@@ -119,10 +119,6 @@ export type CreateInviteInput = {
 export type InviteUrl = {
   __typename: "InviteUrl";
   claimUrl: string;
-};
-
-export type TableTrackFilterInput = {
-  albumId?: TableStringFilterInput | null;
 };
 
 export type TrackConnection = {
@@ -227,13 +223,13 @@ export type GetAlbumWithTracksQuery = {
         id: string;
         name?: string | null;
       }> | null;
-      album: {
+      album?: {
         __typename: "Album";
         id: string;
         name?: string | null;
         imageUrl?: string | null;
         isVa?: boolean | null;
-      };
+      } | null;
     }> | null;
   } | null;
 };
@@ -528,14 +524,14 @@ export type CreateTrackMutation = {
   createTrack?: {
     __typename: "Track";
     id: string;
-    album: {
+    album?: {
       __typename: "Album";
       id: string;
       name?: string | null;
       imageUrl?: string | null;
       year?: number | null;
       isVa?: boolean | null;
-    };
+    } | null;
     artists?: Array<{
       __typename: "Artist";
       id: string;
@@ -561,14 +557,14 @@ export type UpdateTrackMutation = {
   updateTrack?: {
     __typename: "Track";
     id: string;
-    album: {
+    album?: {
       __typename: "Album";
       id: string;
       name?: string | null;
       imageUrl?: string | null;
       year?: number | null;
       isVa?: boolean | null;
-    };
+    } | null;
     artists?: Array<{
       __typename: "Artist";
       id: string;
@@ -593,14 +589,14 @@ export type DeleteTrackMutation = {
   deleteTrack?: {
     __typename: "Track";
     id: string;
-    album: {
+    album?: {
       __typename: "Album";
       id: string;
       name?: string | null;
       imageUrl?: string | null;
       year?: number | null;
       isVa?: boolean | null;
-    };
+    } | null;
     artists?: Array<{
       __typename: "Artist";
       id: string;
@@ -761,14 +757,14 @@ export type GetTrackQuery = {
   getTrack?: {
     __typename: "Track";
     id: string;
-    album: {
+    album?: {
       __typename: "Album";
       id: string;
       name?: string | null;
       imageUrl?: string | null;
       year?: number | null;
       isVa?: boolean | null;
-    };
+    } | null;
     artists?: Array<{
       __typename: "Artist";
       id: string;
@@ -785,12 +781,8 @@ export type GetTrackQuery = {
   } | null;
 };
 
-export type ListTracksQueryVariables = {
-  filter?: TableTrackFilterInput | null;
-};
-
-export type ListTracksQuery = {
-  listTracks?: {
+export type ListOrphanTracksQuery = {
+  listOrphanTracks?: {
     __typename: "TrackConnection";
     items?: Array<{
       __typename: "Track";
@@ -1017,14 +1009,14 @@ export type OnCreateTrackSubscription = {
   onCreateTrack?: {
     __typename: "Track";
     id: string;
-    album: {
+    album?: {
       __typename: "Album";
       id: string;
       name?: string | null;
       imageUrl?: string | null;
       year?: number | null;
       isVa?: boolean | null;
-    };
+    } | null;
     artists?: Array<{
       __typename: "Artist";
       id: string;
@@ -1050,14 +1042,14 @@ export type OnUpdateTrackSubscription = {
   onUpdateTrack?: {
     __typename: "Track";
     id: string;
-    album: {
+    album?: {
       __typename: "Album";
       id: string;
       name?: string | null;
       imageUrl?: string | null;
       year?: number | null;
       isVa?: boolean | null;
-    };
+    } | null;
     artists?: Array<{
       __typename: "Artist";
       id: string;
@@ -1083,14 +1075,14 @@ export type OnDeleteTrackSubscription = {
   onDeleteTrack?: {
     __typename: "Track";
     id: string;
-    album: {
+    album?: {
       __typename: "Album";
       id: string;
       name?: string | null;
       imageUrl?: string | null;
       year?: number | null;
       isVa?: boolean | null;
-    };
+    } | null;
     artists?: Array<{
       __typename: "Artist";
       id: string;

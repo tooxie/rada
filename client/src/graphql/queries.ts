@@ -111,9 +111,9 @@ export const getTrack = gql`
     }
   }
 `;
-export const listTracks = gql`
-  query ListTracks($filter: TableTrackFilterInput) {
-    listTracks(filter: $filter) {
+export const listOrphanTracks = gql`
+  query ListOrphanTracks {
+    listOrphanTracks {
       items {
         id
         url

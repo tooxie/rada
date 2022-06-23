@@ -1,0 +1,10 @@
+{
+  "version": "2017-02-28",
+  "operation": "Scan",
+  "filter": {
+    "expression": "albumId = :nill",
+    "expressionValues": {
+      ":nill": $util.dynamodb.toDynamoDBJson("album:00000000-0000-0000-0000-000000000000"),
+    },
+  },
+}

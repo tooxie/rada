@@ -16,7 +16,7 @@ interface QueueOptionsProps {
   index: number;
 }
 
-const getAlbumCover = (track: Track) => track.album.imageUrl || DEFAULT_ALBUM_COVER;
+const getAlbumCover = (track: Track) => track.album?.imageUrl || DEFAULT_ALBUM_COVER;
 
 const QueueOptions = ({ track, index }: QueueOptionsProps) => {
   const player = usePlayer();

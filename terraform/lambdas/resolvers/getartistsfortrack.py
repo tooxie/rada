@@ -23,10 +23,10 @@ def handler(event, _):
     try:
         artist_ids = get_artist_ids(event)
     except KeyError:
-        return error(RuntimeError("No artist ID provided"))
+        return "[]"
 
     if not artist_ids:
-        return error(RuntimeError("No artist ID provided"))
+        return "[]"
 
     try:
         artists = get_artists(client, table_name, artist_ids)

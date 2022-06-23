@@ -17,6 +17,8 @@ import ArtistDetail from "../routes/artists/detail";
 import ArtistHeader from "../routes/artists/header";
 import ArtistList from "../routes/artists/list";
 
+import TrackList from "../routes/tracks";
+
 import FriendList from "../routes/friends";
 
 const Album = Detail(AlbumDetail, AlbumHeader);
@@ -24,6 +26,7 @@ const Albums = Collection(AlbumList);
 const Artist = Detail(ArtistDetail, ArtistHeader);
 const Artists = Collection(ArtistList);
 const Friends = Collection(FriendList);
+const Tracks = Collection(TrackList);
 
 const NotFound = Collection(NotFoundPage);
 const Root = Collection(Home);
@@ -38,6 +41,7 @@ const AppRouter = () => {
 
       <Route path="/artists" key="artists" component={Artists} />
       <Route path="/albums" key="albums" component={Albums} />
+      <Route path="/tracks" key="tracks" component={Tracks} />
       {appState.isAdmin && <Route path="/friends" key="friends" component={Friends} />}
 
       <Route path="/artist/:id" key="artist" component={Artist} />

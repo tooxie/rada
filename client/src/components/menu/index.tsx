@@ -38,6 +38,7 @@ const Menu = ({ hideControls, isAdmin }: MenuProps) => {
     <nav class={style.collections}>
       <Item href="/artists" name="Artists" />
       <Item href="/albums" name="Albums" />
+      <Item href="/tracks" name="Tracks" />
 
       <AdminItem href="/friends" name="Friends" admin={isAdmin} />
     </nav>

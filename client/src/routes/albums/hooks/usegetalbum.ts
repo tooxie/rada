@@ -12,7 +12,7 @@ interface UseGetAlbumReturn extends UseGetReturnType {
   album: Album | null;
 }
 
-const useGetAlbum = (id: AlbumId): UseGetAlbumReturn => {
+const useGetAlbum = (id?: AlbumId): UseGetAlbumReturn => {
   log.debug(`useGetAlbum("${id}")`);
   const dbId = toDbId("album", id);
   const pk: GetAlbumQueryVariables = { id: dbId };

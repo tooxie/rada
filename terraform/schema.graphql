@@ -30,7 +30,7 @@ type Query {
   listArtistsForAlbum(id: ID!): [Artist!]
 
   getTrack(albumId: ID!, id: ID!): Track
-  listTracks(filter: TableTrackFilterInput): TrackConnection
+  listOrphanTracks: TrackConnection
 
   getInvite(id: ID!): Invite
     @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
@@ -182,7 +182,7 @@ input TableTrackFilterInput {
 
 type Track {
   id: ID!
-  album: Album!
+  album: Album
   artists: [Artist!]
   url: AWSURL!
   title: String

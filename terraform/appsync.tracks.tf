@@ -9,13 +9,13 @@ resource "aws_appsync_datasource" "gawshi_tracks" {
   }
 }
 
-resource "aws_appsync_resolver" "list_tracks" {
+resource "aws_appsync_resolver" "list_orphan_tracks" {
   api_id = aws_appsync_graphql_api.gawshi.id
   type = "Query"
-  field = "listTracks"
+  field = "listOrphanTracks"
   data_source = aws_appsync_datasource.gawshi_tracks.name
 
-  request_template = file("./resolvers/request/scan.vm")
+  request_template = file("./resolvers/request/listorphantracks.vm")
   response_template = file("./resolvers/response/page.vm")
 }
 

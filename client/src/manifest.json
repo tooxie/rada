@@ -45,6 +45,13 @@
       "description": "View the list of albums",
       "url": "/albums",
       "icons": [{ "src": "/assets/icons/android-chrome-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Track list",
+      "short_name": "Tracks",
+      "description": "List of tracks without album",
+      "url": "/tracks",
+      "icons": [{ "src": "/assets/icons/android-chrome-192x192.png", "sizes": "192x192" }]
     }
   ]
 }

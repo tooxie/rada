@@ -7,7 +7,7 @@ import { defaultAppState } from "../context";
 const log = new Logger(__filename);
 
 const reducer: AppStateReducer = (state: AppState, action: Actions): AppState => {
-  log.debug("Reducing:", action, state)
+  log.debug("Reducing:", action, state);
   switch (action) {
     case Actions.SetAdmin:
       state.isAdmin = true;
@@ -29,7 +29,7 @@ const reducer: AppStateReducer = (state: AppState, action: Actions): AppState =>
       break;
   }
 
-  log.debug("New state:", state)
+  log.debug("New state:", state);
   return { ...state };
 };
 

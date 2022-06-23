@@ -1,0 +1,40 @@
+.missing {
+  font-style: italic;
+}
+
+.track {
+  display: flex;
+  padding: 0.25rem 0;
+}
+
+.track img {
+  max-width: 1.5rem;
+}
+
+.track:first-of-type {
+  padding: 0;
+}
+
+.track {
+  display: flex;
+  align-items: center;
+}
+
+.track .details {
+  margin-left: 0.5rem;
+}
+
+.track .details .artists {
+  color: #742e12;
+  font-size: 0.8rem;
+}
+
+.track .details .length {
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.note {
+  font-size: 0.8rem;
+  margin-top: 1rem;
+}
