@@ -1,7 +1,7 @@
 /* develblock:start */
 import "preact/debug";
 /* develblock:end */
-import { h } from "preact";
+import { h, Fragment } from "preact";
 import { useState } from "preact/hooks";
 
 import Conf from "../conf/context";
@@ -9,6 +9,7 @@ import useConf from "../conf/hooks/useconf";
 import AppState from "../state/context";
 import useAppState from "../state/hooks/useappstate";
 import Logger from "../logger";
+import Splash from "./splash";
 
 import Root from "./root";
 import Auth from "./auth";
@@ -28,11 +29,14 @@ const App = () => {
   log.debug(appState);
 
   return (
-    <Conf.Provider value={{ conf, setConf }}>
-      <AppState.Provider value={{ appState, dispatch, actions }}>
-        {loggedIn ? <Root /> : <Auth onLogin={onLogin} />}
-      </AppState.Provider>
-    </Conf.Provider>
+    <Fragment>
+      <Splash />
+      <Conf.Provider value={{ conf, setConf }}>
+        <AppState.Provider value={{ appState, dispatch, actions }}>
+          {loggedIn ? <Root /> : <Auth onLogin={onLogin} />}
+        </AppState.Provider>
+      </Conf.Provider>
+    </Fragment>
   );
 };
 

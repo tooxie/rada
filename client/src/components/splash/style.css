@@ -1,0 +1,23 @@
+.splash {
+  align-items: center;
+  background-color: white;
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  left: 0;
+  opacity: 1;
+  overflow-y: auto;
+  position: fixed;
+  top: 0;
+  transition: opacity 0.25s linear;
+  width: 100vw;
+  z-index: 1000;
+}
+
+.splash.hidden {
+  opacity: 0;
+}
+
+.splash.destroy {
+  display: none;
+}
