@@ -25,10 +25,7 @@ const App = () => {
     setLoggedIn(true);
   };
 
-  log.debug(
-    loggedIn ? `Logged in ${appState.isAdmin ? "as admin" : ""}` : "Anonymous user"
-  );
-  log.warn(appState);
+  log.debug(appState);
 
   return (
     <Conf.Provider value={{ conf, setConf }}>
