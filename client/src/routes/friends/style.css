@@ -80,6 +80,16 @@ section.create .validity input {
 
 .qrcode {
   text-align: center;
+  margin-top: 1rem;
+  min-height: calc(100vw - 4rem);
+}
+
+.qrcode img {
+  max-width: 100%;
+}
+
+.disclaimer {
+  font-size: 0.8rem;
 }
 
 .url {

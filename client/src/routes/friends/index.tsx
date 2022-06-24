@@ -1,10 +1,12 @@
 import { h, Fragment } from "preact";
+import { useEffect, useState } from "preact/hooks";
 import { route } from "preact-router";
 
-import QrCode from "../../components/qrcode";
+import QrCode from "../../components/qrcode/volatile";
 import ErrorMsg from "../../components/error";
 import Spinner from "../../components/spinner";
 import useAppState from "../../hooks/useappstate";
+import Modal from "../../components/modal";
 
 import useListInvites from "./hooks/uselist";
 import useCreateInvite from "./hooks/usecreate";
@@ -15,6 +17,7 @@ const InviteList = () => {
   let note: HTMLInputElement | null;
   let adminCheck: HTMLInputElement | null;
 
+  const [showModal, setShowModal] = useState(false);
   const { appState } = useAppState();
   const { loading, error, invites } = useListInvites();
   const [createInvite, { claimUrl, loading: creating }] = useCreateInvite();
@@ -40,9 +43,38 @@ const InviteList = () => {
     }
   );
   const capitalize = (s: string) => s.substring(0, 1).toUpperCase() + s.substring(1);
+  const displayModal = () => setShowModal(true);
+  const dismissModal = () => setShowModal(false);
+
+  useEffect(() => {
+    if (showModal) {
+      createInvite({
+        note: note?.value || "",
+        validity: parseInt(validity?.value || "") || null,
+        isAdmin: Boolean(adminCheck?.checked),
+      });
+    }
+  }, [showModal]);
+
+  const [qrCode, setQrCode] = useState<JSX.Element | null>(null);
+  useEffect(() => {
+    if (claimUrl) {
+      setQrCode(<QrCode value={`${window.location.origin}${claimUrl}`} width={238} />);
+    }
+
+    return () => setQrCode(null);
+  }, [claimUrl]);
 
   return (
     <Fragment>
+      <Modal title="Invitation" visible={showModal} onClick={dismissModal}>
+        <div class={style.qrcode}>{qrCode || <Spinner />}</div>
+        <p class={style.disclaimer}>
+          Remember: The owner of the AWS account will have to pay for all the resources
+          consumed by each new friend invited to the app.
+        </p>
+      </Modal>
+
       <h1 class={style.heading}>Invitations</h1>
       <section class={style.invites}>
         {Object.keys(stats).map((key) => {
@@ -96,33 +128,9 @@ const InviteList = () => {
             only, but nobody else.
           </div>
         </div>
-        {claimUrl ? (
-          <Fragment>
-            <div class={style.qrcode}>
-              <QrCode value={`${window.location.origin}${claimUrl}`} />
-            </div>
-            <p class={style.url}>
-              Note:
-              <ul>
-                <li>Do not lose this link nor open it yourself. It's a 1-time link.</li>
-                <li>If you reload or navigate away you will lose the code.</li>
-              </ul>
-            </p>
-          </Fragment>
-        ) : (
-          <button
-            disabled={creating}
-            onClick={() => {
-              createInvite({
-                note: note?.value || "",
-                validity: parseInt(validity?.value || "") || null,
-                isAdmin: Boolean(adminCheck?.checked),
-              });
-            }}
-          >
-            {creating ? "Creating..." : "Create invitation"}
-          </button>
-        )}
+        <button disabled={creating} onClick={displayModal}>
+          {creating ? "Creating..." : "Create invitation"}
+        </button>
       </section>
     </Fragment>
   );
