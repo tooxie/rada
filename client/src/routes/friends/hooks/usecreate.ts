@@ -1,45 +1,35 @@
 import { useState } from "preact/hooks";
 
-import useClient from "../../../graphql/hooks";
-import { CreateInviteInput } from "../../../graphql/api";
+import { CreateInviteMutation, CreateInviteInput } from "../../../graphql/api";
 import { createInvite } from "../../../graphql/mutations";
 import Logger from "../../../logger";
+import useMutation, { Executing } from "../../../hooks/usemutation";
 
 const log = new Logger(__filename);
 
-type HookFn = (i: CreateInviteInput) => void;
-interface HookReturn {
-  loading: boolean;
-  error?: Error;
-  claimUrl?: string;
+interface Creating<T> extends Omit<Executing<T>, "data"> {
+  claimUrl: string | null;
 }
+type HookReturn<T> = [Function, Creating<T>];
 
-const useCreateInvite = (): [HookFn, HookReturn] => {
-  const [claimUrl, setClaimUrl] = useState<string>();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error>();
-  const client = useClient();
+const useCreateInvite = (): HookReturn<CreateInviteMutation> => {
+  log.debug("useCreateInvite()");
+  const [claimUrl, setClaimUrl] = useState<string | null>(null);
+  const [mutator, { loading, error, data }] =
+    useMutation<CreateInviteMutation, CreateInviteInput>(createInvite);
 
-  const run = (input: CreateInviteInput) => {
-    if (!client) throw new Error("No apollo client");
+  if (data?.createInvite) {
+    log.debug(`useCreateInvite.data: ${JSON.stringify(data)}`);
+    setClaimUrl(data.createInvite.claimUrl);
+  }
 
-    setLoading(true);
-    client
-      .mutate({
-        mutation: createInvite,
-        variables: { input },
-      })
-      .then(({ data }) => {
-        log.debug("useCreateInvite return:", data);
-        setClaimUrl(data.createInvite.claimUrl);
-        setLoading(false);
-      })
-      .catch((e) => {
-        setError(e);
-      });
-  };
-
-  return [run, { loading, error, claimUrl }];
+  return [
+    (variables: CreateInviteInput) => {
+      setClaimUrl(null);
+      mutator({ input: variables });
+    },
+    { loading, error, claimUrl },
+  ];
 };
 
 export default useCreateInvite;
