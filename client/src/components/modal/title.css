@@ -1,0 +1,7 @@
+.title {
+  align-items: center;
+  border-bottom: 1px solid lightgray;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+}

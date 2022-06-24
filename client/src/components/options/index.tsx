@@ -1,5 +1,8 @@
 import { h, Fragment, ComponentChildren } from "preact";
-import { useState, useEffect } from "preact/hooks";
+import { useState } from "preact/hooks";
+
+import Modal from "../modal";
+import Title from "../modal/title";
 
 import style from "./style.css";
 import dots from "./dots.svg";
@@ -12,42 +15,15 @@ interface OptionsProps {
 
 const Options = ({ title, icon, children }: OptionsProps) => {
   const [visible, setVisible] = useState(false);
-  const [display, setDisplay] = useState(false);
-  const body = document.body;
-
-  const clickHandler = (ev: MouseEvent) => {
-    ev.stopPropagation();
-    if (visible) {
-      setVisible(false);
-      setTimeout(() => setDisplay(false), 250);
-    } else {
-      setDisplay(true);
-      setTimeout(() => setVisible(true), 0);
-    }
-  };
-
-  useEffect(() => {
-    if (visible) body.classList.add(style.noscroll);
-    else body.classList.remove(style.noscroll);
-
-    return () => body.classList.remove(style.noscroll);
-  }, [visible]);
+  const toggle = () => setVisible(!visible);
 
   return (
     <Fragment>
-      <img src={icon || dots} class={style.trigger} onClick={clickHandler} />
+      <img src={icon || dots} class={style.trigger} onClick={toggle} />
 
-      <div
-        class={`${style.overlay} ${visible ? style.visible : ""}`}
-        style={display ? {} : { display: "none" }}
-        onClick={clickHandler}
-      >
-        &nbsp;
-        <div class={style.modal}>
-          {title}
-          <div class={style.body}>{children}</div>
-        </div>
-      </div>
+      <Modal title={title} visible={visible} onClick={toggle}>
+        {children}
+      </Modal>
     </Fragment>
   );
 };
@@ -69,14 +45,6 @@ const Action = (props: ActionProps) => {
       {props.children}
     </div>
   );
-};
-
-interface TitleProps {
-  children: ComponentChildren;
-}
-
-const Title = (props: TitleProps) => {
-  return <div class={style.title}>{props.children}</div>;
 };
 
 interface StepProps {
