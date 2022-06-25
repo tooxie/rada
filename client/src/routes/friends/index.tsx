@@ -13,7 +13,6 @@ import useCreateInvite from "./hooks/usecreate";
 import style from "./style.css";
 
 const InviteList = () => {
-  let validity: HTMLInputElement | null;
   let note: HTMLInputElement | null;
   let adminCheck: HTMLInputElement | null;
 
@@ -50,7 +49,6 @@ const InviteList = () => {
     if (showModal) {
       createInvite({
         note: note?.value || "",
-        validity: parseInt(validity?.value || "") || null,
         isAdmin: Boolean(adminCheck?.checked),
       });
     }
@@ -98,19 +96,6 @@ const InviteList = () => {
             Admin?
           </label>
           <div class={style.details}>An admin can invite other people too.</div>
-        </div>
-
-        <div class={`${style.input} ${style.validity}`}>
-          <label for="invite-validity">
-            Valid for
-            <input
-              type="number"
-              id="invite-validity"
-              value="24"
-              ref={(node) => (validity = node)}
-            />
-            hours
-          </label>
         </div>
 
         <div class={`${style.input} ${style.note}`}>
