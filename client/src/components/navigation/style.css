@@ -1,5 +1,5 @@
 .navigation {
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, .6), transparent);
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.6), transparent);
   color: white;
   display: flex;
   flex-direction: row;
@@ -11,23 +11,12 @@
   position: relative;
 }
 
-.title {
-  flex-grow: 1;
-  text-transform: uppercase;
-  font-size: 1em;
-  line-height: 1.5em;
-}
-
-.title a {
-  color: white;
-}
-
 .back,
 .search,
 .servers,
 .settings,
 .title {
-  padding: 1em .5em .5em;
+  padding: 1rem 0.5rem 0.5rem;
   display: flex;
   align-items: center;
 }
@@ -36,5 +25,20 @@
 .search img,
 .servers img,
 .settings img {
-  width: 1.3em;
+  width: 1.3rem;
+}
+
+.title {
+  display: block;
+  flex-grow: 1;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.title a {
+  color: white;
 }
