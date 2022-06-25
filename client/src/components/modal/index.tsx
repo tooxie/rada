@@ -44,7 +44,7 @@ const Modal = ({ title, children, visible, onClick }: ModalProps) => {
     <div class={classes} style={displayStyle} onClick={clickHandler}>
       &nbsp;
       <div class={style.modal}>
-        <Title>{title}</Title>
+        {title ? <Title>{title}</Title> : null}
         <div class={style.body}>{children}</div>
       </div>
     </div>
