@@ -9,7 +9,7 @@ const log = new Logger(__filename);
 type M = DocumentNode;
 export interface Executing<T> {
   loading: boolean;
-  error: Error | null;
+  error: string | null;
   data: T | null;
 }
 type R<T> = [Function, Executing<T>];
@@ -18,7 +18,7 @@ const useMutation = <D, V>(mutation: M): R<D> => {
   log.debug("useMutation()");
   const [data, setData] = useState<D | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const mutator = (variables?: V) => {
     getClient().then(async (client) => {
@@ -34,10 +34,10 @@ const useMutation = <D, V>(mutation: M): R<D> => {
           setLoading(false);
           setData(data);
         })
-        .catch((e) => {
+        .catch((e: Error) => {
           log.debug("useMutation.error");
           log.error(e);
-          setError(e);
+          setError(e.message);
         });
     });
   };
