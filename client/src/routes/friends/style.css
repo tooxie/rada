@@ -78,9 +78,12 @@ section.create .validity input {
   width: 2.5rem;
 }
 
+.invitation {
+  margin-top: 1rem;
+}
+
 .qrcode {
   text-align: center;
-  margin-top: 1rem;
   min-height: calc(100vw - 4rem);
 }
 

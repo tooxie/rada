@@ -19,7 +19,8 @@ const InviteList = () => {
   const [showModal, setShowModal] = useState(false);
   const { appState } = useAppState();
   const { loading, error, invites } = useListInvites();
-  const [createInvite, { claimUrl, loading: creating }] = useCreateInvite();
+  const [createInvite, { claimUrl, loading: creating, error: errorCreating }] =
+    useCreateInvite();
 
   if (!appState.isAdmin) route("/404");
 
@@ -66,11 +67,19 @@ const InviteList = () => {
   return (
     <Fragment>
       <Modal title="Invitation" visible={showModal} onClick={dismissModal}>
-        <div class={style.qrcode}>{qrCode || <Spinner />}</div>
-        <p class={style.disclaimer}>
-          Remember: The owner of the AWS account will have to pay for all the resources
-          consumed by each new friend invited to the app.
-        </p>
+        <div class={style.invitation}>
+          {errorCreating ? (
+            <ErrorMsg error={errorCreating} />
+          ) : (
+            <Fragment>
+              <div class={style.qrcode}>{qrCode || <Spinner />}</div>
+              <p class={style.disclaimer}>
+                Remember: The owner of the AWS account will have to pay for all the
+                resources consumed by each new friend invited to the app.
+              </p>
+            </Fragment>
+          )}
+        </div>
       </Modal>
 
       <h1 class={style.heading}>Invitations</h1>
