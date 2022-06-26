@@ -21,6 +21,8 @@ def not_found():
         "statusCode": 301,
         "headers": {
             "Location": "https://www.google.com",
+            "Cache-Control": "no-store",
+            "Pragma": "no-cache",
         },
     }
 
@@ -30,6 +32,8 @@ def ok(body):
         "statusCode": 200,
         "headers": {
             "Content-Type": "text/html",
+            "Cache-Control": "no-store",
+            "Pragma": "no-cache",
         },
         "body": body,
     }
