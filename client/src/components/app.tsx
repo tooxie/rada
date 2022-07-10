@@ -4,15 +4,15 @@ import "preact/debug";
 import { h, Fragment } from "preact";
 import { useState } from "preact/hooks";
 
+import Logger from "../logger";
 import Conf from "../conf/context";
 import useConf from "../conf/hooks/useconf";
 import AppState from "../state/context";
 import useAppState from "../state/hooks/useappstate";
-import Logger from "../logger";
-import Splash from "./splash";
 
-import Root from "./root";
 import Auth from "./auth";
+import Root from "./root";
+import Splash from "./splash";
 
 const log = new Logger(__filename);
 
