@@ -12,6 +12,7 @@ def slugify(s):
 
 def handler(event, _):
     print(event)
+
     table_name = os.getenv("DYNAMODB_ARTISTS_TABLE")
     if not table_name:
         return error(RuntimeError("Missing environment variable 'DYNAMODB_ARTISTS_TABLE'"))

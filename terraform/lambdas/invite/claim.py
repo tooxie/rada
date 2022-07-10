@@ -1,17 +1,13 @@
 #!/usr/bin/env python3
-
-# ###################################################################### #
-# TODO: DELETE THIS LAMBDA WHEN WE HAVE THE INTERFACE IN PLACE TO CREATE #
-# TODO: INVITATIONS THROUGH THE APP.                                     #
-# ###################################################################### #
-
 from datetime import datetime, timedelta
-from botocore.config import Config
+import hashlib
+import json
+import os
 import random
 import string
+
+from botocore.config import Config
 import boto3
-import os
-import hashlib
 
 TPL_FILE_NAME="template.html"
 
@@ -28,10 +24,15 @@ def not_found():
 
 
 def ok(body):
+    mime = "text/html"
+    if type(body) == dict:
+        mime = "application/json"
+        body = json.dumps(body)
+
     return {
         "statusCode": 200,
         "headers": {
-            "Content-Type": "text/html",
+            "Content-Type": mime,
             "Cache-Control": "no-store",
             "Pragma": "no-cache",
         },
@@ -59,7 +60,10 @@ def handler(event, context):
         if was_installed(event):
             mark_installed(client, iid, ts)
             password = create_user(iid, is_admin=invite.get("isAdmin", False))
-            return ok(password)
+            return ok({
+                "password": password,
+                "url": os.environ["APP_PUBLIC_URL"],
+            })
         elif was_unsolicited(event):
             mark_unsolicited(client, iid, ts)
             return not_found()
@@ -186,7 +190,8 @@ def create_user(username, *, is_admin):
     user_pool_id = os.environ["COGNITO_USER_POOL_ID"]
     client = boto3.client('cognito-idp', region_name=region)
     password = generate_password()
-    response = client.admin_create_user(
+
+    client.admin_create_user(
         UserPoolId=user_pool_id,
         Username=username,
     )

@@ -10,15 +10,7 @@
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-        <link rel="manifest" href="/manifest.json">
-        <link rel="apple-touch-icon" href="/assets/icons/ios-icon-iphone-180x180.png" />
-        <link rel="apple-touch-startup-image" sizes="2048x2732" href="/assets/img/apple_splash_2048.png" />
-        <link rel="apple-touch-startup-image" sizes="1668x2224" href="/assets/img/apple_splash_1668.png" />
-        <link rel="apple-touch-startup-image" sizes="1536x2048" href="/assets/img/apple_splash_1536.png" />
-        <link rel="apple-touch-startup-image" sizes="1242x2208" href="/assets/img/apple_splash_1242.png" />
-        <link rel="apple-touch-startup-image" sizes="1125x2436" href="/assets/img/apple_splash_1125.png" />
-        <link rel="apple-touch-startup-image" sizes="750x1334"  href="/assets/img/apple_splash_750.png" />
-        <link rel="apple-touch-startup-image" sizes="640x1136"  href="/assets/img/apple_splash_640.png" />
+        <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
         <style>
           @media (orientation: landscape) {
@@ -51,139 +43,43 @@
         <script>
           new window.VConsole();
           console.log(window.navigator.userAgent);
+          let appUrl;
+          let secret;
 
-          let installEvent;
-          let notes;
-
-          function beginDownload(callback) {
-            console.log("beginDownload()");
-            downloadCredentials((username, password) => {
-              const credentials = { username, password };
-              const secret = btoa(JSON.stringify(credentials) + "\n");
-              console.log(credentials);
-              console.log(secret);
-              const msg = `This is your secret:
-                <p>${secret}</p>
-                <ul>
-                  <li>
-                    Copy it, you will need it later.
-                  </li>
-                  <li>
-                    Then use the "Add to home screen"
-                    button from your browser.
-                  </li>
-                </ul>
-              `;
-              document.getElementById('body').innerHTML = msg;
-            });
-          }
-
-          function downloadCredentials(callback) {
-            console.log("downloadCredentials()");
-            const xhr = new XMLHttpRequest();
-            const url = `${window.location.href}&installed`;
-            xhr.open("GET", url, true);
-            xhr.onreadystatechange = function() {
-              if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-                const username = getUsername();
-                const password = xhr.responseText;
-                callback(username, password);
-              }
-            }
-            xhr.send(null);
-          }
-
-          window.addEventListener('appinstalled', (ev) => {
-            console.log('App installed');
-            ev.preventDefault();
-            installEvent = null;
-            downloadCredentials((username, password) => {
-              localStorage.setItem("GawshiUsername", username);
-              localStorage.setItem("GawshiPassword", password);
-              document.getElementById('body').innerHTML = "App installed";
-            });
-          });
-
-          window.addEventListener('beforeinstallprompt', (ev) => {
-            ev.preventDefault();
-            installEvent = ev;
-            document.getElementById('install').innerHTML = "<button onclick=\"install()\">Install app</button>";
-            document.getElementById('notes').innerHTML = notes;
-          });
-
-          if ('serviceWorker' in navigator) {
-              navigator.serviceWorker.register('/sw-esm.js')
-              .then(function(registration) {
-                  console.log('Registration successful, scope is:', registration.scope);
-              })
-              .catch(function(error) {
-                  console.error('Service worker registration failed', error);
-              });
-          }
-
-          navigator.serviceWorker.addEventListener("controllerchange", (ev) => {
-            console.log("Service worker activated!");
-            console.log(navigator.serviceWorker.controller);
-            // const btn = document.createElement("button");
-            // btn.onclick = downloadCredentials;
-            // btn.innerText = "Download credentials";
-            // document.getElementById('downloadCredentials').innerHTML = "";
-            // document.getElementById('downloadCredentials').appendChild(btn);
-            document.getElementById('install').innerText = ">> Service worker activated"
-          });
-
-          function install() {
-            if (!installEvent) {
-              console.error("No event");
-              return;
-            }
-            document.getElementById('install').innerHTML = "<button>Installing...</button>";
-            installEvent.prompt();
-            installEvent.userChoice.then((choice) => {
-              console.log(`User ${choice.outcome} the install prompt`);
-              installEvent = null;
+          function goToApp() {
+            navigator.clipboard.writeText(secret).then(() => {
+              alert(`https://${appUrl}`);
+              window.location.href = `https://${appUrl}`;
             });
           }
 
           function getUsername() {
-              return window.location.href.split('/')[4];
+            return window.location.href.split('/')[4];
           }
 
-          // function getPWADisplayMode() {
-          //     const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-          //     if (document.referrer.startsWith('android-app://')) {
-          //         console.log('twa');
-          //     } else if (navigator.standalone || isStandalone) {
-          //         console.log('standalone');
-          //     }
-          //     console.log('browser');
-          // }
+          function downloadCredentials() {
+            const url = `${window.location.href}&installed`;
+            fetch(url)
+              .then((response) => response.json())
+              .then((response) => {
+                console.log(response);
+                appUrl = response.url;
+                secret = btoa(JSON.stringify({
+                  username: getUsername(),
+                  password: response.password,
+                }));
+                document.getElementById('body').innerHTML = `Credentials downloaded!
+                  <p><button id="goto" onClick=goToApp()>Go to app</button></p>`;
+              });
+          }
 
-          window.addEventListener("DOMContentLoaded", function() {
-            console.log("-- DOMContentLoaded");
-            const userAgent = navigator.userAgent.toLowerCase();
-            const isChrome = userAgent.includes("chrome");
-            const isAndroid = userAgent.includes("android");
-            const supportsInstalling = isAndroid && isChrome;
-
+          window.addEventListener("DOMContentLoaded", () => {
             const href = `${window.location.href}&unsolicited`;
-            document.getElementById("unsolicited").setAttribute("href", href);
-            notes = document.getElementById('notes').innerHTML;
+            const el = document.getElementById("unsolicited");
+            el.setAttribute("href", href);
 
-            if (supportsInstalling) {
-              let ul = `
-                <li>
-                  It can take up to 30 seconds for the invitation to load, please be patient.
-                </li>
-                <li>
-                  If the invitation takes too long to load <button>click this button</button>
-                </li>`;
-
-              document.getElementById('notes').innerHTML = ul + notes;
-            } else {
-              const btn = "<button onclick=beginDownload()>Download credentials</button>";
-              document.getElementById('install').innerHTML = btn;
-            }
+            const btn = "<button onclick=downloadCredentials()>Download credentials</button>";
+            document.getElementById('install').innerHTML = btn;
           });
         </script>
     </head>
@@ -194,7 +90,7 @@
         </div>
         <p>
             <i>Note:</i>
-            <ul id="notes">
+            <ul>
                 <li>This invitation can't be opened twice. Do <i>not</i> reload the page.</li>
                 <li> If you didn't request this invitation and want all your data deleted from our servers please <a id="unsolicited" href="#">click here</a>.</li>
             </ul>

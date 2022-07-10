@@ -13,6 +13,7 @@ import {
 import Logger from "../../logger";
 import Spinner from "../spinner";
 import ErrorMsg from "../error";
+import Install, { appInstalled } from "../install";
 
 /* develblock:start */
 import rootCredentials from "../../rootuser.json";
@@ -105,7 +106,9 @@ const Auth = ({ onLogin, onFailedAuth }: AuthProps) => {
         const isAdmin = !!response.groups.find((group) =>
           group.startsWith("Gawshi-Admin-")
         );
-        if (onLogin) onLogin(isAdmin, response.token);
+        if (onLogin) {
+          if (appInstalled()) onLogin(isAdmin, response.token);
+        }
         setAuthorized(true);
         setLoading(false);
       })
@@ -128,20 +131,25 @@ const Auth = ({ onLogin, onFailedAuth }: AuthProps) => {
       <Shoulder>
         <section class={style.auth}>
           {
-            // Are you online?
-            online ? (
-              // Are we still loading?
-              loading ? (
-                <Spinner message="Authenticating..." />
-              ) : // Was there an error?
-              error ? (
-                <ErrorMsg error={error ? error.message : "Unknown error"} />
-              ) : // Are you authorized to see this?
-              authorized ? null : (
-                <InputSecret onInput={(secret) => setSecret(secret)} />
+            // Is the app running in standalone mode?
+            appInstalled() ? (
+              // Are you online?
+              online ? (
+                // Are we still loading?
+                loading ? (
+                  <Spinner message="Authenticating..." />
+                ) : // Was there an error?
+                error ? (
+                  <ErrorMsg error={error ? error.message : "Unknown error"} />
+                ) : // Are you authorized to see this?
+                authorized ? null : (
+                  <InputSecret onInput={(secret) => setSecret(secret)} />
+                )
+              ) : (
+                <div>You are offline.</div>
               )
             ) : (
-              <div>You are offline.</div>
+              <Install />
             )
           }
         </section>

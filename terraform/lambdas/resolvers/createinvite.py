@@ -3,27 +3,19 @@ from datetime import datetime
 import boto3
 import hashlib
 import json
-import logging
 import os
 import random
 import string
 import uuid
 
 
-def error(e):
-    return {
-        "error": {
-            "message": " ".join(e.args),
-            "type": e.__class__.__name__,
-        }
-    }
-
-
 def handler(event, context):
     print("event:", event)
 
-    table_name = os.environ["INVITATIONS_TABLE_NAME"]
-    validity = get_validity(event)  # In hours
+    table_name = os.getenv("INVITATIONS_TABLE_NAME")
+    if not table_name:
+        return error(RuntimeError("Missing environment variable 'INVITATIONS_TABLE_NAME'"))
+
     id = str(uuid.uuid4())
     time = int(datetime.now().timestamp())  # In seconds
     salt = salt_generator()
@@ -31,6 +23,7 @@ def handler(event, context):
     link = get_invite_link(id, time, salt)
     note = get_note(event)
     hash = hashlib.sha256(seed).hexdigest()
+    validity = get_validity(event)  # In hours
     is_admin = get_is_admin(event)
 
     persist(table_name, id, time, hash, validity, note, is_admin)
@@ -77,13 +70,19 @@ def get_input(event, input_name, default_value):
     return inputs.get(input_name, default_value)
 
 
-def get_public_url(event):
-    return os.environ.get("APP_PUBLIC_URL")
-
-
 def get_seed(id, ts, salt):
     return f"{id}${ts}${salt}".encode()
 
 
 def get_invite_link(id, ts, salt):
-    return f"/invite/{id}/{ts}?s={salt}"
+    url = os.environ["PUBLIC_URL"]
+    return f"{url}/invite/{id}/{ts}?s={salt}"
+
+
+def error(e):
+    return {
+        "error": {
+            "message": " ".join(e.args),
+            "type": e.__class__.__name__,
+        }
+    }

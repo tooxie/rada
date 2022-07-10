@@ -7,10 +7,13 @@ import ErrorMsg from "../../components/error";
 import Spinner from "../../components/spinner";
 import useAppState from "../../hooks/useappstate";
 import Modal from "../../components/modal";
+import Logger from "../../logger";
 
 import useListInvites from "./hooks/uselist";
 import useCreateInvite from "./hooks/usecreate";
 import style from "./style.css";
+
+const log = new Logger(__filename);
 
 const InviteList = () => {
   let note: HTMLInputElement | null;
@@ -58,7 +61,8 @@ const InviteList = () => {
   const [qrCode, setQrCode] = useState<JSX.Element | null>(null);
   useEffect(() => {
     if (claimUrl) {
-      setQrCode(<QrCode value={`${window.location.origin}${claimUrl}`} width={238} />);
+      log.debug(claimUrl);
+      setQrCode(<QrCode value={claimUrl} width={238} />);
     }
 
     return () => setQrCode(null);

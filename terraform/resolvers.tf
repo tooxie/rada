@@ -443,7 +443,8 @@ module "create_invite" {
   function_name = "Gawshi-AppSyncResolver-CreateInvite-${local.suffix}"
 
   environment = {
-      INVITATIONS_TABLE_NAME = aws_dynamodb_table.invitations.name
+    INVITATIONS_TABLE_NAME = aws_dynamodb_table.invitations.name
+    PUBLIC_URL = aws_api_gateway_stage.gawshi.invoke_url
   }
 }
 

@@ -1,0 +1,36 @@
+.h1, .h2, .h3 {
+  font-weight: bold;
+}
+
+.h2, .h3 {
+  font-size: 0.8rem;
+  margin-top: 1rem;
+}
+
+.p {
+  margin: 0.5rem 0;
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  padding: 0.5rem 0;
+}
+
+.icon img {
+  width: 1rem;
+  margin-right: 0.25rem;
+  transition: all 0.3s;
+}
+
+.open .icon img {
+  transform: rotate(90deg);
+}
+
+.children {
+  margin-left: 1.25rem;
+}
+
+.closed .children {
+  display: none;
+}

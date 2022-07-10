@@ -41,4 +41,5 @@ interface Navigator {
   wakeLock: {
     request: (type: WakeLockRequestType) => Promise;
   };
+  standalone?: boolean;
 }

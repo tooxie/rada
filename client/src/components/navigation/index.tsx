@@ -36,13 +36,7 @@ const Navigation = (props: NavigationProps) => {
       class={`${style.navigation} ${props.isDetail ? style.detail : style.collection}`}
     >
       {props.hideControls ? (
-        <Fragment>
-          <div class={style.back}>
-            <img src={back} />
-          </div>
-
-          <div class={style.title}>Gawshi</div>
-        </Fragment>
+        <Fragment />
       ) : (
         <Fragment>
           <div class={style.back}>

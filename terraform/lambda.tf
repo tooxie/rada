@@ -23,7 +23,7 @@ resource "aws_iam_role" "invite" {
 }
 
 resource "aws_iam_role_policy" "lambda_invites" {
-  name = "Gawshi-LambdaCreateInvitations-${local.suffix}"
+  name = "Gawshi-LambdaInvitations-${local.suffix}"
   role = aws_iam_role.invite.id
 
   policy = jsonencode({
@@ -59,38 +59,6 @@ resource "aws_iam_role_policy_attachment" "invite_push_to_cw" {
   policy_arn = data.aws_iam_policy.lambda_logging.arn
 }
 
-// -- Create
-resource "aws_lambda_function" "create_invite" {
-  filename = data.archive_file.invite.output_path
-  function_name = "Gawshi-CreateInvite-${local.suffix}"
-  role = aws_iam_role.invite.arn
-  handler = "create.handler"
-  source_code_hash = data.archive_file.invite.output_base64sha256
-  runtime = "python3.8"
-
-  environment {
-    variables = {
-      INVITATIONS_TABLE_NAME = aws_dynamodb_table.invitations.name
-
-      # Circular dependency
-      # APP_PUBLIC_URL = "https://${aws_cloudfront_distribution.gawshi_app_ssl.domain_name}"
-    }
-  }
-
-  tags = {
-    Gawshi = 1
-  }
-}
-
-resource "aws_lambda_permission" "create_invite" {
-  statement_id = "AllowExecutionFromApiGateway"
-  action = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.create_invite.function_name
-  principal = "apigateway.amazonaws.com"
-  source_arn = "${aws_api_gateway_rest_api.gawshi.execution_arn}/*/*"
-}
-
-// -- Claim
 resource "aws_lambda_function" "claim_invite" {
   filename = data.archive_file.invite.output_path
   function_name = "Gawshi-ClaimInvite-${local.suffix}"
@@ -108,6 +76,7 @@ resource "aws_lambda_function" "claim_invite" {
       COGNITO_USER_POOL_ID = aws_cognito_user_pool.gawshi.id
       COGNITO_ADMIN_GROUP_NAME = aws_cognito_user_group.admin_users.name
       INVITATIONS_TABLE_NAME = aws_dynamodb_table.invitations.name
+      APP_PUBLIC_URL = aws_cloudfront_distribution.gawshi_app_ssl.domain_name
     }
   }
 
