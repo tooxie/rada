@@ -1,6 +1,7 @@
 .shoulder {
   border-radius: 1rem;
   min-height: 5rem;
+  overflow-wrap: break-word;
   position: relative;
 }
 
