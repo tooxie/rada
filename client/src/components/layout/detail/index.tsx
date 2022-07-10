@@ -14,7 +14,7 @@ const Detail = (
 
   return (props: DetailProps) => {
     const player = usePlayer();
-    if (!player) return <div />;
+    if (!player) return null;
 
     const getEntity = () => window.location.pathname.split("/")[1];
     const getId = (props: DetailProps): any => `${getEntity()}:${props.id}`;

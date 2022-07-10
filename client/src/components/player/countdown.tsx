@@ -15,7 +15,7 @@ const Countdown = ({ current, total, playing }: CountdownProps) => {
     if (el) el.innerText = toMinutes(time > 0 ? time : 0);
   };
 
-  if (!total) return <div />;
+  if (!total) return null;
 
   let remaining = total - current;
   useLayoutEffect(() => {

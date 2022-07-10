@@ -12,7 +12,7 @@ interface TimerProps {
 const Timer = ({ current, total, playing }: TimerProps) => {
   const ref = useRef<HTMLDivElement>(null);
 
-  if (!total) return <div />;
+  if (!total) return null;
 
   const render = (el: HTMLDivElement | null, time: number) => {
     if (el) el.innerText = toMinutes(time > total ? total : time);

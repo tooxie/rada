@@ -76,7 +76,8 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
   };
   const toUrl = (id: string) => id.split(":").join("/");
   const track = player.getCurrentTrack();
-  if (!track) return <div />;
+  if (!track) return null;
+
   log.debug(`Current index at ${player.getIndex()}`);
   log.debug(`Current track is "${track.title}"`);
   let prevTrack: Track | undefined;

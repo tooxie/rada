@@ -63,7 +63,7 @@ const renderArtists = (artists: Artist[]) => {
 };
 
 const renderTrack = (player?: IPlayer | null) => (track: Track) => {
-  if (!player) return <div />;
+  if (!player) return null;
 
   const getHandler = (track: Track) => () => {
     player.appendTracks([track]);

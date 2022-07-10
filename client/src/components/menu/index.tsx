@@ -19,7 +19,7 @@ interface AdminItemProps extends Exclude<ItemProps, "hidden"> {
 }
 
 const Item = ({ href, name, hidden }: ItemProps) => {
-  if (hidden) return <div />;
+  if (hidden) return null;
   return (
     <Link href={href} activeClassName={style.active}>
       {name}
