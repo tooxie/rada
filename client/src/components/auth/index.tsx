@@ -11,11 +11,14 @@ import {
   storeAccessToken,
 } from "../../utils/auth";
 import Logger from "../../logger";
+import Spinner from "../spinner";
+import ErrorMsg from "../error";
 
 /* develblock:start */
 import rootCredentials from "../../rootuser.json";
 /* develblock:end */
 
+import InputSecret from "./secret";
 import style from "./style.css";
 
 const log = new Logger(__filename);
@@ -119,42 +122,28 @@ const Auth = ({ onLogin, onFailedAuth }: AuthProps) => {
       });
   }, [credentials, retries]);
 
-  const offlineMsg = <div>You are offline.</div>;
-  const secretInput = (
-    <Fragment>
-      <label for="secret">
-        If you have a <i>secret</i> paste it below:
-      </label>
-      <div>
-        <input
-          type="text"
-          id="secret"
-          onInput={(ev) => setSecret((ev.target as HTMLInputElement).value)}
-        />
-      </div>
-    </Fragment>
-  );
-  const errorMsg = (
-    <Fragment>
-      <p>{error ? error.message : "Unknown error"}</p>
-      <button onClick={() => location.reload()}>Retry?</button>
-    </Fragment>
-  );
-
   return (
     <Fragment>
       <Header hideControls={true} />
       <Shoulder>
         <section class={style.auth}>
-          {online
-            ? loading
-              ? "Loading..."
-              : error
-              ? errorMsg
-              : authorized
-              ? null
-              : secretInput
-            : offlineMsg}
+          {
+            // Are you online?
+            online ? (
+              // Are we still loading?
+              loading ? (
+                <Spinner message="Authenticating..." />
+              ) : // Was there an error?
+              error ? (
+                <ErrorMsg error={error ? error.message : "Unknown error"} />
+              ) : // Are you authorized to see this?
+              authorized ? null : (
+                <InputSecret onInput={(secret) => setSecret(secret)} />
+              )
+            ) : (
+              <div>You are offline.</div>
+            )
+          }
         </section>
       </Shoulder>
     </Fragment>

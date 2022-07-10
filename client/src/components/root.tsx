@@ -8,6 +8,7 @@ import useAppState from "../state/hooks/useappstate";
 
 import PlayerCtx from "./player/context";
 import Shoulder from "./layout/shoulder";
+import Spinner from "./spinner";
 import Header from "./header";
 import Router from "./router";
 import Player from "./player";
@@ -25,7 +26,9 @@ const Root = () => {
     return (
       <Fragment>
         <Header />
-        <Shoulder>Loading...</Shoulder>
+        <Shoulder>
+          <Spinner />
+        </Shoulder>
       </Fragment>
     );
   }
