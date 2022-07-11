@@ -8,10 +8,10 @@ interface ModalProps {
   visible: boolean;
   title?: ComponentChildren;
   children: ComponentChildren;
-  onClick: (ev?: MouseEvent) => void;
+  onDismiss: (ev?: MouseEvent) => void;
 }
 
-const Modal = ({ title, children, visible, onClick }: ModalProps) => {
+const Modal = ({ title, children, visible, onDismiss }: ModalProps) => {
   const [display, setDisplay] = useState(false);
   const [showing, setShowing] = useState(false);
   const body = document.body;
@@ -30,7 +30,7 @@ const Modal = ({ title, children, visible, onClick }: ModalProps) => {
     setDisplay(true);
   };
 
-  const clickHandler = (ev: MouseEvent) => onClick(ev);
+  const clickHandler = (ev: MouseEvent) => onDismiss(ev);
 
   useEffect(() => {
     visible ? show() : hide();

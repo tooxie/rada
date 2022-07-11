@@ -66,7 +66,7 @@ const InviteList = () => {
 
   return (
     <Fragment>
-      <Modal title="Invitation" visible={showModal} onClick={dismissModal}>
+      <Modal title="Invitation" visible={showModal} onDismiss={dismissModal}>
         <div class={style.invitation}>
           {errorCreating ? (
             <ErrorMsg error={errorCreating} />

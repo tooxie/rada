@@ -21,7 +21,7 @@ const Options = ({ title, icon, children }: OptionsProps) => {
     <Fragment>
       <img src={icon || dots} class={style.trigger} onClick={toggle} />
 
-      <Modal title={title} visible={visible} onClick={toggle}>
+      <Modal title={title} visible={visible} onDismiss={toggle}>
         {children}
       </Modal>
     </Fragment>
