@@ -35,7 +35,7 @@ const Splash = () => {
 
   return (
     <div class={classes}>
-      <Spinner message=" " />
+      <Spinner message="" />
     </div>
   );
 };

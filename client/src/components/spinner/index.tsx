@@ -10,7 +10,7 @@ interface SpinnerProps {
 const Spinner = ({ message }: SpinnerProps) => (
   <div class={style.spinner}>
     <img src={spinner} alt={message || "Loading..."} />
-    <p>{message || "Loading..."}</p>
+    {message === "" ? null : <p>{message || "Loading..."}</p>}
   </div>
 );
 
