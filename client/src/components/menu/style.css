@@ -1,4 +1,4 @@
-.collections {
+.menu {
   align-items: flex-end;
   display: flex;
   flex-grow: 1;
@@ -9,13 +9,13 @@
   top: -10rem;
 }
 
-.collections a {
+.menu a {
+  border-bottom: 3px solid transparent;
   color: black;
   padding: 0.5rem 1rem;
-  border-bottom: 3px solid transparent;
 }
 
-.collections a.active {
-  color: white;
+.menu a.active {
   border-bottom: 3px solid black;
+  color: white;
 }

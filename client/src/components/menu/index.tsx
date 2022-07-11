@@ -35,7 +35,7 @@ const Menu = ({ hideControls, isAdmin }: MenuProps) => {
   if (hideControls) return null;
 
   return (
-    <nav class={style.collections}>
+    <nav class={style.menu}>
       <Item href="/artists" name="Artists" />
       <Item href="/albums" name="Albums" />
       <Item href="/tracks" name="Tracks" />
