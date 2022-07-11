@@ -1,4 +1,4 @@
-import { h, ComponentChildren } from "preact";
+import { h, Fragment, ComponentChildren } from "preact";
 import { useState, useEffect } from "preact/hooks";
 
 import Title from "./title";
@@ -45,7 +45,8 @@ const Modal = ({ title, children, visible, onClick }: ModalProps) => {
       &nbsp;
       <div class={style.modal}>
         {title ? <Title>{title}</Title> : null}
-        <div class={style.body}>{children}</div>
+
+        <Fragment>{children}</Fragment>
       </div>
     </div>
   );
