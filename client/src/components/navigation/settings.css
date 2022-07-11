@@ -1,9 +1,19 @@
 .label {
 }
 
-.setting {
+.setting, .stacked {
   display: flex;
+  max-width: 100%;
   width: 100%;
+  white-space: nowrap;
+}
+
+.stacked {
+  flex-direction: column;
+}
+
+.stacked label {
+  margin-bottom: 0.5rem;
 }
 
 .setting label {

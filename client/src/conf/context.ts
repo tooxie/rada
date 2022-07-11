@@ -1,11 +1,18 @@
 import { createContext } from "preact";
 
-import { Conf, ConfHook, ArtistListTypes, AlbumListTypes } from "./types";
+import {
+  Conf,
+  ConfHook,
+  ArtistListTypes,
+  AlbumListTypes,
+  TrackSelectionTypes,
+} from "./types";
 
 const defaultConf = {
   searchEnabled: false,
   artistListType: ArtistListTypes.Mosaic,
   albumListType: AlbumListTypes.Grid,
+  trackSelection: TrackSelectionTypes.AppendFrom,
 };
 
 export const getDefaultConf = (): Conf => {

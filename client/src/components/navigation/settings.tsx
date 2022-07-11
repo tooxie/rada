@@ -2,7 +2,7 @@ import { h } from "preact";
 
 import Options, { Action, Title } from "../../components/options";
 import useConf from "../../hooks/useconf";
-import { ArtistListTypes, AlbumListTypes } from "../../conf/types";
+import { ArtistListTypes, AlbumListTypes, TrackSelectionTypes } from "../../conf/types";
 
 import icon from "./settings.svg";
 import style from "./settings.css";
@@ -43,16 +43,16 @@ const Settings = () => {
               Mosaic
             </option>
             <option
-              value={ArtistListTypes.List}
-              selected={conf.artistListType === ArtistListTypes.List}
-            >
-              List
-            </option>
-            <option
               value={ArtistListTypes.Thumbnails}
               selected={conf.artistListType === ArtistListTypes.Thumbnails}
             >
               Thumbnails
+            </option>
+            <option
+              value={ArtistListTypes.List}
+              selected={conf.artistListType === ArtistListTypes.List}
+            >
+              List
             </option>
           </select>
         </div>
@@ -74,16 +74,41 @@ const Settings = () => {
               Grid
             </option>
             <option
+              value={AlbumListTypes.Thumbnails}
+              selected={conf.albumListType === AlbumListTypes.Thumbnails}
+            >
+              Thumbnails
+            </option>
+            <option
               value={AlbumListTypes.List}
               selected={conf.albumListType === AlbumListTypes.List}
             >
               List
             </option>
+          </select>
+        </div>
+      </Action>
+      <Action noop={true}>
+        <div class={style.stacked}>
+          <label for="track-selection" class={style.label}>
+            On track selection:
+          </label>
+          <select
+            name="track-selection"
+            id="track-selection"
+            onChange={(ev) => updateConf("trackSelection", (ev.target as any).value)}
+          >
             <option
-              value={AlbumListTypes.Thumbnails}
-              selected={conf.albumListType === AlbumListTypes.Thumbnails}
+              value={TrackSelectionTypes.AppendFrom}
+              selected={conf.trackSelection === TrackSelectionTypes.AppendFrom}
             >
-              Thumbnails
+              Append from that track on
+            </option>
+            <option
+              value={TrackSelectionTypes.AppendOne}
+              selected={conf.trackSelection === TrackSelectionTypes.AppendOne}
+            >
+              Append only that track
             </option>
           </select>
         </div>

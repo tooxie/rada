@@ -9,6 +9,8 @@ import { Artist, Track } from "../../graphql/api";
 import { AlbumId } from "../../types";
 import toMinutes from "../../utils/tominutes";
 import usePlayer from "../../hooks/useplayer";
+import { TrackSelectionTypes } from "../../conf/types";
+import useConf from "../../conf/hooks/useconf";
 import Logger from "../../logger";
 
 import useGetAlbum from "./hooks/usegetalbum";
@@ -18,6 +20,7 @@ const log = new Logger(__filename);
 
 const AlbumDetail = ({ id, trackId }: DetailProps) => {
   const { loading, error, album } = useGetAlbum(id as AlbumId);
+  const { conf } = useConf();
   const player = usePlayer();
 
   useEffect(() => window.scrollTo(0, 0), []);
@@ -42,7 +45,18 @@ const AlbumDetail = ({ id, trackId }: DetailProps) => {
 
   const trackList = ((album.tracks || []) as Required<Track>[]).filter((t) => t.url);
   const getTracks = (i: number) => (i == 0 ? trackList : trackList.slice(i));
-  const appendFrom = (i: number) => player?.appendTracks(getTracks(i));
+  const append = (i: number) => {
+    if (trackList.length <= i) return;
+
+    switch (conf.trackSelection) {
+      case TrackSelectionTypes.AppendOne:
+        player?.appendTracks([trackList[i]]);
+        break;
+      case TrackSelectionTypes.AppendFrom:
+        player?.appendTracks(getTracks(i));
+        break;
+    }
+  };
   const isVa = (album.artists || []).length > 1;
   const durationInSeconds = trackList.reduce((total, track) => {
     return total + (track.lengthInSeconds || 0);
@@ -85,7 +99,7 @@ const AlbumDetail = ({ id, trackId }: DetailProps) => {
             class={`${style.track} ${shouldHighlight(track.id) ? style.highlight : ""}`}
           >
             <div class={style.ordinal}>{track.ordinal || " "}</div>
-            <div class={style.stretch} onClick={() => appendFrom(i)}>
+            <div class={style.stretch} onClick={() => append(i)}>
               <div class={style.title}>
                 <div>
                   {track.title ? (
