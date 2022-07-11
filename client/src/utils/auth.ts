@@ -90,13 +90,17 @@ const storeCredentials = (credentials: Credentials) => {
   const { username, password } = credentials;
   if (!username || !password) throw new Error("Must provide both username and password");
   log.debug(`Storing username "${username}"`);
+  log.warn(`localStorage.setItem("GawshiUsername", "${username}")`);
   localStorage.setItem("GawshiUsername", username);
   log.debug(`Storing password ${password}`);
+  log.warn(`localStorage.setItem("GawshiPassword", "***********")`);
   localStorage.setItem("GawshiPassword", password);
 };
 
 const fetchCredentials = (): Credentials => {
+  log.warn(`localStorage.getItem("GawshiUsername")`);
   const username = localStorage.getItem("GawshiUsername");
+  log.warn(`localStorage.getItem("GawshiPassword")`);
   const password = localStorage.getItem("GawshiPassword");
 
   if (!username || !password) throw new Error("Credentials not found");
@@ -105,7 +109,9 @@ const fetchCredentials = (): Credentials => {
 };
 
 const clearCredentials = () => {
+  log.warn(`localStorage.removeItem("GawshiUsername")`);
   localStorage.removeItem("GawshiUsername");
+  log.warn(`localStorage.removeItem("GawshiPassword")`);
   localStorage.removeItem("GawshiPassword");
 };
 

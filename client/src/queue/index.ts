@@ -8,7 +8,7 @@ const log = new Logger(__filename);
 // Just a convenience
 const readLength = (): number => {
   const key = "q.__meta__.length";
-  log.warn("Touching localStorage");
+  log.warn(`localStorage.getItem("${key}")`);
   return parseInt(localStorage.getItem(key) || "0", 10);
 };
 
@@ -31,14 +31,14 @@ const storage: Storage = {
     );
     for (let x = index ? index : 0; x < this.getLength(); x++) {
       log.debug(`Removing item with key q.track-${x}`);
-      log.warn("Touching localStorage");
+      log.warn(`localStorage.removeItem("q.track-${x}")`);
       localStorage.removeItem(`q.track-${x}`);
     }
   },
   setItem: function (key: string, value: any): void {
     if (!value || value === "undefined") throw new Error(`No value for item "${key}"`);
     this.saveToCache(key, value);
-    log.warn("Touching localStorage");
+    log.warn(`localStorage.setItem("${key}", ${JSON.stringify(value)})`);
     localStorage.setItem(key, JSON.stringify(value));
   },
   getItem: function (key: string): Track | null {
@@ -46,20 +46,20 @@ const storage: Storage = {
   },
   removeItem: function (key: string): void {
     delete (this.cache as any)[key];
-    log.warn("Touching localStorage");
+    log.warn(`localStorage.removeItem("${key}")`);
     localStorage.removeItem(key);
   },
   updateLength: function (): void {
     const length = this.getLength().toString();
     log.debug(`Setting new length to ${length}`);
-    log.warn("Touching localStorage");
+    log.warn(`localStorage.setItem("q.__meta__.length", "${length}")`);
     localStorage.setItem("q.__meta__.length", length);
   },
   getLength: function (): number {
     return Object.keys(this.cache).length;
   },
   setIndex: function (index: number): void {
-    log.warn("Touching localStorage");
+    log.warn(`localStorage.setItem("q.__meta__.index", "${index.toString()}")`);
     localStorage.setItem("q.__meta__.index", index.toString());
     this.__index = index;
   },
@@ -104,6 +104,7 @@ const init = () => {
 
   const storedLength = readLength();
   for (let x = 0; x < storedLength; x++) {
+    log.warn(`localStorage.getItem("q.track-${x}")`);
     const track = JSON.parse(localStorage.getItem(`q.track-${x}`) || "null");
     if (track) storage.saveToCache(`q.track-${x}`, track);
   }
@@ -115,6 +116,7 @@ const init = () => {
 
   const iKey = "q.__meta__.index";
   const emptyQueue = storage.getLength() === 0;
+  log.warn(`localStorage.getItem("${iKey}")`);
   let index = parseInt(localStorage.getItem(iKey) || "-1", 10);
 
   // Sanitization
