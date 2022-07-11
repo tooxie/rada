@@ -1,4 +1,4 @@
-import { h } from "preact";
+import { h, FunctionComponent } from "preact";
 import { Route, Router } from "preact-router";
 
 import useAppState from "../hooks/useappstate";
@@ -37,8 +37,6 @@ const NotFound = Collection(NotFoundPage);
 const Root = Collection(Home);
 
 const AppRouter = () => {
-  const { appState } = useAppState();
-
   return (
     <Router key="preact_router">
       <Route path="/" component={Root} />
@@ -60,12 +58,29 @@ const AppRouter = () => {
       />
       <Route path="/server/:serverId/tracks" key="tracks" component={Tracks} />
 
-      {appState.isAdmin && <Route path="/friends" key="friends" component={Friends} />}
-      {appState.isAdmin && <Route path="/servers" key="servers" component={Servers} />}
+      <AdminRoute path="/friends" key="friends" component={Friends} />
+      <AdminRoute path="/servers" key="servers" component={Servers} />
+      <AdminRoute path="/servers/add" key="servers" component={AddServer} />
 
       <Route default component={NotFound} />
     </Router>
   );
+};
+
+interface RouteProps {
+  path: string;
+  key: string;
+  component: FunctionComponent<any>;
+}
+
+const AdminRoute = ({ path, key, component }: RouteProps) => {
+  const { appState } = useAppState();
+
+  if (appState.isAdmin) {
+    return <Route path={path} key={key} component={component} />;
+  }
+
+  return null;
 };
 
 export default AppRouter;
