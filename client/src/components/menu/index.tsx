@@ -23,8 +23,11 @@ interface AdminItemProps extends Exclude<ItemProps, "hidden"> {
 
 const Item = ({ href, name, hidden }: ItemProps) => {
   if (hidden) return null;
+
+  const isActive = window.location.pathname.startsWith(href);
+
   return (
-    <Link href={href} activeClassName={style.active}>
+    <Link href={href} class={isActive ? style.active : ""}>
       {name}
     </Link>
   );
