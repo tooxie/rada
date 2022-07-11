@@ -43,7 +43,7 @@ def enrich_artist(client, artist):
 
 
 def enrich_album(client, artist, album):
-    if album.discogs_id:
+    if not artist or album.discogs_id:
         return
 
     log = get_logger()
