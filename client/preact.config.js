@@ -1,5 +1,3 @@
-const { generateSw } = require("preact-cli-workbox-plugin");
-
 export default {
   /**
    * Function that mutates the original webpack config.
@@ -13,9 +11,6 @@ export default {
   webpack(config, env, helpers, options) {
     var { rule } = helpers.getLoadersByName(config, "babel-loader")[0];
     var babelConfig = rule.options;
-
-    // https://github.com/prateekbh/preact-cli-workbox-plugin/blob/master/README.md
-    generateSw(config, helpers, {});
 
     if (config.mode === "development") {
       config.devtool = "cheap-module-eval-source-map";
