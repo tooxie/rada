@@ -30,10 +30,10 @@ interface UseListTracksReturn extends UseQueryReturnType {
 
 const useListTracks = (): UseListTracksReturn => {
   log.debug("useListTracks");
-  const { loading, error, data } = useQuery<ListOrphanTracksQuery>(listTracks);
+  const { loading, error, data, refetch } = useQuery<ListOrphanTracksQuery>(listTracks);
   const tracks = data?.listOrphanTracks?.items || [];
 
-  const result = { loading, error, tracks };
+  const result = { loading, error, tracks, refetch };
   log.debug("useListTracks.return:", result);
   return result;
 };

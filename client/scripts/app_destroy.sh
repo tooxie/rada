@@ -1,4 +1,4 @@
 #!/bin/bash
 set -euf -o pipefail
 
-rm -f ./src/userpool.json
+rm -f ./src/config.json

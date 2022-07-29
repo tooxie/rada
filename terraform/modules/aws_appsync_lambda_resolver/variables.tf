@@ -48,12 +48,12 @@ variable "environment" {
   type = map
 }
 
-# variable "datasource_name" {
-#   description = ""
-#   type = string
-# }
-
 variable "datasource_service_role_arn" {
   description = ""
   type = string
+}
+
+variable "timeout" {
+  type = number
+  default = 3
 }

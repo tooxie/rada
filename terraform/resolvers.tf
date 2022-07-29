@@ -448,6 +448,30 @@ module "create_invite" {
   }
 }
 
+module "create_server_invite" {
+  source = "./modules/aws_appsync_lambda_resolver"
+
+  type = "Mutation"
+  field = "createServerInvite"
+
+  appsync_graphql_api_id = aws_appsync_graphql_api.gawshi.id
+  appsync_graphql_api_arn = aws_appsync_graphql_api.gawshi.arn
+  datasource_service_role_arn = aws_iam_role.appsync.arn
+  lambda_role_arn = aws_iam_role.lambda_exec.arn
+
+  source_file = "${path.module}/lambdas/resolvers/createserverinvite.py"
+  output_path = "${path.module}/dist/lambdas/resolvers/createserverinvite.zip"
+  lambda_handler = "createserverinvite.handler"
+  function_name = "Gawshi-AppSyncResolver-CreateServerInvite-${local.suffix}"
+
+  environment = {
+    PUBLIC_URL = aws_api_gateway_stage.gawshi.invoke_url
+    SERVER_INVITATIONS_TABLE_NAME = aws_dynamodb_table.server_invitations.name
+    USER_POOL_ID = aws_cognito_user_pool.gawshi.id
+    SECRET_URL = "${aws_api_gateway_stage.gawshi.invoke_url}/secret",
+  }
+}
+
 module "register_server" {
   source = "./modules/aws_appsync_lambda_resolver"
 
@@ -463,9 +487,56 @@ module "register_server" {
   output_path = "${path.module}/dist/lambdas/resolvers/registerserver.zip"
   lambda_handler = "registerserver.handler"
   function_name = "Gawshi-AppSyncResolver-RegisterServer-${local.suffix}"
+  timeout = 6
 
   environment = {
-    SERVERS_TABLE_NAME = aws_dynamodb_table.servers.name
+    COGNITO_USER_POOL_ID = aws_cognito_user_pool.gawshi.id
     PUBLIC_URL = aws_api_gateway_stage.gawshi.invoke_url
+    SERVER_INVITATIONS_TABLE_NAME = aws_dynamodb_table.server_invitations.name
+    SERVERS_TABLE_NAME = aws_dynamodb_table.servers.name
+  }
+}
+
+module "delete_server" {
+  source = "./modules/aws_appsync_lambda_resolver"
+
+  type = "Mutation"
+  field = "deleteServer"
+
+  appsync_graphql_api_id = aws_appsync_graphql_api.gawshi.id
+  appsync_graphql_api_arn = aws_appsync_graphql_api.gawshi.arn
+  datasource_service_role_arn = aws_iam_role.appsync.arn
+  lambda_role_arn = aws_iam_role.lambda_exec.arn
+
+  source_file = "${path.module}/lambdas/resolvers/deleteserver.py"
+  output_path = "${path.module}/dist/lambdas/resolvers/deleteserver.zip"
+  lambda_handler = "deleteserver.handler"
+  function_name = "Gawshi-AppSyncResolver-DeleteServer-${local.suffix}"
+
+  environment = {
+    TABLE_NAME = aws_dynamodb_table.servers.name
+    USER_POOL_ID = aws_cognito_user_pool.gawshi.id
+  }
+}
+
+module "delete_server_invite" {
+  source = "./modules/aws_appsync_lambda_resolver"
+
+  type = "Mutation"
+  field = "deleteServerInvite"
+
+  appsync_graphql_api_id = aws_appsync_graphql_api.gawshi.id
+  appsync_graphql_api_arn = aws_appsync_graphql_api.gawshi.arn
+  datasource_service_role_arn = aws_iam_role.appsync.arn
+  lambda_role_arn = aws_iam_role.lambda_exec.arn
+
+  source_file = "${path.module}/lambdas/resolvers/deleteserver.py"
+  output_path = "${path.module}/dist/lambdas/resolvers/deleteserver.zip"
+  lambda_handler = "deleteserver.handler"
+  function_name = "Gawshi-AppSyncResolver-DeleteServerInvite-${local.suffix}"
+
+  environment = {
+    TABLE_NAME = aws_dynamodb_table.server_invitations.name
+    USER_POOL_ID = aws_cognito_user_pool.gawshi.id
   }
 }

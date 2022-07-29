@@ -14,13 +14,14 @@ export interface Executing<T> {
 }
 type R<T> = [Function, Executing<T>];
 
-const useMutation = <D, V>(mutation: M): R<D> => {
+const useMutation = <D, V = {}>(mutation: M): R<D> => {
   log.debug("useMutation()");
   const [data, setData] = useState<D | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const mutator = (variables?: V) => {
+    setLoading(true);
     getClient().then(async (client) => {
       log.debug(`mutate:${JSON.stringify(variables)}`);
       client
@@ -38,6 +39,7 @@ const useMutation = <D, V>(mutation: M): R<D> => {
           log.debug("useMutation.error");
           log.error(e);
           setError(e.message);
+          setLoading(false);
         });
     });
   };

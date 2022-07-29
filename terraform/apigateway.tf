@@ -19,6 +19,8 @@ resource "aws_api_gateway_deployment" "gawshi" {
 
   triggers = {
     redeployment = sha1(jsonencode(aws_api_gateway_rest_api.gawshi.body))
+    get_secret_hash = data.archive_file.secret.output_base64sha256
+    claim_invite_hash = data.archive_file.invite.output_base64sha256
   }
 
   lifecycle {
@@ -27,6 +29,7 @@ resource "aws_api_gateway_deployment" "gawshi" {
 
   depends_on = [
     aws_api_gateway_method.claim_invite,
+    aws_api_gateway_method.get_secret,
   ]
 }
 
@@ -62,6 +65,7 @@ resource "aws_api_gateway_method_settings" "gawshi" {
   }
 }
 
+// --- /invite
 resource "aws_api_gateway_resource" "invite" {
   rest_api_id = aws_api_gateway_rest_api.gawshi.id
   parent_id = aws_api_gateway_rest_api.gawshi.root_resource_id
@@ -114,7 +118,69 @@ resource "aws_api_gateway_integration_response" "claim_invite" {
   http_method = aws_api_gateway_method.claim_invite.http_method
   status_code = aws_api_gateway_method_response.claim_invite.status_code
 
-  depends_on = [aws_api_gateway_method_response.claim_invite]
+  depends_on = [
+    aws_api_gateway_integration.claim_invite,
+    aws_api_gateway_method_response.claim_invite
+  ]
+}
+
+// --- /secret
+resource "aws_api_gateway_resource" "secret" {
+  rest_api_id = aws_api_gateway_rest_api.gawshi.id
+  parent_id = aws_api_gateway_rest_api.gawshi.root_resource_id
+  path_part = "secret"
+}
+
+resource "aws_api_gateway_resource" "get_secret" {
+  rest_api_id = aws_api_gateway_rest_api.gawshi.id
+  parent_id = aws_api_gateway_resource.secret.id
+  path_part = "{params+}"
+}
+
+resource "aws_api_gateway_method" "get_secret" {
+  rest_api_id = aws_api_gateway_rest_api.gawshi.id
+  resource_id = aws_api_gateway_resource.get_secret.id
+  http_method = "GET"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_method_response" "get_secret" {
+  rest_api_id = aws_api_gateway_rest_api.gawshi.id
+  resource_id = aws_api_gateway_resource.get_secret.id
+  http_method = aws_api_gateway_method.get_secret.http_method
+  status_code = "200"
+
+  response_models = {
+      "application/json" = "Empty"
+  }
+
+  response_parameters = {
+      "method.response.header.Access-Control-Allow-Headers" = true,
+      "method.response.header.Access-Control-Allow-Methods" = true,
+      "method.response.header.Access-Control-Allow-Origin" = true
+  }
+  depends_on = [
+    aws_api_gateway_method.get_secret,
+    aws_api_gateway_integration.get_secret,
+  ]
+}
+
+resource "aws_api_gateway_integration" "get_secret" {
+  rest_api_id = aws_api_gateway_rest_api.gawshi.id
+  resource_id = aws_api_gateway_resource.get_secret.id
+  http_method = aws_api_gateway_method.get_secret.http_method
+  integration_http_method = "POST"
+  type = "AWS_PROXY"
+  uri = aws_lambda_function.get_secret.invoke_arn
+}
+
+resource "aws_api_gateway_integration_response" "get_secret" {
+  rest_api_id = aws_api_gateway_rest_api.gawshi.id
+  resource_id = aws_api_gateway_resource.get_secret.id
+  http_method = aws_api_gateway_method.get_secret.http_method
+  status_code = aws_api_gateway_method_response.get_secret.status_code
+
+  depends_on = [aws_api_gateway_method_response.get_secret]
 }
 
 // --- Outputs
@@ -125,5 +191,6 @@ output "api_endpoint" {
 output "api_resources" {
   value = {
     claim_invite: "${aws_api_gateway_stage.gawshi.invoke_url}${aws_api_gateway_resource.claim_invite.path}",
+    get_secret: "${aws_api_gateway_stage.gawshi.invoke_url}${aws_api_gateway_resource.get_secret.path}",
   }
 }

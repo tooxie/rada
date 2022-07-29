@@ -113,13 +113,16 @@ export type UpdateTrackInput = {
   hash: string;
 };
 
-export type CreateServerInput = {
+export type RegisterServerInput = {
   id: string;
   name: string;
   note?: string | null;
   apiUrl: string;
   idpUrl: string;
   headerUrl?: string | null;
+  secretUrl: string;
+  clientId: string;
+  inviteId: string;
 };
 
 export type Server = {
@@ -132,6 +135,21 @@ export type Server = {
   timestamp: number;
   banned?: boolean | null;
   handshakeCompleted?: boolean | null;
+};
+
+export type CreateServerInviteResponse = {
+  __typename: "CreateServerInviteResponse";
+  id: string;
+  timestamp: number;
+  clientId: string;
+  secretUrl: string;
+};
+
+export type ServerInvite = {
+  __typename: "ServerInvite";
+  id: string;
+  timestamp: number;
+  clientId: string;
 };
 
 export type CreateInviteInput = {
@@ -153,6 +171,11 @@ export type TrackConnection = {
 export type ServerConnection = {
   __typename: "ServerConnection";
   items?: Array<Server> | null;
+};
+
+export type ServerInviteConnection = {
+  __typename: "ServerInviteConnection";
+  items?: Array<ServerInvite> | null;
 };
 
 export type Invite = {
@@ -685,7 +708,7 @@ export type DeleteTrackMutation = {
 };
 
 export type RegisterServerMutationVariables = {
-  input?: CreateServerInput | null;
+  input?: RegisterServerInput | null;
 };
 
 export type RegisterServerMutation = {
@@ -699,6 +722,47 @@ export type RegisterServerMutation = {
     timestamp: number;
     banned?: boolean | null;
     handshakeCompleted?: boolean | null;
+  } | null;
+};
+
+export type DeleteServerMutationVariables = {
+  id: string;
+};
+
+export type DeleteServerMutation = {
+  deleteServer?: {
+    __typename: "Server";
+    id: string;
+    name: string;
+    note?: string | null;
+    apiUrl?: string | null;
+    headerUrl?: string | null;
+    timestamp: number;
+    banned?: boolean | null;
+    handshakeCompleted?: boolean | null;
+  } | null;
+};
+
+export type CreateServerInviteMutation = {
+  createServerInvite?: {
+    __typename: "CreateServerInviteResponse";
+    id: string;
+    timestamp: number;
+    clientId: string;
+    secretUrl: string;
+  } | null;
+};
+
+export type DeleteServerInviteMutationVariables = {
+  id: string;
+};
+
+export type DeleteServerInviteMutation = {
+  deleteServerInvite?: {
+    __typename: "ServerInvite";
+    id: string;
+    timestamp: number;
+    clientId: string;
   } | null;
 };
 
@@ -913,6 +977,18 @@ export type ListServersQuery = {
       timestamp: number;
       banned?: boolean | null;
       handshakeCompleted?: boolean | null;
+    }> | null;
+  } | null;
+};
+
+export type ListServerInvitesQuery = {
+  listServerInvites?: {
+    __typename: "ServerInviteConnection";
+    items?: Array<{
+      __typename: "ServerInvite";
+      id: string;
+      timestamp: number;
+      clientId: string;
     }> | null;
   } | null;
 };

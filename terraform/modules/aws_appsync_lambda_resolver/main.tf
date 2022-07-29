@@ -26,6 +26,7 @@ resource "aws_lambda_function" "resolver" {
   handler = var.lambda_handler
   source_code_hash = data.archive_file.resolver.output_base64sha256
   runtime = "python3.8"
+  timeout = var.timeout
 
   environment {
     variables = var.environment

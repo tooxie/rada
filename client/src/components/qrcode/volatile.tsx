@@ -17,7 +17,7 @@ type Value = string;
 let cache: [Data | null, Value | null] = [null, null];
 
 const VolatileQrCode = ({ value, width }: QrProps) => {
-  log.debug(`QrCode("${value}")`);
+  log.debug(`QrCode([str:${value.length}bytes])`);
   const [data, setData] = useState<string>();
   const [error, setError] = useState<any>();
 
@@ -49,8 +49,6 @@ const VolatileQrCode = ({ value, width }: QrProps) => {
 
   if (error) return <div>ERROR: {error}</div>;
 
-  log.debug("cache:", JSON.stringify(cache));
-  log.debug("local.data:", data);
   return dataEquals() ? <img src={getData()} /> : <Spinner />;
 };
 

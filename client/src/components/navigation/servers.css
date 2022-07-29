@@ -1,0 +1,24 @@
+.title {
+  margin-bottom: 1rem;
+}
+
+.server {
+  align-items: center;
+  display: flex;
+  margin: 0.5rem 0;
+}
+
+.server img {
+  width: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+.mine {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.mine button {
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+}

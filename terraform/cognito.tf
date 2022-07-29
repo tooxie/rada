@@ -101,13 +101,13 @@ resource "aws_cognito_user_group" "read_only_users" {
 resource "aws_cognito_user_pool_client" "gawshi" {
   name = "Gawshi-Client-${local.suffix}"
   user_pool_id = aws_cognito_user_pool.gawshi.id
+  generate_secret = false
   enable_token_revocation = false
   supported_identity_providers = ["COGNITO"]
   explicit_auth_flows = [
     "ALLOW_ADMIN_USER_PASSWORD_AUTH",
     "ALLOW_REFRESH_TOKEN_AUTH",
     "ALLOW_USER_PASSWORD_AUTH",
-    "ALLOW_USER_SRP_AUTH",
   ]
 }
 
@@ -178,38 +178,10 @@ resource "aws_cognito_identity_pool_roles_attachment" "main" {
   }
 }
 
-resource "null_resource" "user_pool_config" {
-  triggers = {
-    region = var.region
-    app_client_id = aws_cognito_user_pool_client.gawshi.id
-    user_pool_id = aws_cognito_user_pool.gawshi.id
-    identity_pool_id = aws_cognito_identity_pool.gawshi.id
-  }
-
-  provisioner "local-exec" {
-    when = destroy
-    command = join(" ", [
-      "cd ../client;",
-      "npm run cognito:userpool:destroy",
-    ])
-  }
-
-  provisioner "local-exec" {
-    command = join(" ", [
-      "cd ../client;",
-      "npm run cognito:userpool:config --",
-      "--region", var.region,
-      "--client-id", aws_cognito_user_pool_client.gawshi.id,
-      "--user-pool-id", aws_cognito_user_pool.gawshi.id,
-      "--identity-pool-id", aws_cognito_identity_pool.gawshi.id,
-    ])
-  }
-}
-
 resource "random_password" "root_user_password" {
   length = 32
   lower = true
-  number = true
+  numeric = true
   special = false
   upper = true
   min_lower = 1
@@ -248,30 +220,9 @@ resource "aws_ssm_parameter" "root_password" {
   overwrite = true
 }
 
-resource "null_resource" "root_user_config" {
-  triggers = {
-    user_username = aws_cognito_user.root.username
-    user_password = aws_cognito_user.root.password
+output "cognito" {
+  value = {
+    root_user = aws_cognito_user.root.username
+    endpoint = aws_cognito_user_pool.gawshi.endpoint
   }
-
-  provisioner "local-exec" {
-    when = destroy
-    command = join(" ", [
-      "cd ../client;",
-      "npm run cognito:rootuser:destroy",
-    ])
-  }
-
-  provisioner "local-exec" {
-    command = join(" ", [
-      "cd ../client;",
-      "npm run cognito:rootuser:config --",
-      "--username", aws_cognito_user.root.username,
-      "--password", aws_cognito_user.root.password,
-    ])
-  }
-}
-
-output "root_user" {
-  value = aws_cognito_user.root.username
 }

@@ -1,32 +1,41 @@
 import { useReducer } from "preact/hooks";
 
 import Logger from "../../logger";
-import { AppState, AppStateHook, AppStateReducer, Actions } from "../types";
+import { AppState, AppStateHook, AppStateReducer, Action } from "../types";
 import { defaultAppState } from "../context";
 
 const log = new Logger(__filename);
 
-const reducer: AppStateReducer = (state: AppState, action: Actions): AppState => {
+const reducer: AppStateReducer = (state: AppState, action: Action): AppState => {
   log.debug("Reducing:", action, state);
   switch (action) {
-    case Actions.SetAdmin:
+    case Action.SetAdmin:
       state.isAdmin = true;
       break;
-    case Actions.UnsetAdmin:
+    case Action.UnsetAdmin:
       state.isAdmin = false;
       break;
-    case Actions.OpenQueue:
+    case Action.OpenQueue:
       state.isQueueOpen = true;
       break;
-    case Actions.CloseQueue:
+    case Action.CloseQueue:
       state.isQueueOpen = false;
       break;
-    case Actions.SetSafari:
+    case Action.SetSafari:
       state.isSafari = true;
       break;
-    case Actions.UnsetSafari:
+    case Action.UnsetSafari:
       state.isSafari = false;
       break;
+    case Action.SetShowServers:
+      state.showServers = true;
+      break;
+    case Action.UnsetShowServers:
+      state.showServers = false;
+      break;
+
+    default:
+      throw new Error(`Unrecognized action "${action}"`);
   }
 
   log.debug("New state:", state);
@@ -35,7 +44,7 @@ const reducer: AppStateReducer = (state: AppState, action: Actions): AppState =>
 
 const useAppState = (): AppStateHook => {
   const [appState, dispatch] = useReducer(reducer, defaultAppState);
-  return { appState, dispatch, actions: Actions };
+  return { appState, dispatch, actions: Action };
 };
 
 export default useAppState;

@@ -20,7 +20,7 @@ const useListArtists = (queryFn?: DocumentNode): UseListArtistsReturn => {
   log.debug("[artists/hooks/uselistartists.ts] useListArtists");
 
   const listArtistsFn = queryFn || listArtists;
-  const { loading, error, data } =
+  const { loading, error, data, refetch } =
     useQuery<ListArtistsQuery, ListArtistsQueryVariables>(listArtistsFn);
   const artists = (data?.listArtists?.items || []) as Artist[];
 
@@ -29,7 +29,7 @@ const useListArtists = (queryFn?: DocumentNode): UseListArtistsReturn => {
     error,
     artists,
   });
-  return { loading, error, artists };
+  return { loading, error, artists, refetch };
 };
 
 export default useListArtists;

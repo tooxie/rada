@@ -11,7 +11,7 @@ import { authenticate, fetchCredentials } from "../../utils/auth";
 import Logger from "../../logger";
 
 const log = new Logger(__filename);
-const reauth = () => authenticate(fetchCredentials());
+// const reauth = () => authenticate(fetchCredentials());
 let wakeLock: WakeLockSentinel | null;
 const requestScreenLock = () => {
   if (!("wakeLock" in navigator)) return;
@@ -342,19 +342,19 @@ const usePlayer = () => {
       setPlaying(false);
       setLoading(false);
       log.warn(`"${target.error.message}"`);
-      if (!errored) {
-        log.warn(`[ERROR] Code: ${target.error.code}`);
-        log.warn(`[ERROR] Message: "${target.error.message}"`);
-        log.debug("Reauthenticating...");
-        reauth().then(() => {
-          log.debug("Retrying...");
-          player.play().then(() => {
-            errored = false;
-          });
-        });
-      } else {
+      if (errored) {
         log.debug(ev);
         log.error(target.error);
+      } else {
+        log.warn(`[ERROR] Code: ${target.error.code}`);
+        log.warn(`[ERROR] Message: "${target.error.message}"`);
+        // log.debug("Reauthenticating...");
+        // reauth().then(() => {
+        //   log.debug("Retrying...");
+        //   player.play().then(() => {
+        //     errored = false;
+        //   });
+        // });
       }
 
       errored = true;

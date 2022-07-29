@@ -12,34 +12,6 @@ import boto3
 TPL_FILE_NAME="template.html"
 
 
-def not_found():
-    return {
-        "statusCode": 301,
-        "headers": {
-            "Location": "https://www.google.com",
-            "Cache-Control": "no-store",
-            "Pragma": "no-cache",
-        },
-    }
-
-
-def ok(body):
-    mime = "text/html"
-    if type(body) == dict:
-        mime = "application/json"
-        body = json.dumps(body)
-
-    return {
-        "statusCode": 200,
-        "headers": {
-            "Content-Type": mime,
-            "Cache-Control": "no-store",
-            "Pragma": "no-cache",
-        },
-        "body": body,
-    }
-
-
 def handler(event, context):
     print("event:", event)
 
@@ -211,3 +183,31 @@ def create_user(username, *, is_admin):
         )
 
     return password
+
+
+def not_found():
+    return {
+        "statusCode": 301,
+        "headers": {
+            "Location": "https://www.google.com",
+            "Cache-Control": "no-store",
+            "Pragma": "no-cache",
+        },
+    }
+
+
+def ok(body):
+    mime = "text/html"
+    if type(body) == dict:
+        mime = "application/json"
+        body = json.dumps(body)
+
+    return {
+        "statusCode": 200,
+        "headers": {
+            "Content-Type": mime,
+            "Cache-Control": "no-store",
+            "Pragma": "no-cache",
+        },
+        "body": body,
+    }

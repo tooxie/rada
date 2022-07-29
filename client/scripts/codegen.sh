@@ -3,7 +3,12 @@ set -euf -o pipefail
 
 transform () {
   FILE="$1"
+  LINE=$(head -n 1 $FILE)
   HEADER='import gql from "graphql-tag";'
+  if [ "$LINE" = "$HEADER" ]; then
+    return 0
+  fi
+
   CONTENT=$(sed 's/\/\* GraphQL \*\/ /gql/g' "$FILE")
 
   if [ "$(uname)" = "Darwin" ]; then

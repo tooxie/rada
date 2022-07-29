@@ -78,6 +78,17 @@ resource "aws_dynamodb_table" "invitations" {
   }
 }
 
+resource "aws_dynamodb_table" "server_invitations" {
+  name = "GawshiServerInvitations-${local.suffix}"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key = "id"
+
+  attribute {
+    name = "id"
+    type = "S"
+  }
+}
+
 resource "aws_dynamodb_table" "servers" {
   name = "GawshiServers-${local.suffix}"
   billing_mode = "PAY_PER_REQUEST"

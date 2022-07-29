@@ -46,7 +46,9 @@ const Navigation = (props: NavigationProps) => {
           </div>
 
           <div class={style.title}>
-            <Link href={`/server/${appState.serverId}/artists`}>Gawshi</Link>
+            <Link href={`/server/${appState.serverId}/artists`}>
+              {conf.currentServer.name}
+            </Link>
           </div>
 
           {/* Only show if we have at least 1 server */}

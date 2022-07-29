@@ -8,6 +8,7 @@ import Modal from "../../components/modal";
 import Spinner from "../../components/spinner";
 import Logger from "../../logger";
 
+import useRegisterServer from "./hooks/useregisterserver";
 import style from "./add.css";
 import camera from "./camera.svg";
 
@@ -19,6 +20,7 @@ interface ServerData {
   api: string;
   name: string;
   header: string;
+  clientSecret: string;
 }
 
 const ServerAdd = () => {
@@ -26,7 +28,8 @@ const ServerAdd = () => {
   const [showModal, setShowModal] = useState(false);
   const [scanner, setScanner] = useState<QrScanner>();
   const [result, setResult] = useState<ServerData | null>();
-  const [error, setError] = useState<string | null>();
+  const [qrError, setQrError] = useState<string | null>();
+  const [registerServer, _] = useRegisterServer();
   const backgroundImage = `url(${result?.header || DEFAULT_HEADER})`;
 
   useEffect(() => {
@@ -37,7 +40,7 @@ const ServerAdd = () => {
         setResult(JSON.parse(result.data));
       } catch (e) {
         log.error(e);
-        setError("Error decoding QR");
+        setQrError("Error decoding QR");
       }
     };
 
@@ -74,7 +77,11 @@ const ServerAdd = () => {
     }
   }, [showModal]);
 
-  if (error) return <ErrorMsg error={error} />;
+  if (qrError) return <ErrorMsg error={qrError} />;
+
+  const confirmServer = () => {
+    registerServer(result);
+  };
 
   return (
     <Fragment>
@@ -87,7 +94,7 @@ const ServerAdd = () => {
             <div class={style.name}>Add Server "{result?.name}"</div>
           </div>
           <div class={style.confirm}>
-            <button>Confirm</button>
+            <button onClick={confirmServer}>Confirm</button>
           </div>
           <div class={style.cancel}>
             <span class={style.cancel}>Cancel</span>

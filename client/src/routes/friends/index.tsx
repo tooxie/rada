@@ -1,16 +1,14 @@
 import { h, Fragment } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { route } from "preact-router";
 
 import QrCode from "../../components/qrcode/volatile";
 import ErrorMsg from "../../components/error";
 import Spinner from "../../components/spinner";
-import useAppState from "../../hooks/useappstate";
 import Modal from "../../components/modal";
 import Logger from "../../logger";
 
 import useListInvites from "./hooks/uselist";
-import useCreateInvite from "./hooks/usecreate";
+import useCreateInvite from "./hooks/useinvite";
 import style from "./style.css";
 
 const log = new Logger(__filename);
@@ -20,17 +18,13 @@ const InviteList = () => {
   let adminCheck: HTMLInputElement | null;
 
   const [showModal, setShowModal] = useState(false);
-  const { appState } = useAppState();
-  const { loading, error, invites } = useListInvites();
-  const [createInvite, { claimUrl, loading: creating, error: errorCreating }] =
-    useCreateInvite();
+  const list = useListInvites();
+  const [createInvite, { claimUrl, loading, error }] = useCreateInvite();
 
-  if (!appState.isAdmin) route("/404");
+  if (list.error) return <ErrorMsg error={list.error} />;
+  if (list.loading) return <Spinner />;
 
-  if (error) return <ErrorMsg error={error} />;
-  if (loading) return <Spinner />;
-
-  const stats = invites.reduce(
+  const stats = list.invites.reduce(
     (acc, invite) => {
       acc.claimed += Number(!!invite.visited);
       acc.installed += Number(!!invite.visited);
@@ -39,7 +33,7 @@ const InviteList = () => {
       return acc;
     },
     {
-      total: invites.length,
+      total: list.invites.length,
       claimed: 0,
       installed: 0,
       unsolicited: 0,
@@ -72,8 +66,8 @@ const InviteList = () => {
     <Fragment>
       <Modal title="Invitation" visible={showModal} onDismiss={dismissModal}>
         <div class={style.invitation}>
-          {errorCreating ? (
-            <ErrorMsg error={errorCreating} />
+          {error ? (
+            <ErrorMsg error={error} />
           ) : (
             <Fragment>
               <div class={style.qrcode}>{qrCode || <Spinner />}</div>
@@ -126,8 +120,8 @@ const InviteList = () => {
             only, but nobody else.
           </div>
         </div>
-        <button disabled={creating} onClick={displayModal}>
-          {creating ? "Creating..." : "Create invitation"}
+        <button disabled={loading} onClick={displayModal}>
+          {loading ? "Creating..." : "Create invitation"}
         </button>
       </section>
     </Fragment>

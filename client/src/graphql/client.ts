@@ -1,6 +1,6 @@
 import type { ApolloClient, NormalizedCacheObject } from "@apollo/client";
 
-import config from "../config.json";
+import { server } from "../config.json";
 import { getAccessToken } from "../utils/auth";
 
 export type Client = ApolloClient<NormalizedCacheObject>;
@@ -13,7 +13,7 @@ const getClient = async (url?: string): Promise<Client> => {
   const { ApolloClient, createHttpLink, InMemoryCache } = await import("@apollo/client");
   const { setContext } = await import("@apollo/client/link/context");
 
-  const httpLink = createHttpLink({ uri: url || config.graphql.url });
+  const httpLink = createHttpLink({ uri: url || server.api });
   const authLink = setContext((_, { headers }) => {
     return {
       headers: {

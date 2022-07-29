@@ -98,6 +98,12 @@ resource "aws_cloudfront_distribution" "gawshi_app_ssl" {
   }
 }
 
+resource "aws_ssm_parameter" "app_public_url" {
+  name = local.app_public_url_parameter_name
+  type = "String"
+  value = aws_cloudfront_distribution.gawshi_app_ssl.domain_name
+}
+
 output "public_url" {
   value = "https://${aws_cloudfront_distribution.gawshi_app_ssl.domain_name}"
 }

@@ -13,7 +13,13 @@ type Mutation {
   updateTrack(id: ID!, input: UpdateTrackInput!): Track
   deleteTrack(id: ID!): Track
 
-  registerServer(input: CreateServerInput): Server
+  registerServer(input: RegisterServerInput): Server
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
+  deleteServer(id: ID!): Server
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
+  createServerInvite: CreateServerInviteResponse
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
+  deleteServerInvite(id: ID!): ServerInvite
     @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
 
   createInvite(input: CreateInviteInput!): InviteUrl
@@ -36,6 +42,9 @@ type Query {
   listOrphanTracks: TrackConnection
 
   listServers: ServerConnection
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
+
+  listServerInvites: ServerInviteConnection
     @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
 
   getInvite(id: ID!): Invite
@@ -270,17 +279,44 @@ type Server {
   timestamp: Int!
   banned: Boolean
   handshakeCompleted: Boolean
+  userPoolId: String!
+  clientId: String!
+  region: String!
+  idpUrl: String!
+  identityPoolId: String!
 }
 
 type ServerConnection {
   items: [Server!]
 }
 
-input CreateServerInput {
+input RegisterServerInput {
   id: ID!
   name: String!
   note: String
   apiUrl: String!
   idpUrl: String!
+  timestamp: Int!
   headerUrl: String
+  secretUrl: String!
+  clientId: ID!
+  inviteId: ID!
+}
+
+# --- Server invites
+type ServerInvite {
+  id: ID!
+  timestamp: Int!
+  clientId: ID!
+}
+
+type CreateServerInviteResponse {
+  id: ID!
+  timestamp: Int!
+  clientId: ID!
+  secretUrl: String!
+}
+
+type ServerInviteConnection {
+  items: [ServerInvite!]
 }

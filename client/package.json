@@ -6,15 +6,15 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "build": "preact build --no-prerender --no-inline-css",
+    "build": ". ./scripts/build.sh",
     "codegen": ". ./scripts/codegen.sh",
+    "app:config": ". ./scripts/app_config.sh",
+    "app:destroy": ". ./scripts/app_destroy.sh",
     "codegen:config": ". ./scripts/codegen_config.sh",
     "codegen:destroy": ". ./scripts/codegen_destroy.sh",
     "cognito:rootuser:config": ". ./scripts/rootuser_config.sh",
     "cognito:rootuser:destroy": ". ./scripts/rootuser_destroy.sh",
-    "cognito:userpool:config": ". ./scripts/userpool_config.sh",
-    "cognito:userpool:destroy": ". ./scripts/userpool_destroy.sh",
-    "dev": "preact watch",
+    "dev": "preact watch --https",
     "format": "prettier --write '*.{json,js}' 'src/**/*.{js,json,ts,tsx}'",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
     "serve": "sirv build --port 8080 --cors --single",
@@ -40,7 +40,6 @@
     "preact": "^10.3.1",
     "preact-cli": "^3.0.0",
     "preact-cli-workbox-plugin": "^1.1.1",
-    "preact-i18n": "2.4.0-preactx",
     "preact-render-to-string": "^5.1.4",
     "preact-router": "^3.2.1",
     "qr-scanner": "^1.4.1",
@@ -59,7 +58,6 @@
     "@graphql-codegen/typescript-operations": "1.18.0",
     "@types/enzyme": "^3.10.5",
     "@types/jest": "^26.0.8",
-    "@types/preact-i18n": "^2.3.0",
     "@types/qrcode": "^1.4.2",
     "@types/wicg-mediasession": "^1.1.3",
     "@typescript-eslint/eslint-plugin": "^2.25.0",
@@ -67,16 +65,13 @@
     "amplify-codegen": "^2.28.0",
     "eslint": "^6.8.0",
     "eslint-config-preact": "^1.1.1",
-    "eslint-plugin-preact-i18n": "^1.1.0",
     "prettier": "2.3.0",
     "qrcode-terminal": "^0.12.0",
-    "sirv-cli": "^1.0.0-next.3"
+    "sirv-cli": "^1.0.0-next.3",
+    "yarn": "^1.22.19"
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
-    "plugins": [
-      "preact-i18n"
-    ],
     "extends": [
       "preact",
       "plugin:@typescript-eslint/recommended"
@@ -84,22 +79,8 @@
     "ignorePatterns": [
       "build/"
     ],
-    "settings": {
-      "preact-i18n": {
-        "languageFiles": [
-          {
-            "name": "es",
-            "path": "i18n/es.json"
-          }
-        ]
-      }
-    },
     "rules": {
-      "@typescript-eslint/no-explicit-any": "error",
-      "preact-i18n/no-missing-template-field": "error",
-      "preact-i18n/no-text-as-attribute": "error",
-      "preact-i18n/no-text-as-children": "warn",
-      "preact-i18n/no-unknown-key": "error"
+      "@typescript-eslint/no-explicit-any": "error"
     }
   },
   "jest": {

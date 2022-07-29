@@ -3,15 +3,48 @@
 }
 
 .add {
-  margin: 0.5rem 0 1rem 0;
-  text-align: center;
-}
-
-.servers .server {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 1rem;
 }
 
-.servers .server .id {
-  font-size: 0.8rem;
+.add button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+
+.servers .server,
+.pending .server {
+  margin: 0.5rem 0;
+}
+
+.server .id,
+.server .ts {
   display: block;
+  font-size: 0.8rem;
+}
+
+.qr {
+  margin-top: 1rem;
+}
+
+.qr .placeholder {
+  min-height: 240px;
+  text-align: center;
+}
+
+.pending .server .id {
+  color: gray;
+}
+
+.server {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.server .trash {
+  width: 2.5rem;
+  padding: 0.5rem;
 }

@@ -279,7 +279,7 @@ export const deleteTrack = gql`
   }
 `;
 export const registerServer = gql`
-  mutation RegisterServer($input: CreateServerInput) {
+  mutation RegisterServer($input: RegisterServerInput) {
     registerServer(input: $input) {
       id
       name
@@ -289,6 +289,39 @@ export const registerServer = gql`
       timestamp
       banned
       handshakeCompleted
+    }
+  }
+`;
+export const deleteServer = gql`
+  mutation DeleteServer($id: ID!) {
+    deleteServer(id: $id) {
+      id
+      name
+      note
+      apiUrl
+      headerUrl
+      timestamp
+      banned
+      handshakeCompleted
+    }
+  }
+`;
+export const createServerInvite = gql`
+  mutation CreateServerInvite {
+    createServerInvite {
+      id
+      timestamp
+      clientId
+      secretUrl
+    }
+  }
+`;
+export const deleteServerInvite = gql`
+  mutation DeleteServerInvite($id: ID!) {
+    deleteServerInvite(id: $id) {
+      id
+      timestamp
+      clientId
     }
   }
 `;

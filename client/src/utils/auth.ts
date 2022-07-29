@@ -1,5 +1,4 @@
 // import cognito from "@aws-cdk/aws-cognito";
-import poolConfig from "../userpool.json";
 import {
   CognitoUserPool,
   CognitoUser,
@@ -8,6 +7,7 @@ import {
 import * as AWS from "aws-sdk/global";
 
 import Logger from "../logger";
+import type Config from "../config.json";
 
 const log = new Logger(__filename);
 
@@ -16,15 +16,19 @@ interface AuthResponse {
   groups: string[];
 }
 
-const authenticate = (credentials: Credentials): Promise<AuthResponse> => {
+const authenticate = (
+  credentials: Credentials,
+  config: typeof Config
+): Promise<AuthResponse> => {
   log.debug(`Authenticating as ${credentials.username}`);
+
   const { username, password } = credentials;
   if (!username || !password) throw new Error("No user credentials provided");
 
   return new Promise((resolve, reject) => {
     const poolData = {
-      UserPoolId: poolConfig.userPoolId,
-      ClientId: poolConfig.clientId,
+      UserPoolId: config.idp.userPoolId,
+      ClientId: config.idp.clientId,
     };
     const pool = new CognitoUserPool(poolData);
     const authData = {
@@ -43,11 +47,11 @@ const authenticate = (credentials: Credentials): Promise<AuthResponse> => {
       onSuccess: (result) => {
         log.debug("Authentication successful");
         const loginData = {};
-        const key = `cognito-idp.${poolConfig.region}.amazonaws.com/${poolConfig.userPoolId}`;
+        const key = config.idp.url;
         (loginData as any)[key] = result.getIdToken().getJwtToken();
-        AWS.config.update({ region: poolConfig.region });
+        AWS.config.update({ region: config.region });
         AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-          IdentityPoolId: poolConfig.identityPoolId,
+          IdentityPoolId: config.idp.identityPoolId,
           Logins: loginData,
         });
         (AWS.config.credentials as any).refresh((error: Error) => {

@@ -1,4 +1,3 @@
-import { h } from "preact";
 import { route } from "preact-router";
 
 import useAppState from "../../hooks/useappstate";

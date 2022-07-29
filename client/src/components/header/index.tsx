@@ -1,6 +1,7 @@
 import { h } from "preact";
 
 import useAppState from "../../state/hooks/useappstate";
+import useConf from "../../conf/hooks/useconf";
 
 import Navigation from "../navigation";
 import Menu from "../menu";
@@ -13,9 +14,15 @@ interface HeaderProps {
 
 const Header = (props: HeaderProps) => {
   const { appState } = useAppState();
+  const { conf } = useConf();
+
+  const backgroundImage = `url(${conf.currentServer.headerUrl})`;
 
   return (
-    <header class={style.header}>
+    <header
+      class={style.header}
+      style={conf.currentServer.headerUrl ? { backgroundImage } : {}}
+    >
       <div class={style.song2} />
       <Navigation
         hideControls={props.hideControls}

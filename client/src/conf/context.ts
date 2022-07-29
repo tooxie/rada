@@ -1,18 +1,23 @@
 import { createContext } from "preact";
 
+import config from "../config.json";
+
 import {
+  AlbumListTypes,
+  ArtistListTypes,
   Conf,
   ConfHook,
-  ArtistListTypes,
-  AlbumListTypes,
+  DefaultServer,
   TrackSelectionTypes,
 } from "./types";
 
-const defaultConf = {
+const defaultConf: Conf = {
+  config,
   searchEnabled: false,
   artistListType: ArtistListTypes.Mosaic,
   albumListType: AlbumListTypes.Grid,
   trackSelection: TrackSelectionTypes.AppendFrom,
+  currentServer: DefaultServer,
 };
 
 export const getDefaultConf = (): Conf => {

@@ -34,13 +34,13 @@ interface UseListAlbumsReturn extends UseQueryReturnType {
 
 const useListAlbums = (serverId: ServerId): UseListAlbumsReturn => {
   log.debug(`useListAlbums("${serverId}")`);
-  const { loading, error, data } = useQuery<ListAlbumsQuery, ListAlbumsQueryVariables>(
-    listAlbums,
-    {}
-  );
+  const { loading, error, data, refetch } = useQuery<
+    ListAlbumsQuery,
+    ListAlbumsQueryVariables
+  >(listAlbums, {});
   const albums = data?.listAlbums?.items || [];
 
-  const result = { loading, error, albums };
+  const result = { loading, error, albums, refetch };
   log.debug("useListAlbums.return:", result);
   return result;
 };

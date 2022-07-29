@@ -14,6 +14,7 @@ import Logger from "../../logger";
 import Spinner from "../spinner";
 import ErrorMsg from "../error";
 import Install, { appInstalled } from "../install";
+import useConf from "../../conf/hooks/useconf";
 
 /* develblock:start */
 import rootCredentials from "../../rootuser.json";
@@ -30,6 +31,7 @@ interface AuthProps {
 }
 
 const Auth = ({ onLogin, onFailedAuth }: AuthProps) => {
+  const { conf } = useConf();
   const [authorized, setAuthorized] = useState(false);
   const [loading, setLoading] = useState(true);
   const [credentials, setCredentials] = useState<Credentials>();
@@ -90,7 +92,7 @@ const Auth = ({ onLogin, onFailedAuth }: AuthProps) => {
   }, [credentials]);
 
   useEffect(() => {
-    if (!credentials || authorized) return;
+    if (!conf || !credentials || authorized) return;
     if (retries > 3) {
       setLoading(false);
       if (onFailedAuth) onFailedAuth();
@@ -99,7 +101,7 @@ const Auth = ({ onLogin, onFailedAuth }: AuthProps) => {
 
     log.debug("Authenticating against cognito");
     setLoading(true);
-    authenticate(credentials)
+    authenticate(credentials, conf.config)
       .then((response) => {
         log.debug("Logged in");
         storeAccessToken(response.token);
@@ -123,7 +125,7 @@ const Auth = ({ onLogin, onFailedAuth }: AuthProps) => {
           setLoading(false);
         }
       });
-  }, [credentials, retries]);
+  }, [conf, credentials, retries]);
 
   return (
     <Fragment>

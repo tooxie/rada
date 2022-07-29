@@ -90,6 +90,9 @@ resource "aws_iam_role_policy" "lambda_dynamodb" {
              aws_dynamodb_table.invitations.arn,
           "${aws_dynamodb_table.invitations.arn}/*",
 
+             aws_dynamodb_table.server_invitations.arn,
+          "${aws_dynamodb_table.server_invitations.arn}/*",
+
              aws_dynamodb_table.servers.arn,
           "${aws_dynamodb_table.servers.arn}/*",
         ]
@@ -119,6 +122,9 @@ resource "aws_iam_role_policy" "appsync_dynamodb" {
 
              aws_dynamodb_table.invitations.arn,
           "${aws_dynamodb_table.invitations.arn}/*",
+
+             aws_dynamodb_table.server_invitations.arn,
+          "${aws_dynamodb_table.server_invitations.arn}/*",
 
              aws_dynamodb_table.servers.arn,
           "${aws_dynamodb_table.servers.arn}/*",
@@ -176,4 +182,33 @@ resource "aws_iam_role_policy" "cloudwatch" {
       }
     ]
   })
+}
+
+resource "aws_iam_policy" "lambda_cognito" {
+  name = "GawshiLambdaCreateCognitoUserPoolClient-${local.suffix}"
+  path = "/"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = [
+          "cognito-idp:CreateUserPoolClient",
+          "cognito-idp:DeleteUserPoolClient",
+          "cognito-idp:CreateIdentityProvider",
+          "cognito-idp:DeleteIdentityProvider",
+        ]
+        Effect = "Allow"
+        Resource = [
+          aws_cognito_user_pool.gawshi.arn,
+          "${aws_cognito_user_pool.gawshi.arn}/*",
+        ]
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_cognito" {
+  role = aws_iam_role.lambda_exec.name
+  policy_arn = aws_iam_policy.lambda_cognito.arn
 }

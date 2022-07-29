@@ -9,12 +9,16 @@ interface UseListServersReturn extends Omit<UseGetReturn, "data"> {
 }
 
 const useListServers = (): UseListServersReturn => {
-  const { loading, error, data } = useQuery<ListServersQuery, {}>(listServers, {});
+  const { loading, error, data, refetch } = useQuery<ListServersQuery, {}>(
+    listServers,
+    {}
+  );
 
   return {
     loading,
     error,
     servers: data?.listServers?.items || [],
+    refetch,
   };
 };
 

@@ -5,6 +5,13 @@ data "archive_file" "invite" {
   output_path = "${path.module}/dist/invite.zip"
 }
 
+data "archive_file" "secret" {
+  type = "zip"
+  source_dir = "${path.module}/lambdas/secret/"
+  output_file_mode = "0666"
+  output_path = "${path.module}/dist/secret.zip"
+}
+
 resource "aws_iam_role" "invite" {
   name = "Gawshi-LambdaInvite-${local.suffix}"
 
@@ -37,6 +44,9 @@ resource "aws_iam_role_policy" "lambda_invites" {
         Resource = [
           aws_dynamodb_table.invitations.arn,
           "${aws_dynamodb_table.invitations.arn}/*",
+
+          aws_dynamodb_table.server_invitations.arn,
+          "${aws_dynamodb_table.server_invitations.arn}/*",
         ]
       },
       {
@@ -44,6 +54,7 @@ resource "aws_iam_role_policy" "lambda_invites" {
           "cognito-idp:AdminConfirmSignUp",
           "cognito-idp:AdminCreateUser",
           "cognito-idp:AdminSetUserPassword",
+          "cognito-idp:DescribeUserPoolClient",
         ],
         Effect = "Allow",
         Resource = [
@@ -69,14 +80,10 @@ resource "aws_lambda_function" "claim_invite" {
 
   environment {
     variables = {
-      COGNITO_CLIENT_ID = aws_cognito_user_pool_client.gawshi.id
-      COGNITO_ROOT_PASSWORD = aws_cognito_user.root.password
-      COGNITO_ROOT_USERNAME = aws_cognito_user.root.username
-      COGNITO_USER_POOL_ID = aws_cognito_user_pool.gawshi.id
-      COGNITO_USER_POOL_ID = aws_cognito_user_pool.gawshi.id
+      APP_PUBLIC_URL_PARAMETER_NAME = local.app_public_url_parameter_name
       COGNITO_ADMIN_GROUP_NAME = aws_cognito_user_group.admin_users.name
+      COGNITO_USER_POOL_ID = aws_cognito_user_pool.gawshi.id
       INVITATIONS_TABLE_NAME = aws_dynamodb_table.invitations.name
-      APP_PUBLIC_URL = aws_cloudfront_distribution.gawshi_app_ssl.domain_name
     }
   }
 
@@ -89,6 +96,34 @@ resource "aws_lambda_permission" "claim_invite" {
   statement_id = "AllowExecutionFromApiGateway"
   action = "lambda:InvokeFunction"
   function_name = aws_lambda_function.claim_invite.function_name
+  principal = "apigateway.amazonaws.com"
+  source_arn = "${aws_api_gateway_rest_api.gawshi.execution_arn}/*/*"
+}
+
+resource "aws_lambda_function" "get_secret" {
+  filename = data.archive_file.secret.output_path
+  function_name = "Gawshi-GetApClientSecret-${local.suffix}"
+  role = aws_iam_role.invite.arn
+  handler = "getsecret.handler"
+  source_code_hash = data.archive_file.secret.output_base64sha256
+  runtime = "python3.8"
+
+  environment {
+    variables = {
+      COGNITO_USER_POOL_ID = aws_cognito_user_pool.gawshi.id
+      SERVER_INVITATIONS_TABLE_NAME = aws_dynamodb_table.server_invitations.name
+    }
+  }
+
+  tags = {
+    Gawshi = 1
+  }
+}
+
+resource "aws_lambda_permission" "get_secret" {
+  statement_id = "AllowExecutionFromApiGateway"
+  action = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.get_secret.function_name
   principal = "apigateway.amazonaws.com"
   source_arn = "${aws_api_gateway_rest_api.gawshi.execution_arn}/*/*"
 }

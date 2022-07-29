@@ -156,6 +156,17 @@ export const listServers = gql`
     }
   }
 `;
+export const listServerInvites = gql`
+  query ListServerInvites {
+    listServerInvites {
+      items {
+        id
+        timestamp
+        clientId
+      }
+    }
+  }
+`;
 export const getInvite = gql`
   query GetInvite($id: ID!) {
     getInvite(id: $id) {

@@ -29,7 +29,8 @@ AWS_PROFILE=gawshi-backend-resources terraform apply
 
 You will be prompted for the region in which to create the resources.
 
-4. Find the "gawshi-<suffix>" user in IAM and click on "Create access key".
+4. Find the "gawshi-<suffix>" user in IAM.
+5. Go to the "Security credentials" tab and click on "Create access key".
 5. Download the credentials and add them to the `~/.aws/credentials` file.
 
 This guide will assume the name "gawshi" for the new profile.
@@ -93,11 +94,11 @@ If you need to recreate the root user simply taint the user's suffix:
 AWS_PROFILE=gawshi terraform taint random_string.root_user_suffix
 ```
 
-The previous command will reuse the same password. It's therefore highly 
+The previous command will reuse the same password. It's therefore highly
 recommended tainting the password as well:
 ```
 AWS_PROFILE=gawshi terraform taint random_password.root_user_password
 ```
 
-Note that those are 2 different resources, `random_string` and 
+Note that those are 2 different resources, `random_string` and
 `random_password`.

@@ -84,6 +84,7 @@ const H2 = ({ children }: ElProps) => <h2 class={style.h2}>{children}</h2>;
 const H3 = ({ children }: ElProps) => <h3 class={style.h3}>{children}</h3>;
 
 export const appInstalled = () => {
+  return true;
   /* develblock:start */
   return true;
   /* develblock:end */

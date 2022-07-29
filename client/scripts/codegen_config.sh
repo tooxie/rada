@@ -6,14 +6,8 @@ while [ "$1" != "" ]; do
     --api-id ) shift
       API_ID="$1"
     ;;
-    --api-url ) shift
-      API_URL="$1"
-    ;;
     --region ) shift
       REGION="$1"
-    ;;
-    --server-id ) shift
-      SERVER_ID="$1"
     ;;
   esac
 
@@ -21,9 +15,7 @@ while [ "$1" != "" ]; do
 done
 
 if [ -z "$API_ID" ] ||
-   [ -z "$API_URL" ] ||
-   [ -z "$REGION" ] ||
-   [ -z "$SERVER_ID" ]
+   [ -z "$REGION" ]
 then
   echo "Parameter missing"
   exit 1
@@ -49,26 +41,3 @@ AMPLIFY_CONFIG="projects:
         maxDepth: 2
 "
 echo "$AMPLIFY_CONFIG" > "$AMPLIFY_CONFIG_FILE"
-
-tobase64 () {
-  if [ "`uname`" = "Darwin" ]; then
-    echo "$1" | tr -d '\n' | base64 | tr -d '\n'
-  else
-    echo -n "$1" | base64 | tr -d '\n'
-  fi
-}
-
-CONFIG_FILE="./src/config.json"
-CONFIG="{
-  \"graphql\": {
-    \"url\": \"$API_URL\"
-  },
-  \"region\": \"$REGION\",
-  \"serverId\": \"$SERVER_ID\"
-}
-"
-if [ "`uname`" = "Darwin" ]; then
-  echo "$CONFIG" > "$CONFIG_FILE"
-else
-  echo -e "$CONFIG" > "$CONFIG_FILE"
-fi

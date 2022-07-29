@@ -22,7 +22,6 @@ resource "random_string" "suffix" {
 
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "gawshi-terraform-state-${random_string.suffix.result}"
-  acl = "private"
 
   tags = {
     Name = "gawshi-terraform-state"
@@ -217,8 +216,8 @@ resource "aws_iam_policy" "gawshi" {
         ]
         Effect = "Allow"
         Resource = [
-          "arn:aws:kms:${var.region}:${data.aws_caller_identity}:key/*",
-          "arn:aws:kms:${var.region}:${data.aws_caller_identity}:alias/Gawshi-*",
+          "arn:aws:kms:${var.region}:${data.aws_caller_identity.gawshi.account_id}:key/*",
+          "arn:aws:kms:${var.region}:${data.aws_caller_identity.gawshi.account_id}:alias/Gawshi-*",
         ]
       },
     ]
