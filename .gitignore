@@ -14,6 +14,7 @@ client/size-plugin.json
 client/src/config.json
 client/src/rootuser.json
 client/src/userpool.json
+client/yarn.lock
 
 shiva/gawshi.*
 
