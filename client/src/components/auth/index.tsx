@@ -17,6 +17,9 @@ import Install, { appInstalled } from "../install";
 import useConf from "../../conf/hooks/useconf";
 
 /* develblock:start */
+/* We inject the root credentials into localStorage for local development. The
+ * build pipeline will remove all the code between the "develblock:" markers.
+ */
 import rootCredentials from "../../rootuser.json";
 /* develblock:end */
 
@@ -144,7 +147,8 @@ const Auth = ({ onLogin, onFailedAuth }: AuthProps) => {
                 error ? (
                   <ErrorMsg error={error ? error.message : "Unknown error"} />
                 ) : // Are you authorized to see this?
-                authorized ? null : (
+                authorized ? /* Null is good :) */ null : (
+                  // I'm going to need to see your ID
                   <InputSecret onInput={(secret) => setSecret(secret)} />
                 )
               ) : (
