@@ -59,6 +59,7 @@ resource "null_resource" "app_config" {
   triggers = {
     api_url = lookup(aws_appsync_graphql_api.gawshi.uris, "GRAPHQL")
     client_id = aws_cognito_user_pool_client.gawshi.id
+    cognito_admin_group_name = local.cognito_admin_group_name
     id_pool_id = aws_cognito_identity_pool.gawshi.id
     idp_url = aws_cognito_user_pool.gawshi.endpoint
     region = var.region
@@ -87,6 +88,7 @@ resource "null_resource" "app_config" {
       "--server-id", random_uuid.server_id.result,
       "--server-name", var.server_name,
       "--user-pool-id", aws_cognito_user_pool.gawshi.id,
+      "--cognito-admin-group-name", local.cognito_admin_group_name,
     ])
   }
 }

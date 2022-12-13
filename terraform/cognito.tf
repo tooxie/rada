@@ -33,7 +33,7 @@ resource "aws_cognito_user_pool" "gawshi" {
 }
 
 resource "aws_cognito_user_group" "admin_users" {
-  name = "Gawshi-Admin-${local.suffix}"
+  name = local.cognito_admin_group_name
   user_pool_id = aws_cognito_user_pool.gawshi.id
   description = "Gawshi admin users group"
   precedence = 1

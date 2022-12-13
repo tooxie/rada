@@ -32,6 +32,7 @@ locals {
   suffix = var.suffix != "" ? var.suffix : random_string.suffix.result
   mime_types = jsondecode(file("${path.module}/mime.json"))
   app_public_url_parameter_name = "GawshiAppPublicUrl-${local.suffix}"
+  cognito_admin_group_name = "Gawshi-Admin-${local.suffix}"
 }
 
 output "server_id" {

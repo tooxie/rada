@@ -22,6 +22,9 @@ while [ "$1" != "" ]; do
     --client-id ) shift
       CLIENT_ID=`read_arg $1`
     ;;
+    --cognito-admin-group-name ) shift
+      COGNITO_ADMIN_GROUP_NAME=`read_arg $1`
+    ;;
     --id-pool-id ) shift
       ID_POOL_ID=`read_arg $1`
     ;;
@@ -48,6 +51,7 @@ done
 if [ -z "$API_URL" ] ||
    [ -z "$CLIENT_ID" ] ||
    [ -z "$ID_POOL_ID" ] ||
+   [ -z "$COGNITO_ADMIN_GROUP_NAME" ] ||
    [ -z "$IDP_URL" ] ||
    [ -z "$REGION" ] ||
    [ -z "$SERVER_ID" ] ||
@@ -70,7 +74,8 @@ CONFIG="{
     \"url\": \"$IDP_URL\",
     \"clientId\": \"$CLIENT_ID\",
     \"identityPoolId\": \"$ID_POOL_ID\",
-    \"userPoolId\": \"$USER_POOL_ID\"
+    \"userPoolId\": \"$USER_POOL_ID\",
+    \"adminGroupName\": \"$COGNITO_ADMIN_GROUP_NAME\"
   }
 }
 "

@@ -15,6 +15,7 @@ import Spinner from "../spinner";
 import ErrorMsg from "../error";
 import Install, { appInstalled } from "../install";
 import useConf from "../../conf/hooks/useconf";
+import config from "../../config.json";
 
 /* develblock:start */
 /* We inject the root credentials into localStorage for local development. The
@@ -108,8 +109,8 @@ const Auth = ({ onLogin, onFailedAuth }: AuthProps) => {
       .then((response) => {
         log.debug("Logged in");
         storeAccessToken(response.token);
-        const isAdmin = !!response.groups.find((group) =>
-          group.startsWith("Gawshi-Admin-")
+        const isAdmin = !!response.groups.find(
+          (group) => group === config.idp.adminGroupName
         );
         if (onLogin) {
           if (appInstalled()) onLogin(isAdmin, response.token);
