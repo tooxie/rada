@@ -14,15 +14,18 @@
   transition: 0.5s ease-out;
 }
 
+.background {
+  background-color: #041628;
+  background-position: center;
+  border-radius: 1rem 1rem 0 0;
+  border-width: 0;
+}
+
 .player {
   -webkit-touch-callout: none;
   user-select: none;
 
   align-items: center;
-  background-color: #041628;
-  background-position: center;
-  border-radius: 1rem 1rem 0 0;
-  border-width: 0;
   bottom: 0;
   color: white;
   display: flex;

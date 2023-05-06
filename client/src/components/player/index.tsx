@@ -1,5 +1,6 @@
 import { h } from "preact";
 
+import type { AlbumId, ServerId } from "../../types";
 import { Album, Track } from "../../graphql/api";
 import { IPlayer } from "../../player/types";
 import useGetAlbum from "../../routes/albums/hooks/usegetalbum";
@@ -24,7 +25,16 @@ interface PlayerProps {
   onClick: Function;
   track: Track;
   player: IPlayer;
+  album?: Album;
 }
+
+interface PlayerBackgroundProps {
+  serverId: ServerId;
+  albumId: AlbumId;
+  children?: JSX.Element | JSX.Element[];
+}
+
+type NoBackgroundProps = Pick<PlayerBackgroundProps, "children">;
 
 const Shell = ({ onClick }: ShellProps) => {
   const player = usePlayer();
@@ -34,7 +44,17 @@ const Shell = ({ onClick }: ShellProps) => {
 
   return (
     <div class={`${style.shell} ${visible ? style.visible : style.hidden}`}>
-      {player && track && <Player player={player} track={track} onClick={onClick} />}
+      {player &&
+        track &&
+        (track.serverId && track.album?.id ? (
+          <PlayerBackground serverId={track.serverId} albumId={track.album?.id}>
+            <Player player={player} track={track} onClick={onClick} />
+          </PlayerBackground>
+        ) : (
+          <NoBackground>
+            <Player player={player} track={track} onClick={onClick} />
+          </NoBackground>
+        ))}
     </div>
   );
 };
@@ -43,13 +63,28 @@ const defaultBackground = "/assets/img/black.png";
 let backgroundImage = `url(${defaultBackground})`;
 let _album: Album | null = null;
 
-const Player = ({ player, track, onClick }: PlayerProps) => {
-  log.debug(`Player.render(${track.id})`);
-  const { album } = useGetAlbum(track.serverId, track.album?.id);
-  const albumChanged = _album?.id !== track.album?.id;
+const PlayerBackground = ({ serverId, albumId, children }: PlayerBackgroundProps) => {
+  const { album } = useGetAlbum(serverId, albumId);
+  const albumChanged = _album?.id !== albumId;
 
   if (albumChanged) _album = album;
   if (_album) backgroundImage = `url(${_album.imageUrl || defaultBackground})`;
+
+  return (
+    <div key="player-background" class={style.background} style={{ backgroundImage }}>
+      {children}
+    </div>
+  );
+};
+
+const NoBackground = ({ children }: NoBackgroundProps) => (
+  <div key="player-background" class={style.background}>
+    {children}
+  </div>
+);
+
+const Player = ({ player, track, onClick }: PlayerProps) => {
+  log.debug(`Player.render(${track.id})`);
 
   const clickHandler = (ev: Event) => {
     ev.preventDefault();
@@ -61,12 +96,7 @@ const Player = ({ player, track, onClick }: PlayerProps) => {
   const notify = () => (onClick ? onClick() : null);
 
   return (
-    <div
-      key="player-background"
-      class={style.player}
-      style={{ backgroundImage }}
-      onClick={notify}
-    >
+    <div key="player-background" class={style.player} onClick={notify}>
       <div class={style.song2}>
         <div class={style.icon}>
           <img src={icon} />
