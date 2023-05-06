@@ -48,9 +48,6 @@ const Servers = () => {
 
   return (
     <Fragment>
-      {/*
-      <div class={style.credentials}>{token && <QrCode value={token} />}</div>
-      */}
       <Modal title="Server" visible={showModal} onDismiss={dismissModal}>
         <div class={style.qr}>
           {loading ? (

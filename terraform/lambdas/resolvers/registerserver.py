@@ -6,7 +6,7 @@ import os
 import urllib3
 
 
-def handler(event, context):
+def handler(event, _):
     print("event:", event)
     print("input:", event.get("arguments", {}).get("input", {}))
 

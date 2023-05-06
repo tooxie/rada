@@ -5,7 +5,7 @@ import os
 import boto3
 
 
-def handler(event, context):
+def handler(event, _):
     print("event:", event)
 
     table_name = os.getenv("SERVER_INVITATIONS_TABLE_NAME")

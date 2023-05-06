@@ -102,7 +102,7 @@ resource "aws_lambda_permission" "claim_invite" {
 
 resource "aws_lambda_function" "get_secret" {
   filename = data.archive_file.secret.output_path
-  function_name = "Gawshi-GetApClientSecret-${local.suffix}"
+  function_name = "Gawshi-GetAppClientSecret-${local.suffix}"
   role = aws_iam_role.invite.arn
   handler = "getsecret.handler"
   source_code_hash = data.archive_file.secret.output_base64sha256
