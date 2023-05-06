@@ -12,6 +12,7 @@ import useListServerInvites from "./hooks/uselistinvites";
 import useCreateServerInvite from "./hooks/useinvite";
 import style from "./style.css";
 import Trash from "./trash";
+import { cutId, tsToDate, is_invite_expired } from "./utils";
 
 const credentials = {
   id: config.server.id,
@@ -111,7 +112,7 @@ const Servers = () => {
               pending.invites.map((invite) => (
                 <div class={style.server}>
                   <div class={style.col}>
-                    <span>(Pending)</span>
+                    <span>{is_invite_expired(invite) ? "Expired" : "Pending"}</span>
                     <span class={style.ts}>{tsToDate(invite.timestamp)}</span>
                     <span class={style.id}>{cutId(invite.id)}</span>
                   </div>
@@ -126,15 +127,6 @@ const Servers = () => {
       )}
     </Fragment>
   );
-};
-
-const cutId = (id: string) => id.split("-")[0];
-const tsToDate = (tsInSeconds: number) => {
-  const d = new Date(tsInSeconds * 1000);
-  const date = `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
-  const time = `${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
-
-  return `${date} ${time}`;
 };
 
 export default Servers;

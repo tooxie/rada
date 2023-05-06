@@ -7,6 +7,7 @@ import useDeleteServer from "./hooks/usedeleteserver";
 import trash from "./trash.svg";
 import style from "./trash.css";
 import { useEffect } from "preact/hooks";
+import { is_invite_expired } from "./utils";
 
 interface TrashServerProps {
   server: Server;
@@ -41,7 +42,8 @@ const TrashInvite = (props: TrashInviteProps) => {
   const handler = () => {
     if (loading) return;
 
-    const msg = `Delete pending invite "${cutId(props.invite.id)}"?`;
+    const status = is_invite_expired(props.invite) ? "expired" : "pending";
+    const msg = `Delete ${status} invite "${cutId(props.invite.id)}"?`;
     if (confirm(msg)) deleteInvite(props.invite.id);
   };
   const classes = [style.trash, loading ? style.loading : ""];
