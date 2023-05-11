@@ -13,7 +13,7 @@ import Logger from "../logger";
 const log = new Logger(__filename);
 
 type Q = DocumentNode | TypedDocumentNode;
-const useQuery = <T, V = void>(query: Q, variables?: V) => {
+const useList = <T, V = void>(query: Q, variables?: V) => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<T | null>();
   const [error, setError] = useState<string | null>();
@@ -27,7 +27,7 @@ const useQuery = <T, V = void>(query: Q, variables?: V) => {
   };
 
   log.debug(
-    `useQuery(query:${
+    `useList(query:${
       (query.definitions[0] as any).name.value
     }, variables:${JSON.stringify(variables)})`
   );
@@ -74,4 +74,4 @@ const normalizeMessage = (message: string): string => {
   return message;
 };
 
-export default useQuery;
+export default useList;

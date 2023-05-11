@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
 import { Track, ListOrphanTracksQuery } from "../../../graphql/api";
-import useQuery from "../../../hooks/usequery";
+import useList from "../../../hooks/uselist";
 import Logger from "../../../logger";
 
 const log = new Logger(__filename);
@@ -23,14 +23,14 @@ const listTracks = gql`
   }
 `;
 
-type UseQueryReturnType = Omit<ReturnType<typeof useQuery>, "data">;
-interface UseListTracksReturn extends UseQueryReturnType {
+type UseListReturnType = Omit<ReturnType<typeof useList>, "data">;
+interface UseListTracksReturn extends UseListReturnType {
   tracks: Track[];
 }
 
 const useListTracks = (): UseListTracksReturn => {
   log.debug("useListTracks");
-  const { loading, error, data, refetch } = useQuery<ListOrphanTracksQuery>(listTracks);
+  const { loading, error, data, refetch } = useList<ListOrphanTracksQuery>(listTracks);
   const tracks = data?.listOrphanTracks?.items || [];
 
   const result = { loading, error, tracks, refetch };

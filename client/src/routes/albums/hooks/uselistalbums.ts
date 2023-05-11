@@ -2,7 +2,7 @@ import gql from "graphql-tag";
 
 import { Album, ListAlbumsQuery, ListAlbumsQueryVariables } from "../../../graphql/api";
 import { ServerId } from "../../../types";
-import useQuery from "../../../hooks/usequery";
+import useList from "../../../hooks/uselist";
 import Logger from "../../../logger";
 
 const log = new Logger(__filename);
@@ -27,14 +27,14 @@ const listAlbums = gql`
   }
 `;
 
-type UseQueryReturnType = Omit<ReturnType<typeof useQuery>, "data">;
-interface UseListAlbumsReturn extends UseQueryReturnType {
+type UseListReturnType = Omit<ReturnType<typeof useList>, "data">;
+interface UseListAlbumsReturn extends UseListReturnType {
   albums: Album[];
 }
 
 const useListAlbums = (serverId: ServerId): UseListAlbumsReturn => {
   log.debug(`useListAlbums("${serverId}")`);
-  const { loading, error, data, refetch } = useQuery<
+  const { loading, error, data, refetch } = useList<
     ListAlbumsQuery,
     ListAlbumsQueryVariables
   >(listAlbums, {});

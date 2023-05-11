@@ -1,15 +1,15 @@
 import type { ListServerInvitesQuery, ServerInvite } from "../../../graphql/api";
 
-import useQuery from "../../../hooks/usequery";
+import useList from "../../../hooks/uselist";
 import { listServerInvites } from "../../../graphql/queries";
 
-type UseGetReturn = ReturnType<typeof useQuery>;
-interface UseListServersReturn extends Omit<UseGetReturn, "data"> {
+type UseListReturn = ReturnType<typeof useList>;
+interface UseListServersReturn extends Omit<UseListReturn, "data"> {
   invites: ServerInvite[];
 }
 
 const useListInvites = (): UseListServersReturn => {
-  const { loading, error, data, refetch } = useQuery<ListServerInvitesQuery, {}>(
+  const { loading, error, data, refetch } = useList<ListServerInvitesQuery, {}>(
     listServerInvites,
     {}
   );
