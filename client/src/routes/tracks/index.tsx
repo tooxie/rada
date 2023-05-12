@@ -24,7 +24,10 @@ const Tracks = () => {
   const { loading, error, tracks } = useListTracks();
 
   if (loading) return <Spinner />;
-  if (error) return <ErrorMsg error={error} />;
+  if (error) {
+    log.error(error);
+    return <ErrorMsg error={error} />;
+  }
   if (!tracks.length) return <div>No tracks</div>;
 
   const filterFn = (track: Track, s: string): boolean => {

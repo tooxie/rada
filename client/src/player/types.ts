@@ -1,5 +1,6 @@
-import { Track } from "../graphql/api";
-import { States } from "../queue/types";
+import type { Track } from "../graphql/api";
+
+import { States } from "../queue/enums";
 
 export interface IQueue {
   append: (t: Track[]) => void;

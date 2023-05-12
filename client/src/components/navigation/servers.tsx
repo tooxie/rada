@@ -1,5 +1,4 @@
 import { h, Fragment } from "preact";
-import { route } from "preact-router";
 
 import Options, { Title } from "../../components/options";
 import Spinner from "../../components/spinner";

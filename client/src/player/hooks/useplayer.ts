@@ -1,18 +1,18 @@
 import { useState, useEffect } from "preact/hooks";
 import { StatusAlertService } from "react-status-alert";
 
+import type { Track } from "../../graphql/api";
+import type { IQueue, AudioEvent, AudioEventListener, IPlayer } from "../../player/types";
+
+import { States } from "../../queue/enums";
 import { getSignedUrl } from "../../utils/s3";
 import { getNillId } from "../../utils/id";
-import { Track } from "../../graphql/api";
 import q from "../../queue";
-import { States } from "../../queue/types";
-import { IQueue, AudioEvent, AudioEventListener, IPlayer } from "../../player/types";
-import { authenticate, fetchCredentials } from "../../utils/auth";
 import Logger from "../../logger";
 
 const log = new Logger(__filename);
-// const reauth = () => authenticate(fetchCredentials());
 let wakeLock: WakeLockSentinel | null;
+
 const requestScreenLock = () => {
   if (!("wakeLock" in navigator)) return;
   log.debug("Requesting screen lock...");

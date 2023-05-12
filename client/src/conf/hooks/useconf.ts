@@ -1,8 +1,10 @@
 import { useState } from "preact/hooks";
 
-import { Conf, ConfHook } from "../types";
-import { getDefaultConf } from "../context";
+import type { Conf, ConfHook } from "../types";
+
 import Logger from "../../logger";
+
+import { getDefaultConf } from "../context";
 
 const log = new Logger(__filename);
 

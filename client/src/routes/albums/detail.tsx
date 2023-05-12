@@ -2,16 +2,17 @@ import { Fragment, h } from "preact";
 import { useEffect } from "preact/hooks";
 import { Link } from "preact-router";
 
-import { toHref } from "../../utils/id";
-import { DetailProps } from "../../components/layout/types";
+import type { DetailProps } from "../../components/layout/types";
+import type { Artist, Track } from "../../graphql/api";
+
 import ErrorMsg from "../../components/error";
+import Logger from "../../logger";
 import Spinner from "../../components/spinner";
-import { Artist, Track } from "../../graphql/api";
 import toMinutes from "../../utils/tominutes";
+import useConf from "../../conf/hooks/useconf";
 import usePlayer from "../../hooks/useplayer";
 import { TrackSelectionTypes } from "../../conf/types";
-import useConf from "../../conf/hooks/useconf";
-import Logger from "../../logger";
+import { toHref } from "../../utils/id";
 
 import useGetAlbum from "./hooks/usegetalbum";
 import style from "./detail.css";
@@ -25,7 +26,10 @@ const AlbumDetail = ({ id, trackId, serverId }: DetailProps) => {
 
   useEffect(() => window.scrollTo(0, 0), []);
 
-  if (error) return <ErrorMsg error={error} margins={true} />;
+  if (error) {
+    log.error(error);
+    return <ErrorMsg error={error} margins={true} />;
+  }
   if (!loading && !album) return <p class={style.empty}>Album not found</p>;
   if (!album) {
     return (

@@ -1,21 +1,24 @@
 import { h, Fragment } from "preact";
 import { Link } from "preact-router";
 
-import { Album } from "../../graphql/api";
-import { toHref } from "../../utils/id";
-import Search from "../../components/search";
+import type { ListProps } from "../../components/layout/types";
+import type { Album } from "../../graphql/api";
+
 import ErrorMsg from "../../components/error";
-import Spinner from "../../components/spinner";
+import Logger from "../../logger";
 import ScrollTop from "../../components/scrolltop";
+import Search from "../../components/search";
+import Spinner from "../../components/spinner";
 import useConf from "../../hooks/useconf";
+import { AlbumListTypes } from "../../conf/types";
+import { toHref } from "../../utils/id";
 
 import style from "./list.css";
 import listIcon from "./disc.svg";
 import useListAlbums from "./hooks/uselistalbums";
-import { AlbumListTypes } from "../../conf/types";
-import { ListProps } from "../../components/layout/types";
 
 const DEFAULT_ALBUM_COVER = "/assets/img/no-cover.jpeg";
+const log = new Logger(__filename);
 
 const AlbumList = ({ serverId }: ListProps) => {
   const { loading, error, albums } = useListAlbums(serverId);
@@ -25,7 +28,10 @@ const AlbumList = ({ serverId }: ListProps) => {
     return name.includes(s.toLowerCase());
   };
 
-  if (error) return <ErrorMsg error={error} />;
+  if (error) {
+    log.error(error);
+    return <ErrorMsg error={error} />;
+  }
   if (loading) return <Spinner />;
   if (albums.length < 1) return <p>No Albums</p>;
 

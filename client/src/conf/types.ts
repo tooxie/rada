@@ -1,4 +1,5 @@
-import { Server } from "../graphql/api";
+import type { Server } from "../graphql/api";
+
 import config from "../config.json";
 
 export enum ArtistListTypes {

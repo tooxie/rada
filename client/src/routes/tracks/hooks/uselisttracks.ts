@@ -1,6 +1,7 @@
 import gql from "graphql-tag";
 
-import { Track, ListOrphanTracksQuery } from "../../../graphql/api";
+import type { Track, ListOrphanTracksQuery } from "../../../graphql/api";
+
 import useList from "../../../hooks/uselist";
 import Logger from "../../../logger";
 

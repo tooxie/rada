@@ -1,13 +1,14 @@
 import { h } from "preact";
+import { useEffect } from "preact/hooks";
 
-import { Server, ServerInvite } from "../../graphql/api";
+import type { Server, ServerInvite } from "../../graphql/api";
+
 import Logger from "../../logger";
 
+import style from "./trash.css";
+import trash from "./trash.svg";
 import useDeleteInvite from "./hooks/usedeleteinvite";
 import useDeleteServer from "./hooks/usedeleteserver";
-import trash from "./trash.svg";
-import style from "./trash.css";
-import { useEffect } from "preact/hooks";
 import { is_invite_expired } from "./utils";
 
 interface TrashServerProps {

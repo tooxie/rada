@@ -1,4 +1,6 @@
-import type { ApolloClient, NormalizedCacheObject } from "@apollo/client";
+import type { NormalizedCacheObject } from "@apollo/client";
+import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 
 import { server } from "../config.json";
 import { getAccessToken } from "../utils/auth";
@@ -10,17 +12,12 @@ let client: Client;
 const getClient = async (url?: string): Promise<Client> => {
   if (client) return client;
 
-  const { ApolloClient, createHttpLink, InMemoryCache } = await import("@apollo/client");
-  const { setContext } = await import("@apollo/client/link/context");
-
   const httpLink = createHttpLink({ uri: url || server.api });
   const authLink = setContext((_, { headers }) => {
-    return {
-      headers: {
-        ...headers,
-        Authorization: getAccessToken(),
-      },
-    };
+    headers: {
+      ...headers,
+      Authorization: getAccessToken(),
+    },
   });
 
   client = new ApolloClient({

@@ -1,21 +1,21 @@
 import { Fragment, FunctionComponent, h } from "preact";
 import { Link } from "preact-router";
 
-import { DetailProps } from "../../components/layout/types";
-import ErrorMsg from "../../components/error";
-import Spinner from "../../components/spinner";
 import compareYear from "../../utils/compareyear";
-import { toHref } from "../../utils/id";
-import { Album, Artist } from "../../graphql/api";
+import ErrorMsg from "../../components/error";
 import Logger from "../../logger";
+import Spinner from "../../components/spinner";
+import { Album, Artist } from "../../graphql/api";
+import { DetailProps } from "../../components/layout/types";
+import { toHref } from "../../utils/id";
 
 import style from "./detail.css";
 import useGetArtist from "./hooks/usegetartist";
 
+const DEFAULT_ALBUM_COVER = "/assets/img/no-cover.jpeg";
 const log = new Logger(__filename);
 let _artist: Artist | null = null;
 
-const DEFAULT_ALBUM_COVER = "/assets/img/no-cover.jpeg";
 const ArtistDetail: FunctionComponent<DetailProps> = ({ id, serverId }) => {
   log.debug(`ArtistDetail("${id}", "${serverId}")`);
   const { loading, error, artist } = useGetArtist(serverId, id);
@@ -23,7 +23,10 @@ const ArtistDetail: FunctionComponent<DetailProps> = ({ id, serverId }) => {
   if (id !== _artist?.id) _artist = null;
   if (!loading && artist) _artist = artist;
 
-  if (error) return <ErrorMsg error={error} margins={true} />;
+  if (error) {
+    log.error(error);
+    return <ErrorMsg error={error} margins={true} />;
+  }
   if (!loading && !artist) return <p class={style.empty}>Artist not found</p>;
   if (!_artist) {
     return (

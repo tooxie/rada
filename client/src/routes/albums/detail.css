@@ -59,16 +59,16 @@
 }
 
 .tracklist .track .ordinal {
-  width: 2rem;
-  min-width: 2rem;
-  height: 2rem;
-  border-radius: 1rem;
-  display: flex;
   align-items: center;
-  justify-content: center;
-  color: white;
   background-image: url("/assets/img/play.png");
   background-size: cover;
+  border-radius: 1rem;
+  color: white;
+  display: flex;
+  height: 2rem;
+  justify-content: center;
+  min-width: 2rem;
+  width: 2rem;
 }
 
 .stretch {

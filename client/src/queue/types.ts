@@ -1,22 +1,6 @@
-import { Track } from "../graphql/api";
+import type { Track } from "../graphql/api";
 
-export enum States {
-  Idle,
-  Loading,
-  Playing,
-  Paused,
-}
-
-export enum Action {
-  Append,
-  Clear,
-  Play,
-  SkipNext,
-  SkipPrevious,
-  RemoveAt,
-  SetIndex,
-  UpdateTime,
-}
+import { States, Action } from "./enums";
 
 export interface ReducerAction {
   type: Action;

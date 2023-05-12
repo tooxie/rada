@@ -1,8 +1,9 @@
 import { h } from "preact";
 
 import type { AlbumId, ServerId } from "../../types";
-import { Album, Track } from "../../graphql/api";
-import { IPlayer } from "../../player/types";
+import type { Album, Track } from "../../graphql/api";
+import type { IPlayer } from "../../player/types";
+
 import useGetAlbum from "../../routes/albums/hooks/usegetalbum";
 import usePlayer from "../../hooks/useplayer";
 import Logger from "../../logger";
@@ -13,8 +14,6 @@ import playIcon from "./play.svg";
 import pauseIcon from "./pause.svg";
 import wifiIcon from "./wifi.svg";
 import Countdown from "./countdown";
-
-const log = new Logger(__filename);
 
 interface ShellProps {
   onClick: Function;
@@ -35,6 +34,8 @@ interface PlayerBackgroundProps {
 }
 
 type NoBackgroundProps = Pick<PlayerBackgroundProps, "children">;
+
+const log = new Logger(__filename);
 
 const Shell = ({ onClick }: ShellProps) => {
   const player = usePlayer();
@@ -86,14 +87,14 @@ const NoBackground = ({ children }: NoBackgroundProps) => (
 const Player = ({ player, track, onClick }: PlayerProps) => {
   log.debug(`Player.render(${track.id})`);
 
+  const title = player.getCurrentTrack()?.title;
+  const artists = player.getCurrentTrack()?.artists || [];
+  const notify = () => (onClick ? onClick() : null);
   const clickHandler = (ev: Event) => {
     ev.preventDefault();
     ev.stopPropagation();
     player.togglePlayback();
   };
-  const title = player.getCurrentTrack()?.title;
-  const artists = player.getCurrentTrack()?.artists || [];
-  const notify = () => (onClick ? onClick() : null);
 
   return (
     <div key="player-background" class={style.player} onClick={notify}>
