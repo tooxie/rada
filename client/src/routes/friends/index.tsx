@@ -57,6 +57,7 @@ const InviteList = () => {
     if (claimUrl) {
       log.debug(claimUrl);
       setQrCode(<QrCode value={claimUrl} width={238} />);
+      list.refetch();
     }
 
     return () => setQrCode(null);
