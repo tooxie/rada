@@ -1,66 +1,70 @@
 import { useState } from "preact/hooks";
-import {
-  ApolloQueryResult,
-  DocumentNode,
-  TypedDocumentNode,
-  // useQuery as apolloUseQuery,
-  QueryOptions,
-} from "@apollo/client";
+import { DocumentNode, TypedDocumentNode, QueryOptions } from "@apollo/client";
 
-import getClient from "../graphql/client";
+import type { Client } from "../graphql/client";
+import type { ServerId } from "../types";
 import Logger from "../logger";
+
+import use from "./use";
+
+type Query = DocumentNode | TypedDocumentNode;
+type UseReturnType = Omit<ReturnType<typeof use>, "data">;
+interface UseListReturn<T> extends UseReturnType {
+  items: T[];
+  refetch: () => void;
+}
 
 const log = new Logger(__filename);
 
-type Q = DocumentNode | TypedDocumentNode;
-const useList = <T, V = void>(query: Q, variables?: V) => {
+const useList = <Q, T, V = void>(
+  query: Query,
+  serverId: ServerId,
+  variables?: V
+): UseListReturn<T> => {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<T | null>();
-  const [error, setError] = useState<string | null>();
+  const [items, setItems] = useState<T[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const [refetching, setRefetching] = useState(false);
+  const qName: string = (query.definitions[0] as any).name.value;
+
+  const exec = async (client: Client) => {
+    const options: QueryOptions = { query, variables };
+
+    log.debug(`uselist.${qName}(refetching==${refetching})`);
+
+    let queryFn = client.query(options);
+    if (refetching) {
+      options["fetchPolicy"] = "network-only";
+      queryFn = client.query(options);
+      queryFn.then((data) => {
+        setRefetching(false);
+        return data;
+      });
+    }
+
+    return queryFn;
+  };
 
   const refetch = () => {
+    log.debug("Refetching...");
     setError(null);
-    setData(null);
+    setItems([]);
     setLoading(true);
     setRefetching(true);
   };
 
-  log.debug(
-    `useList(query:${
-      (query.definitions[0] as any).name.value
-    }, variables:${JSON.stringify(variables)})`
-  );
-  getClient()
-    .then(async (client) => {
-      let options: QueryOptions = { query, variables };
-      if (refetching) {
-        options["fetchPolicy"] = "network-only";
-      }
-      let data;
-      try {
-        data = await client.query(options);
-      } catch (error: any) {
-        log.error(error);
-        log.debug(`variables: (${typeof variables}) ${JSON.stringify(variables)}`);
-        setLoading(false);
-        setError(normalizeMessage(error.message));
-      }
+  log.debug(`useList(query:${qName}, variables:${JSON.stringify(variables)})`);
 
-      if (data) {
-        log.debug("useQuery got data:", data);
-        setData((data as ApolloQueryResult<T>).data);
-        setLoading(false);
-        if (error) setError(null);
-        setRefetching(false);
-      }
-    })
-    .catch((error) => {
-      log.error(`Error getting graphql client: ${error}`);
-    });
+  const result = use<Q>(exec, serverId, normalizeMessage);
+  if (result.data) {
+    const key = Object.keys(result.data).find((key) => key.startsWith("list"));
+    if (key) setItems(((result.data as any)[key].items || []) as T[]);
+  }
+  setLoading(result.loading);
+  setError(result.error);
 
-  log.debug("useQuery.return:", { loading, error, data });
-  return { loading, error, data, refetch };
+  log.debug("useList.return:", { loading, error, items });
+  return { loading, error, items, refetch };
 };
 
 // DynamoDB adds a random request ID with every error message which breaks

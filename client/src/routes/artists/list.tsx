@@ -1,6 +1,7 @@
 import { h, Fragment } from "preact";
 import { Link } from "preact-router";
 
+import type { ListProps } from "../../components/layout/types";
 import type { Artist } from "../../graphql/api";
 
 import ErrorMsg from "../../components/error";
@@ -18,9 +19,9 @@ import style from "./list.css";
 
 const log = new Logger(__filename);
 
-const ArtistList = () => {
+const ArtistList = ({ serverId }: ListProps) => {
   const { conf } = useConf();
-  const { loading, error, artists } = useListArtists();
+  const { loading, error, artists } = useListArtists(serverId);
 
   if (error) {
     log.error(error);

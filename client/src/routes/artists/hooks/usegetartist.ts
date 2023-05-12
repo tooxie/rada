@@ -24,7 +24,7 @@ export const useGetArtist = (
     loading,
     error,
     item: artist,
-  } = useGet<Artist, GetArtistQueryVariables>(serverId, getArtist, pk);
+  } = useGet<Artist, GetArtistQueryVariables>(getArtist, serverId, pk);
 
   const NOT_FOUND = `Artist '${id}' not found`;
   if (error === NOT_FOUND) {

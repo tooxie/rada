@@ -1,5 +1,3 @@
-import { DocumentNode } from "graphql";
-
 import {
   Artist,
   ListArtistsQuery,
@@ -8,28 +6,29 @@ import {
 import { listArtists } from "../../../graphql/queries";
 import useList from "../../../hooks/uselist";
 import Logger from "../../../logger";
+import type { ServerId } from "../../../types";
 
 const log = new Logger(__filename);
 
-type UseListReturnType = Omit<ReturnType<typeof useList>, "data">;
+type UseListReturnType = Omit<ReturnType<typeof useList>, "items">;
 interface UseListArtistsReturn extends UseListReturnType {
   artists: Artist[];
 }
 
-const useListArtists = (queryFn?: DocumentNode): UseListArtistsReturn => {
+const useListArtists = (serverId: ServerId): UseListArtistsReturn => {
   log.debug("[artists/hooks/uselistartists.ts] useListArtists");
-
-  const listArtistsFn = queryFn || listArtists;
-  const { loading, error, data, refetch } =
-    useList<ListArtistsQuery, ListArtistsQueryVariables>(listArtistsFn);
-  const artists = (data?.listArtists?.items || []) as Artist[];
+  const { loading, error, items, refetch } = useList<
+    ListArtistsQuery,
+    Artist,
+    ListArtistsQueryVariables
+  >(listArtists, serverId);
 
   log.debug("useListArtists.return:", {
     loading,
     error,
-    artists,
+    artists: items,
   });
-  return { loading, error, artists, refetch };
+  return { loading, error, artists: items, refetch };
 };
 
 export default useListArtists;

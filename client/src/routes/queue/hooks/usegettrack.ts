@@ -24,7 +24,7 @@ const useGetTrack = (serverId: ServerId, tId: TrackId, aId: AlbumId): UseGetTrac
     loading,
     error,
     item: track,
-  } = useGet<Track, GetTrackQueryVariables>(serverId, getTrack, pk);
+  } = useGet<Track, GetTrackQueryVariables>(getTrack, serverId, pk);
 
   const result = { loading, error, track };
   log.debug("useGetTrack.return:", result);

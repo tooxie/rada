@@ -6,6 +6,7 @@ import ErrorMsg from "../../components/error";
 import Spinner from "../../components/spinner";
 import Modal from "../../components/modal";
 import Logger from "../../logger";
+import type { ListProps } from "../../components/layout/types";
 
 import useListInvites from "./hooks/uselist";
 import useCreateInvite from "./hooks/useinvite";
@@ -13,12 +14,12 @@ import style from "./style.css";
 
 const log = new Logger(__filename);
 
-const InviteList = () => {
+const InviteList = ({ serverId }: ListProps) => {
   let note: HTMLInputElement | null;
   let adminCheck: HTMLInputElement | null;
 
   const [showModal, setShowModal] = useState(false);
-  const list = useListInvites();
+  const list = useListInvites(serverId);
   const [createInvite, { claimUrl, loading, error }] = useCreateInvite();
 
   if (list.error) return <ErrorMsg error={list.error} />;

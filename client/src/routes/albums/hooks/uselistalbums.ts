@@ -27,20 +27,20 @@ const listAlbums = gql`
   }
 `;
 
-type UseListReturnType = Omit<ReturnType<typeof useList>, "data">;
+type UseListReturnType = Omit<ReturnType<typeof useList>, "items">;
 interface UseListAlbumsReturn extends UseListReturnType {
   albums: Album[];
 }
 
 const useListAlbums = (serverId: ServerId): UseListAlbumsReturn => {
   log.debug(`useListAlbums("${serverId}")`);
-  const { loading, error, data, refetch } = useList<
+  const { loading, error, items, refetch } = useList<
     ListAlbumsQuery,
+    Album,
     ListAlbumsQueryVariables
-  >(listAlbums, {});
-  const albums = data?.listAlbums?.items || [];
+  >(listAlbums, serverId);
 
-  const result = { loading, error, albums, refetch };
+  const result = { loading, error, albums: items, refetch };
   log.debug("useListAlbums.return:", result);
   return result;
 };

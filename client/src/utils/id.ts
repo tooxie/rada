@@ -5,7 +5,7 @@ const nillId = "00000000-0000-0000-0000-000000000000";
 const toHref = (entity?: Album | Artist | Track | null) => {
   if (!entity) return "";
 
-  const sId = entity.serverId;
+  const serverId = entity.serverId;
   const name = entity.__typename.toLowerCase();
   const id = urlize(entity.id);
 
@@ -20,7 +20,7 @@ const toHref = (entity?: Album | Artist | Track | null) => {
     path = `/${name}/${id}`;
   }
 
-  return `/server/${sId}${path}`;
+  return `/server/${serverId}${path}`;
 };
 
 const urlize = (id?: string): string => {

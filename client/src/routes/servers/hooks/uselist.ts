@@ -1,23 +1,24 @@
 import type { ListServersQuery, Server } from "../../../graphql/api";
 
+import config from "../../../config.json";
 import useList from "../../../hooks/uselist";
 import { listServers } from "../../../graphql/queries";
 
-type UseListReturn = ReturnType<typeof useList>;
-interface UseListServersReturn extends Omit<UseListReturn, "data"> {
+type UseGetReturn = ReturnType<typeof useList>;
+interface UseListServersReturn extends Omit<UseGetReturn, "items"> {
   servers: Server[];
 }
 
 const useListServers = (): UseListServersReturn => {
-  const { loading, error, data, refetch } = useList<ListServersQuery, {}>(
+  const { loading, error, items, refetch } = useList<ListServersQuery, Server>(
     listServers,
-    {}
+    config.server.id
   );
 
   return {
     loading,
     error,
-    servers: data?.listServers?.items || [],
+    servers: items || [],
     refetch,
   };
 };

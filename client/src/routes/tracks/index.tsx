@@ -2,6 +2,7 @@ import { Fragment, h } from "preact";
 
 import type { Artist, Track } from "../../graphql/api";
 import type { IPlayer } from "../../player/types";
+import type { ListProps } from "../../components/layout/types";
 
 import ErrorMsg from "../../components/error";
 import Logger from "../../logger";
@@ -18,10 +19,10 @@ import icon from "./track.svg";
 
 const log = new Logger(__filename);
 
-const Tracks = () => {
+const Tracks = ({ serverId }: ListProps) => {
   const { conf } = useConf();
   const player = usePlayer();
-  const { loading, error, tracks } = useListTracks();
+  const { loading, error, tracks } = useListTracks(serverId);
 
   if (loading) return <Spinner />;
   if (error) {

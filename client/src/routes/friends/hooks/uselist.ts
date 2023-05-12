@@ -1,13 +1,15 @@
 import { Invite, ListInvitesQuery } from "../../../graphql/api";
 import { listInvites } from "../../../graphql/queries";
 import useList from "../../../hooks/uselist";
+import type { ServerId } from "../../../types";
 
-const useListInvites = () => {
-  const { loading, error, data, refetch } =
-    useList<ListInvitesQuery, object>(listInvites, {});
-  const invites = (data?.listInvites?.items || []) as Invite[];
+const useListInvites = (serverId: ServerId) => {
+  const { loading, error, items, refetch } = useList<ListInvitesQuery, Invite>(
+    listInvites,
+    serverId
+  );
 
-  return { loading, error, invites, refetch };
+  return { loading, error, invites: items, refetch };
 };
 
 export default useListInvites;

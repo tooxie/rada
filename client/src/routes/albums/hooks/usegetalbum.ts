@@ -20,7 +20,7 @@ const useGetAlbum = (serverId: ServerId, albumId?: AlbumId): UseGetAlbumReturn =
     loading,
     error,
     item: album,
-  } = useGet<Album, GetAlbumQueryVariables>(serverId, getAlbumWithTracks, pk);
+  } = useGet<Album, GetAlbumQueryVariables>(getAlbumWithTracks, serverId, pk);
 
   const NOT_FOUND = `Album '${id}' not found`;
   if (error === NOT_FOUND) {

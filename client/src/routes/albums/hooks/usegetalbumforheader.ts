@@ -15,7 +15,7 @@ const useGetAlbum = (serverId: ServerId, albumId: AlbumId) => {
     loading,
     error,
     item: album,
-  } = useGet<Album, GetAlbumQueryVariables>(serverId, getAlbum, pk);
+  } = useGet<Album, GetAlbumQueryVariables>(getAlbum, serverId, pk);
 
   const result = { loading, error, album };
   log.debug("useGetAlbum.return:", result);
