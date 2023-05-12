@@ -17,3 +17,10 @@ export const tsToDate = (tsInSeconds: number) => {
 
   return `${date} ${time}`;
 };
+
+export const inviteCmp = (i1: ServerInvite, i2: ServerInvite): -1 | 0 | 1 => {
+  if (i1.timestamp < i2.timestamp) return 1;
+  if (i1.timestamp > i2.timestamp) return -1;
+
+  return 0;
+};

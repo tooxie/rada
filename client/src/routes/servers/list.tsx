@@ -13,7 +13,7 @@ import useListServerInvites from "./hooks/uselistinvites";
 import useCreateServerInvite from "./hooks/useinvite";
 import style from "./style.css";
 import Trash from "./trash";
-import { cutId, tsToDate, is_invite_expired } from "./utils";
+import { cutId, tsToDate, is_invite_expired, inviteCmp } from "./utils";
 
 const log = new Logger(__filename);
 
@@ -112,7 +112,7 @@ const Servers = () => {
             {pending.error ? (
               <ErrorMsg error={pending.error} />
             ) : (
-              pending.invites.map((invite) => (
+              pending.invites.sort(inviteCmp).map((invite) => (
                 <div class={style.server}>
                   <div class={style.col}>
                     <span>{is_invite_expired(invite) ? "Expired" : "Pending"}</span>
