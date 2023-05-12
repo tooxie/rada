@@ -1,6 +1,7 @@
 import { h } from "preact";
 
 import { Server, ServerInvite } from "../../graphql/api";
+import Logger from "../../logger";
 
 import useDeleteInvite from "./hooks/usedeleteinvite";
 import useDeleteServer from "./hooks/usedeleteserver";
@@ -23,6 +24,7 @@ interface TrashInviteProps {
 
 type TrashProps = TrashServerProps | TrashInviteProps;
 
+const log = new Logger(__filename);
 const cutId = (id?: string) => (id ? id.split("-")[0] : "");
 
 const Trash = (props: TrashProps) => {
@@ -39,6 +41,8 @@ const Trash = (props: TrashProps) => {
 const TrashInvite = (props: TrashInviteProps) => {
   const [deleteInvite, { loading, error, invite }] = useDeleteInvite();
 
+  if (error) log.error(error);
+
   const handler = () => {
     if (loading) return;
 
@@ -52,12 +56,13 @@ const TrashInvite = (props: TrashInviteProps) => {
     if (invite) props.onDelete(invite);
   }, [invite]);
 
-  if (!loading && !error && invite) return <div />;
   return <img src={trash} class={classes.join(" ")} onClick={handler} />;
 };
 
 const TrashServer = (props: TrashServerProps) => {
   const [deleteServer, { loading, error, server }] = useDeleteServer();
+
+  if (error) log.error(error);
 
   const handler = () => {
     if (loading) return;
@@ -71,7 +76,6 @@ const TrashServer = (props: TrashServerProps) => {
     if (server) props.onDelete(server);
   }, [server]);
 
-  if (!loading && !error && server) return <div />;
   return <img src={trash} class={classes.join(" ")} onClick={handler} />;
 };
 

@@ -6,6 +6,7 @@ import QrCode from "../../components/qrcode/volatile";
 import Modal from "../../components/modal";
 import Spinner from "../../components/spinner";
 import ErrorMsg from "../../components/error";
+import Logger from "../../logger";
 
 import useListInvites from "./hooks/uselist";
 import useListServerInvites from "./hooks/uselistinvites";
@@ -13,6 +14,8 @@ import useCreateServerInvite from "./hooks/useinvite";
 import style from "./style.css";
 import Trash from "./trash";
 import { cutId, tsToDate, is_invite_expired } from "./utils";
+
+const log = new Logger(__filename);
 
 const credentials = {
   id: config.server.id,
@@ -30,12 +33,12 @@ const Servers = () => {
   const [createServerInvite, { invite, loading, error }] = useCreateServerInvite();
 
   useEffect(() => {
+    log.debug("Servers.useEffect([showModal])");
     if (showModal && !loading) createServerInvite();
-    refetchPending();
-    refetchServers();
   }, [showModal]);
 
   useEffect(() => {
+    log.debug("Servers.useEffect([invite])");
     if (invite) {
       setToken(JSON.stringify({ ...invite, ...credentials }));
       refetchPending();
