@@ -16,7 +16,7 @@ type ErrorNormalizer = (s: string) => string;
 
 const use = <T>(
   fn: (c: Client) => Promise<any>,
-  serverId: ServerId,
+  serverId?: ServerId,
   enFn?: ErrorNormalizer
 ): UseReturn<T> => {
   log.debug(`use(server:${serverId})`);
@@ -28,7 +28,7 @@ const use = <T>(
 
   useEffect(() => {
     getClient(serverId)
-      .then((client) =>
+      .then((client: Client) =>
         fn(client)
           .then((data: T) => {
             log.debug("use.useEffect.fn data:", data);
@@ -36,16 +36,16 @@ const use = <T>(
             setLoading(false);
             if (error) setError(null);
           })
-          .catch(async (error: Error) => {
+          .catch((error: Error) => {
             log.error(error);
             setLoading(false);
-            setError(normalizer(error.message));
+            const msg = typeof error === "string" ? error : error.message;
+            setError(normalizer(msg));
           })
       )
-      .catch((error) => {
+      .catch((error: Error | string) => {
         log.error(`Error getting graphql client: ${error}`);
-        if (typeof error === "string") setError(error);
-        else setError(error.toString());
+        setError(typeof error === "string" ? error : error.message);
       });
   }, [fn]);
 

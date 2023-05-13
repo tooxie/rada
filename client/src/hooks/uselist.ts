@@ -1,31 +1,32 @@
 import { useState } from "preact/hooks";
-import { DocumentNode, TypedDocumentNode, QueryOptions } from "@apollo/client";
+import type { DocumentNode, TypedDocumentNode, QueryOptions } from "@apollo/client";
 
 import type { Client } from "../graphql/client";
 import type { ServerId } from "../types";
 import Logger from "../logger";
 
 import use from "./use";
+import { getDocumentNodeName } from "./utils/name";
 
 type Query = DocumentNode | TypedDocumentNode;
 type UseReturnType = Omit<ReturnType<typeof use>, "data">;
-interface UseListReturn<T> extends UseReturnType {
-  items: T[];
+interface UseListReturn<R> extends UseReturnType {
+  items: R[];
   refetch: () => void;
 }
 
 const log = new Logger(__filename);
 
-const useList = <Q, T, V = void>(
+const useList = <Q, R, V = void>(
   query: Query,
   serverId: ServerId,
   variables?: V
-): UseListReturn<T> => {
+): UseListReturn<R> => {
   const [loading, setLoading] = useState(true);
-  const [items, setItems] = useState<T[]>([]);
+  const [items, setItems] = useState<R[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [refetching, setRefetching] = useState(false);
-  const qName: string = (query.definitions[0] as any).name.value;
+  const qName = getDocumentNodeName(query);
 
   const exec = async (client: Client) => {
     const options: QueryOptions = { query, variables };
@@ -58,7 +59,7 @@ const useList = <Q, T, V = void>(
   const result = use<Q>(exec, serverId, normalizeMessage);
   if (result.data) {
     const key = Object.keys(result.data).find((key) => key.startsWith("list"));
-    if (key) setItems(((result.data as any)[key].items || []) as T[]);
+    if (key) setItems(((result.data as any)[key].items || []) as R[]);
   }
   setLoading(result.loading);
   setError(result.error);

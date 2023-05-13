@@ -274,7 +274,7 @@ type Server {
   id: ID!
   name: String!
   note: String
-  apiUrl: String
+  apiUrl: String!
   headerUrl: String
   timestamp: Int!
   banned: Boolean

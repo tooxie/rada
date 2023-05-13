@@ -1,12 +1,13 @@
 import { useState } from "preact/hooks";
-import { DocumentNode } from "@apollo/client";
+import type { DocumentNode } from "@apollo/client";
 
-import getClient from "../graphql/client";
 import Logger from "../logger";
+
+import getClient from "./utils/client";
 
 const log = new Logger(__filename);
 
-type M = DocumentNode;
+type Mutation = DocumentNode;
 export interface Executing<T> {
   loading: boolean;
   error: string | null;
@@ -14,9 +15,9 @@ export interface Executing<T> {
 }
 type R<T> = [Function, Executing<T>];
 
-const useMutation = <D, V = {}>(mutation: M): R<D> => {
+const useMutation = <T, V = {}>(mutation: Mutation): R<T> => {
   log.debug("useMutation()");
-  const [data, setData] = useState<D | null>(null);
+  const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

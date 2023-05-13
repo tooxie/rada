@@ -2,28 +2,23 @@ import type { NormalizedCacheObject } from "@apollo/client";
 import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 
-import { server } from "../config.json";
 import { getAccessToken } from "../utils/auth";
 
 export type Client = ApolloClient<NormalizedCacheObject>;
 
-let client: Client;
-
-const getClient = async (url?: string): Promise<Client> => {
-  if (client) return client;
-
-  const httpLink = createHttpLink({ uri: url || server.api });
-  const authLink = setContext((_, { headers }) => {
+const getClient = async (uri: string, name: string): Promise<Client> => {
+  const httpLink = createHttpLink({ uri });
+  const authLink = setContext((_, { headers }) => ({
     headers: {
       ...headers,
       Authorization: getAccessToken(),
     },
-  });
+  }));
 
-  client = new ApolloClient({
+  const client = new ApolloClient({
     link: authLink.concat(httpLink),
     cache: new InMemoryCache(),
-    name: "Gawshi",
+    name,
     queryDeduplication: false,
     defaultOptions: {
       watchQuery: {
