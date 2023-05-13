@@ -112,7 +112,7 @@ const Servers = () => {
             {pending.error ? (
               <ErrorMsg error={pending.error} />
             ) : (
-              pending.invites.sort(inviteCmp).map((invite) => (
+              [...pending.invites].sort(inviteCmp).map((invite) => (
                 <div class={style.server}>
                   <div class={style.col}>
                     <span>{is_invite_expired(invite) ? "Expired" : "Pending"}</span>
