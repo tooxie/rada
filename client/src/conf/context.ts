@@ -7,9 +7,9 @@ import {
   ArtistListTypes,
   Conf,
   ConfHook,
-  DefaultServer,
   TrackSelectionTypes,
 } from "./types";
+import { Server } from "./defaults";
 
 const defaultConf: Conf = {
   config,
@@ -17,7 +17,7 @@ const defaultConf: Conf = {
   artistListType: ArtistListTypes.Mosaic,
   albumListType: AlbumListTypes.Grid,
   trackSelection: TrackSelectionTypes.AppendFrom,
-  currentServer: DefaultServer,
+  currentServer: Server,
 };
 
 export const getDefaultConf = (): Conf => {

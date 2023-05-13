@@ -5,8 +5,7 @@ import Spinner from "../../components/spinner";
 import ErrorMsg from "../../components/error";
 import useListServers from "../../routes/servers/hooks/uselist";
 import useConf from "../../conf/hooks/useconf";
-import { Server } from "../../graphql/api";
-import { DefaultServer } from "../../conf/types";
+import { Server } from "../../conf/defaults";
 
 import icon from "./servers.svg";
 import style from "./servers.css";
@@ -15,12 +14,12 @@ import folder from "./folder.svg";
 const Servers = () => {
   const { loading, error, servers } = useListServers();
   const { conf, setConf } = useConf();
-  const selectServer = (server: Server) => {
+  const selectServer = (server: typeof Server) => {
     conf.currentServer = server;
     setConf(conf);
     window.location.href = `/server/${server.id}/artists`;
   };
-  const resetServer = () => selectServer(DefaultServer);
+  const resetServer = () => selectServer(Server);
 
   return (
     <Options icon={icon}>
