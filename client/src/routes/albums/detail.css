@@ -68,6 +68,8 @@
   height: 2rem;
   justify-content: center;
   min-width: 2rem;
+  /* https://stackoverflow.com/a/4919231 */
+  text-shadow: -1px -1px 0 #464646, 1px -1px 0 #464646, -1px 1px 0 #464646, 1px 1px 0 #464646;
   width: 2rem;
 }
 
