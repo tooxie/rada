@@ -152,6 +152,11 @@ export const listServers = gql`
         timestamp
         banned
         handshakeCompleted
+        userPoolId
+        clientId
+        region
+        idpUrl
+        identityPoolId
       }
     }
   }

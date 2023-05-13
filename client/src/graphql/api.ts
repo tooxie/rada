@@ -119,6 +119,7 @@ export type RegisterServerInput = {
   note?: string | null;
   apiUrl: string;
   idpUrl: string;
+  timestamp: number;
   headerUrl?: string | null;
   secretUrl: string;
   clientId: string;
@@ -130,11 +131,16 @@ export type Server = {
   id: string;
   name: string;
   note?: string | null;
-  apiUrl?: string | null;
+  apiUrl: string;
   headerUrl?: string | null;
   timestamp: number;
   banned?: boolean | null;
   handshakeCompleted?: boolean | null;
+  userPoolId: string;
+  clientId: string;
+  region: string;
+  idpUrl: string;
+  identityPoolId: string;
 };
 
 export type CreateServerInviteResponse = {
@@ -717,11 +723,16 @@ export type RegisterServerMutation = {
     id: string;
     name: string;
     note?: string | null;
-    apiUrl?: string | null;
+    apiUrl: string;
     headerUrl?: string | null;
     timestamp: number;
     banned?: boolean | null;
     handshakeCompleted?: boolean | null;
+    userPoolId: string;
+    clientId: string;
+    region: string;
+    idpUrl: string;
+    identityPoolId: string;
   } | null;
 };
 
@@ -735,11 +746,16 @@ export type DeleteServerMutation = {
     id: string;
     name: string;
     note?: string | null;
-    apiUrl?: string | null;
+    apiUrl: string;
     headerUrl?: string | null;
     timestamp: number;
     banned?: boolean | null;
     handshakeCompleted?: boolean | null;
+    userPoolId: string;
+    clientId: string;
+    region: string;
+    idpUrl: string;
+    identityPoolId: string;
   } | null;
 };
 
@@ -972,11 +988,16 @@ export type ListServersQuery = {
       id: string;
       name: string;
       note?: string | null;
-      apiUrl?: string | null;
+      apiUrl: string;
       headerUrl?: string | null;
       timestamp: number;
       banned?: boolean | null;
       handshakeCompleted?: boolean | null;
+      userPoolId: string;
+      clientId: string;
+      region: string;
+      idpUrl: string;
+      identityPoolId: string;
     }> | null;
   } | null;
 };

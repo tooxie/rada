@@ -289,6 +289,11 @@ export const registerServer = gql`
       timestamp
       banned
       handshakeCompleted
+      userPoolId
+      clientId
+      region
+      idpUrl
+      identityPoolId
     }
   }
 `;
@@ -303,6 +308,11 @@ export const deleteServer = gql`
       timestamp
       banned
       handshakeCompleted
+      userPoolId
+      clientId
+      region
+      idpUrl
+      identityPoolId
     }
   }
 `;
