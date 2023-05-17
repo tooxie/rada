@@ -87,7 +87,13 @@ def handler(event, _):
         print(e)
         return error(RuntimeError("Server exists"))
 
-    create_identity_provider(user_pool_id, name, idp_url, client_id, secret)
+    create_identity_provider(
+        client_id=client_id,
+        client_secret=secret,
+        idp_url=idp_url,
+        name=name,
+        user_pool_id=user_pool_id,
+    )
 
     try:
         delete_invite(invites_table, invite_id)
@@ -98,7 +104,7 @@ def handler(event, _):
     return json.dumps(server)
 
 
-def create_identity_provider(user_pool_id, name, idp_url, client_id, client_secret):
+def create_identity_provider(*, user_pool_id, name, idp_url, client_id, client_secret):
     client = boto3.client('cognito-idp')
     args = {
         "UserPoolId": user_pool_id,
