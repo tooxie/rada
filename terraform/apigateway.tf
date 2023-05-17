@@ -1,10 +1,6 @@
 resource "aws_api_gateway_rest_api" "gawshi" {
   name = "Gawshi-${local.suffix}"
 
-  tags = {
-    Gawshi = "1"
-  }
-
   depends_on = [
     aws_api_gateway_account.gawshi
   ]
@@ -43,10 +39,6 @@ resource "aws_api_gateway_stage" "gawshi" {
   deployment_id = aws_api_gateway_deployment.gawshi.id
   rest_api_id = aws_api_gateway_rest_api.gawshi.id
   stage_name = random_string.stage_name.result
-
-  tags = {
-    Gawshi = "1"
-  }
 
   depends_on = [
     aws_api_gateway_account.gawshi

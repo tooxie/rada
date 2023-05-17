@@ -7,10 +7,6 @@ data "aws_caller_identity" "gawshi" {}
 
 resource "aws_iam_user" "gawshi" {
   name = "Gawshi-${random_string.suffix.result}"
-
-  tags = {
-    Gawshi = "1"
-  }
 }
 
 // --- S3
@@ -25,7 +21,6 @@ resource "aws_s3_bucket" "terraform_state" {
 
   tags = {
     Name = "gawshi-terraform-state"
-    Gawshi = "1"
   }
 }
 
@@ -51,10 +46,6 @@ resource "aws_iam_policy" "terraform_state" {
       },
     ]
   })
-
-  tags = {
-    Gawshi = "1"
-  }
 }
 
 resource "aws_iam_user_policy_attachment" "gawshi_terraform_state" {
@@ -192,6 +183,7 @@ resource "aws_iam_policy" "gawshi" {
       {
         Action = [
           "cognito-idp:CreateUserPool",
+          "cognito-idp:TagResource",
         ]
         Effect = "Allow"
         Resource = "*"
@@ -222,10 +214,6 @@ resource "aws_iam_policy" "gawshi" {
       },
     ]
   })
-
-  tags = {
-    Gawshi = "1"
-  }
 }
 
 resource "aws_iam_user_policy_attachment" "gawshi" {
@@ -258,10 +246,6 @@ resource "aws_iam_role" "gawshi" {
       },
     ]
   })
-
-  tags = {
-    Gawshi = "1"
-  }
 }
 
 // --- Outputs

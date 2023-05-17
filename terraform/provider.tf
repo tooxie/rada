@@ -11,6 +11,12 @@ terraform {
 
 provider "aws" {
   region = var.region
+
+  default_tags {
+    tags = {
+      ServerName = var.server_name
+    }
+  }
 }
 
 terraform {

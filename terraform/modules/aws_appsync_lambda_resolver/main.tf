@@ -31,10 +31,6 @@ resource "aws_lambda_function" "resolver" {
   environment {
     variables = var.environment
   }
-
-  tags = {
-    Gawshi = "1"
-  }
 }
 
 resource "aws_lambda_permission" "resolver" {

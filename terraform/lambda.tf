@@ -86,10 +86,6 @@ resource "aws_lambda_function" "claim_invite" {
       INVITATIONS_TABLE_NAME = aws_dynamodb_table.invitations.name
     }
   }
-
-  tags = {
-    Gawshi = 1
-  }
 }
 
 resource "aws_lambda_permission" "claim_invite" {
@@ -113,10 +109,6 @@ resource "aws_lambda_function" "get_secret" {
       COGNITO_USER_POOL_ID = aws_cognito_user_pool.gawshi.id
       SERVER_INVITATIONS_TABLE_NAME = aws_dynamodb_table.server_invitations.name
     }
-  }
-
-  tags = {
-    Gawshi = 1
   }
 }
 

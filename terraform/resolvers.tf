@@ -50,10 +50,6 @@ resource "aws_lambda_function" "create_album" {
       SERVER_ID = random_uuid.server_id.result
     }
   }
-
-  tags = {
-    Gawshi = "1"
-  }
 }
 
 data "archive_file" "create_album" {
@@ -111,10 +107,6 @@ resource "aws_lambda_function" "create_artist" {
       SERVER_ID = random_uuid.server_id.result
     }
   }
-
-  tags = {
-    Gawshi = "1"
-  }
 }
 
 data "archive_file" "create_artist" {
@@ -171,10 +163,6 @@ resource "aws_lambda_function" "get_artist" {
       DYNAMODB_ARTISTS_TABLE = aws_dynamodb_table.artists_albums.name
     }
   }
-
-  tags = {
-    Gawshi = "1"
-  }
 }
 
 data "archive_file" "get_artist" {
@@ -230,10 +218,6 @@ resource "aws_lambda_function" "get_album" {
     variables = {
       DYNAMODB_ALBUMS_TABLE = aws_dynamodb_table.artists_albums.name
     }
-  }
-
-  tags = {
-    Gawshi = "1"
   }
 }
 
@@ -292,10 +276,6 @@ resource "aws_lambda_function" "get_artists_for_album" {
       DYNAMODB_INDEX_NAME = "ById"
     }
   }
-
-  tags = {
-    Gawshi = "1"
-  }
 }
 
 data "archive_file" "get_artists_for_album" {
@@ -351,10 +331,6 @@ resource "aws_lambda_function" "get_track" {
     variables = {
       DYNAMODB_TRACKS_TABLE = aws_dynamodb_table.tracks.name
     }
-  }
-
-  tags = {
-    Gawshi = "1"
   }
 }
 

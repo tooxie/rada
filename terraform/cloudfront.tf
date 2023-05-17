@@ -92,10 +92,6 @@ resource "aws_cloudfront_distribution" "gawshi_app_ssl" {
       }
     }
   }
-
-  tags = {
-    Gawshi = "1"
-  }
 }
 
 resource "aws_ssm_parameter" "app_public_url" {

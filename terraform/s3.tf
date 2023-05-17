@@ -1,10 +1,6 @@
 resource "aws_s3_bucket" "gawshi_music" {
   bucket = "gawshi-music-${local.suffix}"
   force_destroy = var.force_destroy_bucket
-
-  tags = {
-    Gawshi = "1"
-  }
 }
 
 resource "aws_s3_bucket_public_access_block" "gawshi_music" {
@@ -19,10 +15,6 @@ resource "aws_s3_bucket_public_access_block" "gawshi_music" {
 resource "aws_s3_bucket" "gawshi_app" {
   bucket = "gawshi-app-${local.suffix}"
   force_destroy = var.force_destroy_bucket
-
-  tags = {
-    Gawshi = "1"
-  }
 }
 
 resource "aws_s3_bucket_public_access_block" "gawshi_app" {
@@ -70,10 +62,6 @@ resource "aws_s3_object" "gawshi_app_file" {
   source_hash = filemd5("${var.website_root}/${each.key}")
   force_destroy = true
   content_type = lookup(local.mime_types, regex("\\.[^.]+$", each.key), null)
-
-  tags = {
-    Gawshi = "1"
-  }
 }
 
 output "s3_music_bucket_url" {
