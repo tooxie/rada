@@ -46,8 +46,8 @@ def handler(event, context):
 
 def delete_app_client(user_pool_id, client_id):
     print("Deleting app client...")
-    client = boto3.client('cognito-idp')
-    client.delete_user_pool_client(
+    cognito = boto3.client('cognito-idp')
+    cognito.delete_user_pool_client(
         UserPoolId=user_pool_id,
         ClientId=client_id,
     )
@@ -55,8 +55,8 @@ def delete_app_client(user_pool_id, client_id):
 
 def delete_identity_provider(user_pool_id, idp_name):
     print(f"Deleting idp '{idp_name}' from pool '{user_pool_id}'...")
-    client = boto3.client('cognito-idp')
-    client.delete_identity_provider(
+    cognito = boto3.client('cognito-idp')
+    cognito.delete_identity_provider(
         UserPoolId=user_pool_id,
         ProviderName=idp_name,
     )
@@ -64,8 +64,8 @@ def delete_identity_provider(user_pool_id, idp_name):
 
 def delete_server(table_name, id):
     print(f"Deleting key '{id}' from table '{table_name}'")
-    client = boto3.resource('dynamodb').Table(table_name)
-    item = client.delete_item(Key={"id": id}, ReturnValues="ALL_OLD")
+    dynamodb = boto3.resource('dynamodb').Table(table_name)
+    item = dynamodb.delete_item(Key={"id": id}, ReturnValues="ALL_OLD")
 
     print(item)
     if "Attributes" not in item:

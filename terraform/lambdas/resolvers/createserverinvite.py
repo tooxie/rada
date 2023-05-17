@@ -50,13 +50,15 @@ def handler(event, _):
     invite["timestamp"] = float(invite["timestamp"])
     invite["secretUrl"] = secret_url
 
-    return json.dumps(invite)
+    payload = json.dumps(invite)
+    print(payload)
+    return payload
 
 
 def create_app_client(user_pool_id, client_name):
     print("Creating app client...")
-    client = boto3.client('cognito-idp')
-    response = client.create_user_pool_client(
+    cognito = boto3.client('cognito-idp')
+    response = cognito.create_user_pool_client(
         UserPoolId=user_pool_id,
         ClientName=client_name,
         GenerateSecret=True,
@@ -66,6 +68,7 @@ def create_app_client(user_pool_id, client_name):
         ],
     )
 
+    print(response)
     if "UserPoolClient" in response:
         return response["UserPoolClient"]
     else:
@@ -74,8 +77,8 @@ def create_app_client(user_pool_id, client_name):
 
 def delete_app_client(app_client):
     print("Deleting app client...")
-    client = boto3.client('cognito-idp')
-    client.delete_user_pool_client(
+    cognito = boto3.client('cognito-idp')
+    cognito.delete_user_pool_client(
         UserPoolId=app_client["UserPoolId"],
         ClientId=app_client["ClientId"],
     )
@@ -83,14 +86,14 @@ def delete_app_client(app_client):
 
 def persist(table_name, id, timestamp, app_client):
     print("Persisting invite to DB...")
-    client = boto3.resource('dynamodb').Table(table_name)
+    dynamodb = boto3.resource('dynamodb').Table(table_name)
     item = {
         "id": id,
         "timestamp": timestamp,
         "clientId": app_client["ClientId"],
     }
     print("item:", item)
-    client.put_item(Item=item)
+    dynamodb.put_item(Item=item)
 
     return item
 

@@ -105,7 +105,7 @@ def handler(event, _):
 
 
 def create_identity_provider(*, user_pool_id, name, idp_url, client_id, client_secret):
-    client = boto3.client('cognito-idp')
+    cognito = boto3.client('cognito-idp')
     args = {
         "UserPoolId": user_pool_id,
         "ProviderName": name,
@@ -119,13 +119,13 @@ def create_identity_provider(*, user_pool_id, name, idp_url, client_id, client_s
         },
     }
     print("Creating IDP:", args)
-    idp = client.create_identity_provider(**args)
+    idp = cognito.create_identity_provider(**args)
     print(idp)
 
 
 def persist(table_name, data):
     print(f"Writing to table '{table_name}'...")
-    client = boto3.resource('dynamodb').Table(table_name)
+    dynamodb = boto3.resource('dynamodb').Table(table_name)
     item = {
         "id": data["id"],
         "name": data["name"],
@@ -143,7 +143,7 @@ def persist(table_name, data):
         "handshakeCompleted": False,
     }
     print("Putting item:", item)
-    client.put_item(
+    dynamodb.put_item(
         Item=item,
         ConditionExpression="attribute_not_exists(id)"
     )
@@ -153,8 +153,8 @@ def persist(table_name, data):
 
 def delete_invite(table_name, id):
     print(f"Deleting invite '{id}' from table '{table_name}'")
-    client = boto3.resource('dynamodb').Table(table_name)
-    item = client.delete_item(Key={"id": id}, ReturnValues="ALL_OLD")
+    dynamodb = boto3.resource('dynamodb').Table(table_name)
+    item = dynamodb.delete_item(Key={"id": id}, ReturnValues="ALL_OLD")
 
     print("Deleted item:", item)
     if "Attributes" not in item:
@@ -165,8 +165,8 @@ def delete_invite(table_name, id):
 
 # def invite_is_valid(table_name, id):
 #     print(f"Checking validity of invite '{id}'")
-#     client = boto3.resource('dynamodb').Table(table_name)
-#     resp = client.get_item(Key={"id": id})
+#     dynamodb = boto3.resource('dynamodb').Table(table_name)
+#     resp = dynamodb.get_item(Key={"id": id})
 #
 #     print("Response:", resp)
 #     try:
