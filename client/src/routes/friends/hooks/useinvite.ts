@@ -19,7 +19,7 @@ const useCreateInvite = (): HookReturn<CreateInviteMutation> => {
     useMutation<CreateInviteMutation, CreateInviteInput>(createInvite);
 
   if (data?.createInvite) {
-    log.debug(`useCreateInvite.data: ${JSON.stringify(data)}`);
+    log.debug("useCreateInvite.data", data);
     setClaimUrl(data.createInvite.claimUrl);
   }
 

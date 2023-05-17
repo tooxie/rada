@@ -288,7 +288,6 @@ export const registerServer = gql`
       headerUrl
       timestamp
       banned
-      handshakeCompleted
       userPoolId
       clientId
       region
@@ -307,7 +306,6 @@ export const deleteServer = gql`
       headerUrl
       timestamp
       banned
-      handshakeCompleted
       userPoolId
       clientId
       region
@@ -321,8 +319,8 @@ export const createServerInvite = gql`
     createServerInvite {
       id
       timestamp
-      clientId
-      secretUrl
+      secret
+      clientIdUrl
     }
   }
 `;
@@ -331,7 +329,6 @@ export const deleteServerInvite = gql`
     deleteServerInvite(id: $id) {
       id
       timestamp
-      clientId
     }
   }
 `;

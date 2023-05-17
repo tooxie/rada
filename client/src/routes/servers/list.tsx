@@ -1,6 +1,8 @@
 import { h, Fragment } from "preact";
 import { useEffect, useState } from "preact/hooks";
 
+import type { RegisterServerInput, RegisterServerServerInput } from "../../graphql/api";
+
 import config from "../../config.json";
 import QrCode from "../../components/qrcode/volatile";
 import Modal from "../../components/modal";
@@ -17,12 +19,12 @@ import { cutId, tsToDate, is_invite_expired, inviteCmp } from "./utils";
 
 const log = new Logger(__filename);
 
-const credentials = {
+const server: RegisterServerServerInput = {
   id: config.server.id,
   name: config.server.name,
   apiUrl: config.server.api,
+  idpUrl: `https://${config.idp.url}`,
   headerUrl: null, // config.header,
-  idpUrl: config.idp.url,
 };
 
 const Servers = () => {
@@ -35,12 +37,15 @@ const Servers = () => {
   useEffect(() => {
     log.debug("Servers.useEffect([showModal])");
     if (showModal && !loading) createServerInvite();
+    refetchPending();
   }, [showModal]);
 
   useEffect(() => {
     log.debug("Servers.useEffect([invite])");
     if (invite) {
-      setToken(JSON.stringify({ ...invite, ...credentials }));
+      log.debug(invite);
+      const input: RegisterServerInput = { invite, server };
+      setToken(JSON.stringify(input));
       refetchPending();
     }
   }, [invite]);
@@ -101,6 +106,11 @@ const Servers = () => {
                     <span class={style.id}>{cutId(server.id)}</span>
                   </div>
                   <div class={style.col}>
+                    {/*
+                     * FIXME: If I'm currently in the server that it's being
+                     * FIXME: deleted, we have to first switch back to our
+                     * FIXME: default server and then do the deletion.
+                     */}
                     <Trash server={server} onDelete={refetchServers} />
                   </div>
                 </div>

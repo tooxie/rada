@@ -38,8 +38,9 @@ const storage: Storage = {
   setItem: function (key: string, value: any): void {
     if (!value || value === "undefined") throw new Error(`No value for item "${key}"`);
     this.saveToCache(key, value);
-    log.warn(`localStorage.setItem("${key}", ${JSON.stringify(value)})`);
-    localStorage.setItem(key, JSON.stringify(value));
+    const _value = JSON.stringify(value);
+    log.warn(`localStorage.setItem("${key}", ${_value})`);
+    localStorage.setItem(key, _value);
   },
   getItem: function (key: string): Track | null {
     return (this.cache as any)[key] || null;

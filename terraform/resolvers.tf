@@ -444,7 +444,7 @@ module "create_server_invite" {
     PUBLIC_URL = aws_api_gateway_stage.gawshi.invoke_url
     SERVER_INVITATIONS_TABLE_NAME = aws_dynamodb_table.server_invitations.name
     USER_POOL_ID = aws_cognito_user_pool.gawshi.id
-    SECRET_URL = "${aws_api_gateway_stage.gawshi.invoke_url}/secret",
+    GET_CLIENT_ID_URL = "${aws_api_gateway_stage.gawshi.invoke_url}/${aws_api_gateway_resource.get_client_id_base_path.path_part}",
   }
 }
 
@@ -463,7 +463,16 @@ module "register_server" {
   output_path = "${path.module}/dist/lambdas/resolvers/registerserver.zip"
   lambda_handler = "registerserver.handler"
   function_name = "Gawshi-AppSyncResolver-RegisterServer-${local.suffix}"
-  timeout = 6
+
+  // This lambda needs to:
+  // * Query the other server to get the client id (which will most likely hit
+  //   a cold start).
+  // * Persist the new server entry in the DB.
+  // * Create cognito's identity provider.
+  // * Delete the invite from the DB.
+  // Until we split these responsibilities into a couple of lambdas, we have no
+  // choice but to set a generous timeout.
+  timeout = 10
 
   environment = {
     COGNITO_IDENTITY_POOL_ID = aws_cognito_identity_pool.gawshi.id
@@ -471,6 +480,7 @@ module "register_server" {
     PUBLIC_URL = aws_api_gateway_stage.gawshi.invoke_url
     SERVER_INVITATIONS_TABLE_NAME = aws_dynamodb_table.server_invitations.name
     SERVERS_TABLE_NAME = aws_dynamodb_table.servers.name
+    SERVER_NAME = var.server_name
   }
 }
 

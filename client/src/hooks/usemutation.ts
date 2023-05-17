@@ -24,23 +24,23 @@ const useMutation = <T, V = {}>(mutation: Mutation): R<T> => {
   const mutator = (variables?: V) => {
     setLoading(true);
     getClient().then(async (client) => {
-      log.debug(`mutate:${JSON.stringify(variables)}`);
+      log.debug("useMutation.variables", variables);
       client
         .mutate({
           mutation,
           variables,
         })
         .then(({ data }) => {
-          log.debug(`useMutation.data: ${JSON.stringify(data)}`);
+          log.debug("useMutation.data", data);
           log.debug(data);
           setLoading(false);
           setData(data);
         })
         .catch((e: Error) => {
-          log.debug("useMutation.error");
-          log.error(e);
+          log.error("useMutation.error", e);
           setError(e.message);
           setLoading(false);
+          setData(null);
         });
     });
   };

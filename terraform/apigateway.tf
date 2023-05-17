@@ -6,6 +6,11 @@ resource "aws_api_gateway_rest_api" "gawshi" {
   ]
 }
 
+// FIXME: This changes with every apply when you have more than 1 deployment in
+// FIXME: the same account, because the aws_api_gateway_account is the same for
+// FIXME: all users. We need to look into alternatives to assign the role at a
+// FIXME: different level, for example to the stage.
+// FIXME: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_stage#managing-the-api-logging-cloudwatch-log-group
 resource "aws_api_gateway_account" "gawshi" {
   cloudwatch_role_arn = aws_iam_role.cloudwatch.arn
 }
@@ -15,7 +20,7 @@ resource "aws_api_gateway_deployment" "gawshi" {
 
   triggers = {
     redeployment = sha1(jsonencode(aws_api_gateway_rest_api.gawshi.body))
-    get_secret_hash = data.archive_file.secret.output_base64sha256
+    get_client_id_hash = data.archive_file.get_client_id.output_base64sha256
     claim_invite_hash = data.archive_file.invite.output_base64sha256
   }
 
@@ -25,7 +30,7 @@ resource "aws_api_gateway_deployment" "gawshi" {
 
   depends_on = [
     aws_api_gateway_method.claim_invite,
-    aws_api_gateway_method.get_secret,
+    aws_api_gateway_method.get_client_id,
   ]
 }
 
@@ -58,7 +63,7 @@ resource "aws_api_gateway_method_settings" "gawshi" {
 }
 
 // --- /invite
-resource "aws_api_gateway_resource" "invite" {
+resource "aws_api_gateway_resource" "claim_invite_base_path" {
   rest_api_id = aws_api_gateway_rest_api.gawshi.id
   parent_id = aws_api_gateway_rest_api.gawshi.root_resource_id
   path_part = "invite"
@@ -66,7 +71,7 @@ resource "aws_api_gateway_resource" "invite" {
 
 resource "aws_api_gateway_resource" "claim_invite" {
   rest_api_id = aws_api_gateway_rest_api.gawshi.id
-  parent_id = aws_api_gateway_resource.invite.id
+  parent_id = aws_api_gateway_resource.claim_invite_base_path.id
   path_part = "{params+}"
 }
 
@@ -116,30 +121,30 @@ resource "aws_api_gateway_integration_response" "claim_invite" {
   ]
 }
 
-// --- /secret
-resource "aws_api_gateway_resource" "secret" {
+// --- /clientid
+resource "aws_api_gateway_resource" "get_client_id_base_path" {
   rest_api_id = aws_api_gateway_rest_api.gawshi.id
   parent_id = aws_api_gateway_rest_api.gawshi.root_resource_id
-  path_part = "secret"
+  path_part = "clientid"
 }
 
-resource "aws_api_gateway_resource" "get_secret" {
+resource "aws_api_gateway_resource" "get_client_id" {
   rest_api_id = aws_api_gateway_rest_api.gawshi.id
-  parent_id = aws_api_gateway_resource.secret.id
+  parent_id = aws_api_gateway_resource.get_client_id_base_path.id
   path_part = "{params+}"
 }
 
-resource "aws_api_gateway_method" "get_secret" {
+resource "aws_api_gateway_method" "get_client_id" {
   rest_api_id = aws_api_gateway_rest_api.gawshi.id
-  resource_id = aws_api_gateway_resource.get_secret.id
+  resource_id = aws_api_gateway_resource.get_client_id.id
   http_method = "GET"
   authorization = "NONE"
 }
 
-resource "aws_api_gateway_method_response" "get_secret" {
+resource "aws_api_gateway_method_response" "get_client_id" {
   rest_api_id = aws_api_gateway_rest_api.gawshi.id
-  resource_id = aws_api_gateway_resource.get_secret.id
-  http_method = aws_api_gateway_method.get_secret.http_method
+  resource_id = aws_api_gateway_resource.get_client_id.id
+  http_method = aws_api_gateway_method.get_client_id.http_method
   status_code = "200"
 
   response_models = {
@@ -152,27 +157,27 @@ resource "aws_api_gateway_method_response" "get_secret" {
       "method.response.header.Access-Control-Allow-Origin" = true
   }
   depends_on = [
-    aws_api_gateway_method.get_secret,
-    aws_api_gateway_integration.get_secret,
+    aws_api_gateway_method.get_client_id,
+    aws_api_gateway_integration.get_client_id,
   ]
 }
 
-resource "aws_api_gateway_integration" "get_secret" {
+resource "aws_api_gateway_integration" "get_client_id" {
   rest_api_id = aws_api_gateway_rest_api.gawshi.id
-  resource_id = aws_api_gateway_resource.get_secret.id
-  http_method = aws_api_gateway_method.get_secret.http_method
+  resource_id = aws_api_gateway_resource.get_client_id.id
+  http_method = aws_api_gateway_method.get_client_id.http_method
   integration_http_method = "POST"
   type = "AWS_PROXY"
-  uri = aws_lambda_function.get_secret.invoke_arn
+  uri = aws_lambda_function.get_client_id.invoke_arn
 }
 
-resource "aws_api_gateway_integration_response" "get_secret" {
+resource "aws_api_gateway_integration_response" "get_client_id" {
   rest_api_id = aws_api_gateway_rest_api.gawshi.id
-  resource_id = aws_api_gateway_resource.get_secret.id
-  http_method = aws_api_gateway_method.get_secret.http_method
-  status_code = aws_api_gateway_method_response.get_secret.status_code
+  resource_id = aws_api_gateway_resource.get_client_id.id
+  http_method = aws_api_gateway_method.get_client_id.http_method
+  status_code = aws_api_gateway_method_response.get_client_id.status_code
 
-  depends_on = [aws_api_gateway_method_response.get_secret]
+  depends_on = [aws_api_gateway_method_response.get_client_id]
 }
 
 // --- Outputs
@@ -182,7 +187,7 @@ output "api_endpoint" {
 
 output "api_resources" {
   value = {
-    claim_invite: "${aws_api_gateway_stage.gawshi.invoke_url}${aws_api_gateway_resource.claim_invite.path}",
-    get_secret: "${aws_api_gateway_stage.gawshi.invoke_url}${aws_api_gateway_resource.get_secret.path}",
+    claim_invite: "${aws_api_gateway_stage.gawshi.invoke_url}/${aws_api_gateway_resource.claim_invite_base_path.path_part}",
+    get_client_id: "${aws_api_gateway_stage.gawshi.invoke_url}/${aws_api_gateway_resource.get_client_id_base_path.path_part}",
   }
 }

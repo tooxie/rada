@@ -5,11 +5,11 @@ data "archive_file" "invite" {
   output_path = "${path.module}/dist/invite.zip"
 }
 
-data "archive_file" "secret" {
+data "archive_file" "get_client_id" {
   type = "zip"
-  source_dir = "${path.module}/lambdas/secret/"
+  source_dir = "${path.module}/lambdas/clientid/"
   output_file_mode = "0666"
-  output_path = "${path.module}/dist/secret.zip"
+  output_path = "${path.module}/dist/clientid.zip"
 }
 
 resource "aws_iam_role" "invite" {
@@ -54,6 +54,7 @@ resource "aws_iam_role_policy" "lambda_invites" {
           "cognito-idp:AdminConfirmSignUp",
           "cognito-idp:AdminCreateUser",
           "cognito-idp:AdminSetUserPassword",
+          "cognito-idp:CreateUserPoolClient",
           "cognito-idp:DescribeUserPoolClient",
         ],
         Effect = "Allow",
@@ -96,12 +97,12 @@ resource "aws_lambda_permission" "claim_invite" {
   source_arn = "${aws_api_gateway_rest_api.gawshi.execution_arn}/*/*"
 }
 
-resource "aws_lambda_function" "get_secret" {
-  filename = data.archive_file.secret.output_path
-  function_name = "Gawshi-GetAppClientSecret-${local.suffix}"
+resource "aws_lambda_function" "get_client_id" {
+  filename = data.archive_file.get_client_id.output_path
+  function_name = "Gawshi-GetClientId-${local.suffix}"
   role = aws_iam_role.invite.arn
-  handler = "getsecret.handler"
-  source_code_hash = data.archive_file.secret.output_base64sha256
+  handler = "getclientid.handler"
+  source_code_hash = data.archive_file.get_client_id.output_base64sha256
   runtime = "python3.8"
 
   environment {
@@ -112,10 +113,10 @@ resource "aws_lambda_function" "get_secret" {
   }
 }
 
-resource "aws_lambda_permission" "get_secret" {
+resource "aws_lambda_permission" "get_client_id" {
   statement_id = "AllowExecutionFromApiGateway"
   action = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.get_secret.function_name
+  function_name = aws_lambda_function.get_client_id.function_name
   principal = "apigateway.amazonaws.com"
   source_arn = "${aws_api_gateway_rest_api.gawshi.execution_arn}/*/*"
 }

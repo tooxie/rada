@@ -46,6 +46,8 @@ const use = <T>(
       .catch((error: Error | string) => {
         log.error(`Error getting graphql client: ${error}`);
         setError(typeof error === "string" ? error : error.message);
+        setLoading(false);
+        setData(null);
       });
   }, [fn]);
 

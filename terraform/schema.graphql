@@ -256,7 +256,7 @@ type Invite {
 }
 
 type InviteUrl {
-  claimUrl: String!
+  claimUrl: AWSURL!
 }
 
 type InviteConnection {
@@ -274,15 +274,14 @@ type Server {
   id: ID!
   name: String!
   note: String
-  apiUrl: String!
-  headerUrl: String
+  apiUrl: AWSURL!
+  headerUrl: AWSURL
   timestamp: Int!
   banned: Boolean
-  handshakeCompleted: Boolean
   userPoolId: String!
   clientId: String!
   region: String!
-  idpUrl: String!
+  idpUrl: AWSURL!
   identityPoolId: String!
 }
 
@@ -290,33 +289,40 @@ type ServerConnection {
   items: [Server!]
 }
 
-input RegisterServerInput {
-  id: ID!
-  name: String!
-  note: String
-  apiUrl: String!
-  idpUrl: String!
-  timestamp: Int!
-  headerUrl: String
-  secretUrl: String!
-  clientId: ID!
-  inviteId: ID!
-}
-
 # --- Server invites
 type ServerInvite {
   id: ID!
   timestamp: Int!
-  clientId: ID!
 }
 
 type CreateServerInviteResponse {
   id: ID!
   timestamp: Int!
-  clientId: ID!
-  secretUrl: String!
+  secret: String!
+  clientIdUrl: AWSURL!
 }
 
 type ServerInviteConnection {
   items: [ServerInvite!]
+}
+
+# --- Register server
+input RegisterServerServerInput {
+  id: ID!
+  name: String!
+  apiUrl: AWSURL!
+  idpUrl: AWSURL!
+  headerUrl: AWSURL
+}
+
+input RegisterServerInviteInput {
+  id: ID!
+  timestamp: Int!
+  secret: String!
+  clientIdUrl: AWSURL!
+}
+
+input RegisterServerInput {
+  invite: RegisterServerInviteInput!
+  server: RegisterServerServerInput!
 }

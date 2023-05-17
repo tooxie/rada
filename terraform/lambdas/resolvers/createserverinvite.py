@@ -13,6 +13,8 @@ from datetime import datetime
 import boto3
 import json
 import os
+import random
+import string
 import uuid
 
 
@@ -27,75 +29,45 @@ def handler(event, _):
     if not table_name:
         return error(RuntimeError("Missing environment variable 'USER_POOL_ID'"))
 
-    secret_url = os.getenv("SECRET_URL")
-    if not secret_url:
-        return error(RuntimeError("Missing environment variable 'SECRET_URL'"))
+    client_id_url = os.getenv("GET_CLIENT_ID_URL")
+    if not client_id_url:
+        return error(RuntimeError("Missing environment variable 'GET_CLIENT_ID_URL'"))
 
-    id = str(uuid.uuid4())
-    ts = int(datetime.now().timestamp())  # In seconds
-
-    try:
-        app_client = create_app_client(user_pool_id, id)
-    except Exception as e:
-        return error(e)
+    invite_id = str(uuid.uuid4())
+    timestamp = int(datetime.now().timestamp())  # In seconds
+    secret = generate_secret()
 
     try:
-        invite = persist(table_name, id, ts, app_client)
+        invite = persist(table_name, invite_id, timestamp, secret)
     except Exception as e:
         print(e)
-        print("Something went wrong, initiating cleanup...")
-        delete_app_client(app_client)
         return error(e)
 
     invite["timestamp"] = float(invite["timestamp"])
-    invite["secretUrl"] = secret_url
+    invite["clientIdUrl"] = client_id_url
 
     payload = json.dumps(invite)
     print(payload)
     return payload
 
 
-def create_app_client(user_pool_id, client_name):
-    print("Creating app client...")
-    cognito = boto3.client('cognito-idp')
-    response = cognito.create_user_pool_client(
-        UserPoolId=user_pool_id,
-        ClientName=client_name,
-        GenerateSecret=True,
-        ExplicitAuthFlows=[
-            'ALLOW_REFRESH_TOKEN_AUTH',
-            'ALLOW_USER_SRP_AUTH',
-        ],
-    )
-
-    print(response)
-    if "UserPoolClient" in response:
-        return response["UserPoolClient"]
-    else:
-        raise RuntimeError("Invalid response from Cognito")
-
-
-def delete_app_client(app_client):
-    print("Deleting app client...")
-    cognito = boto3.client('cognito-idp')
-    cognito.delete_user_pool_client(
-        UserPoolId=app_client["UserPoolId"],
-        ClientId=app_client["ClientId"],
-    )
-
-
-def persist(table_name, id, timestamp, app_client):
+def persist(table_name, invite_id, timestamp, secret):
     print("Persisting invite to DB...")
     dynamodb = boto3.resource('dynamodb').Table(table_name)
     item = {
-        "id": id,
+        "id": invite_id,
         "timestamp": timestamp,
-        "clientId": app_client["ClientId"],
+        "secret": secret,
     }
     print("item:", item)
     dynamodb.put_item(Item=item)
 
     return item
+
+
+def generate_secret(length=8):
+    chars = string.ascii_letters + string.digits
+    return ''.join(random.choice(chars) for _ in range(length))
 
 
 def error(e):

@@ -114,16 +114,23 @@ export type UpdateTrackInput = {
 };
 
 export type RegisterServerInput = {
+  invite: RegisterServerInviteInput;
+  server: RegisterServerServerInput;
+};
+
+export type RegisterServerInviteInput = {
+  id: string;
+  timestamp: number;
+  secret: string;
+  clientIdUrl: string;
+};
+
+export type RegisterServerServerInput = {
   id: string;
   name: string;
-  note?: string | null;
   apiUrl: string;
   idpUrl: string;
-  timestamp: number;
   headerUrl?: string | null;
-  secretUrl: string;
-  clientId: string;
-  inviteId: string;
 };
 
 export type Server = {
@@ -135,7 +142,6 @@ export type Server = {
   headerUrl?: string | null;
   timestamp: number;
   banned?: boolean | null;
-  handshakeCompleted?: boolean | null;
   userPoolId: string;
   clientId: string;
   region: string;
@@ -147,15 +153,14 @@ export type CreateServerInviteResponse = {
   __typename: "CreateServerInviteResponse";
   id: string;
   timestamp: number;
-  clientId: string;
-  secretUrl: string;
+  secret: string;
+  clientIdUrl: string;
 };
 
 export type ServerInvite = {
   __typename: "ServerInvite";
   id: string;
   timestamp: number;
-  clientId: string;
 };
 
 export type CreateInviteInput = {
@@ -727,7 +732,6 @@ export type RegisterServerMutation = {
     headerUrl?: string | null;
     timestamp: number;
     banned?: boolean | null;
-    handshakeCompleted?: boolean | null;
     userPoolId: string;
     clientId: string;
     region: string;
@@ -750,7 +754,6 @@ export type DeleteServerMutation = {
     headerUrl?: string | null;
     timestamp: number;
     banned?: boolean | null;
-    handshakeCompleted?: boolean | null;
     userPoolId: string;
     clientId: string;
     region: string;
@@ -764,8 +767,8 @@ export type CreateServerInviteMutation = {
     __typename: "CreateServerInviteResponse";
     id: string;
     timestamp: number;
-    clientId: string;
-    secretUrl: string;
+    secret: string;
+    clientIdUrl: string;
   } | null;
 };
 
@@ -778,7 +781,6 @@ export type DeleteServerInviteMutation = {
     __typename: "ServerInvite";
     id: string;
     timestamp: number;
-    clientId: string;
   } | null;
 };
 
@@ -992,7 +994,6 @@ export type ListServersQuery = {
       headerUrl?: string | null;
       timestamp: number;
       banned?: boolean | null;
-      handshakeCompleted?: boolean | null;
       userPoolId: string;
       clientId: string;
       region: string;
@@ -1009,7 +1010,6 @@ export type ListServerInvitesQuery = {
       __typename: "ServerInvite";
       id: string;
       timestamp: number;
-      clientId: string;
     }> | null;
   } | null;
 };

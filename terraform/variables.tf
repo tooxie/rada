@@ -19,5 +19,4 @@ variable "force_destroy_bucket" {
 
 variable "server_name" {
   type = string
-  default = "rada.fan"
 }

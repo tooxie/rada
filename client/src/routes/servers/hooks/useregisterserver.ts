@@ -28,7 +28,7 @@ const useRegisterServer = (): HookReturn<RegisterServerMutation> => {
 
   return [
     (input: RegisterServerMutationVariables) => {
-      log.debug(`registerServer(${JSON.stringify(input)})`);
+      log.debug("registerServer.input", input);
       setServer(null);
       mutator({ input });
     },

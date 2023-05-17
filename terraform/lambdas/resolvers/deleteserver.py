@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-from datetime import datetime
 import boto3
 import json
 import os
@@ -31,26 +30,25 @@ def handler(event, context):
     # [ERROR] TypeError: Object of type Decimal is not JSON serializable
     server["timestamp"] = float(server["timestamp"])
 
-    try:
-        delete_app_client(user_pool_id, server["clientId"])
-    except Exception as e:
-        print(e)
+    # TODO: Notify the other server that we are "closing the connection" on our
+    # TODO: side, so that they can delete the app client on their side.
+    # try:
+    #     delete_app_client(user_pool_id, server["clientId"])
+    # except Exception as e:
+    #     print(e)
 
-    try:
-        delete_identity_provider(user_pool_id, server["name"])
-    except Exception as e:
-        print(e)
+    delete_identity_provider(user_pool_id, server_id)
 
     return json.dumps(server)
 
 
-def delete_app_client(user_pool_id, client_id):
-    print("Deleting app client...")
-    cognito = boto3.client('cognito-idp')
-    cognito.delete_user_pool_client(
-        UserPoolId=user_pool_id,
-        ClientId=client_id,
-    )
+# def delete_app_client(user_pool_id, client_id):
+#     print("Deleting app client...")
+#     cognito = boto3.client('cognito-idp')
+#     cognito.delete_user_pool_client(
+#         UserPoolId=user_pool_id,
+#         ClientId=client_id,
+#     )
 
 
 def delete_identity_provider(user_pool_id, idp_name):

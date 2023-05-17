@@ -26,11 +26,6 @@ resource "aws_s3_bucket_public_access_block" "gawshi_app" {
   restrict_public_buckets = true
 }
 
-resource "aws_s3_bucket_acl" "gawshi_app" {
-  bucket = aws_s3_bucket.gawshi_app.id
-  acl = "private"
-}
-
 resource "aws_s3_bucket_policy" "gawshi_app" {
   bucket = aws_s3_bucket.gawshi_app.id
   policy = data.aws_iam_policy_document.gawshi_app.json
@@ -56,6 +51,7 @@ data "aws_iam_policy_document" "gawshi_app" {
 
 resource "aws_s3_object" "gawshi_app_file" {
   for_each = fileset(var.website_root, "**")
+
   bucket = aws_s3_bucket.gawshi_app.bucket
   key = each.key
   source = "${var.website_root}/${each.key}"

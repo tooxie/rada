@@ -1,24 +1,23 @@
 import { useEffect, useState } from "preact/hooks";
 
-import { CreateServerInviteMutation } from "../../../graphql/api";
+import type {
+  CreateServerInviteMutation,
+  CreateServerInviteResponse,
+} from "../../../graphql/api";
+
 import { createServerInvite } from "../../../graphql/mutations";
 import Logger from "../../../logger";
 import useMutation, { Executing } from "../../../hooks/usemutation";
 
 const log = new Logger(__filename);
 
-interface Invite {
-  inviteId: string | null;
-  clientId: string | null;
-  secretUrl: string | null;
-  timestamp: number | null;
-}
+type Invite = Omit<CreateServerInviteResponse, "__typename">;
 interface Creating<T> extends Omit<Executing<T>, "data"> {
   invite: Invite | null;
 }
 type HookReturn<T> = [Function, Creating<T>];
 
-const useCreateServerInvite = (): HookReturn<CreateServerInviteMutation> => {
+const useCreateServerInvite = (): HookReturn<Invite> => {
   log.debug("useCreateServerInvite()");
   const [invite, setInvite] = useState<Invite | null>(null);
 
@@ -27,13 +26,14 @@ const useCreateServerInvite = (): HookReturn<CreateServerInviteMutation> => {
 
   useEffect(() => {
     if (data?.createServerInvite) {
-      log.debug(`useCreateServerInvite.data: ${JSON.stringify(data)}`);
-      setInvite({
-        inviteId: data?.createServerInvite?.id,
-        clientId: data?.createServerInvite?.clientId,
-        secretUrl: data?.createServerInvite?.secretUrl,
-        timestamp: data?.createServerInvite?.timestamp,
-      });
+      const invite: Invite = {
+        id: data.createServerInvite.id,
+        timestamp: data.createServerInvite.timestamp,
+        secret: data.createServerInvite.secret,
+        clientIdUrl: data.createServerInvite.clientIdUrl,
+      };
+      log.debug(`useCreateServerInvite.invite: ${invite}`);
+      setInvite(invite);
     }
   }, [data]);
 

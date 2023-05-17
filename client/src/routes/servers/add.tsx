@@ -3,6 +3,8 @@ import { route } from "preact-router";
 import { useEffect, useRef, useState } from "preact/hooks";
 import QrScanner from "qr-scanner";
 
+import type { RegisterServerInput } from "../../graphql/api";
+
 import ErrorMsg from "../../components/error";
 import Modal from "../../components/modal";
 import Spinner from "../../components/spinner";
@@ -15,22 +17,14 @@ import camera from "./camera.svg";
 const log = new Logger(__filename);
 const DEFAULT_HEADER = "/assets/img/bg-header.jpg";
 
-interface ServerData {
-  id: string;
-  api: string;
-  name: string;
-  header: string;
-  clientSecret: string;
-}
-
 const ServerAdd = () => {
   const ref = useRef<HTMLVideoElement>(null);
   const [showModal, setShowModal] = useState(false);
   const [scanner, setScanner] = useState<QrScanner>();
-  const [result, setResult] = useState<ServerData | null>();
+  const [result, setResult] = useState<RegisterServerInput | null>();
   const [qrError, setQrError] = useState<string | null>();
   const [registerServer, _] = useRegisterServer();
-  const backgroundImage = `url(${result?.header || DEFAULT_HEADER})`;
+  const backgroundImage = `url(${result?.server.headerUrl || DEFAULT_HEADER})`;
 
   useEffect(() => {
     const detected = (result: QrScanner.ScanResult) => {
@@ -62,7 +56,7 @@ const ServerAdd = () => {
 
   useEffect(() => {
     if (result) {
-      log.debug(`Scan result: ${JSON.stringify(result)}`);
+      log.debug("Scan result:", result);
       scanner?.stop();
       ref.current?.pause();
       setShowModal(true);
@@ -79,9 +73,7 @@ const ServerAdd = () => {
 
   if (qrError) return <ErrorMsg error={qrError} />;
 
-  const confirmServer = () => {
-    registerServer(result);
-  };
+  const confirmServer = () => registerServer(result);
 
   return (
     <Fragment>
@@ -91,7 +83,7 @@ const ServerAdd = () => {
             <div class={style.header} style={{ backgroundImage }}>
               &nbsp;
             </div>
-            <div class={style.name}>Add Server "{result?.name}"</div>
+            <div class={style.name}>Add Server "{result?.server.name}"</div>
           </div>
           <div class={style.confirm}>
             <button onClick={confirmServer}>Confirm</button>

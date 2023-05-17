@@ -151,7 +151,6 @@ export const listServers = gql`
         headerUrl
         timestamp
         banned
-        handshakeCompleted
         userPoolId
         clientId
         region
@@ -167,7 +166,6 @@ export const listServerInvites = gql`
       items {
         id
         timestamp
-        clientId
       }
     }
   }

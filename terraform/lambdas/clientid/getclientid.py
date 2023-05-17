@@ -18,32 +18,47 @@ def handler(event, _):
 
     invite_id, timestamp = parse_url(event)
     if not invite_id or not timestamp:
-        print("Invitation ID and/or timestamp not found in URL")
+        print("Error: Invitation ID and/or timestamp not found in URL")
+        return not_found()
+
+    app_name = get_name(event)
+    if not app_name:
+        print("Error: App name not found in request")
+        return not_found()
+
+    secret = get_secret(event)
+    if not secret:
+        print("Error: Secret not found in request")
         return not_found()
 
     invite = get_invite(table_name, invite_id)
     if not invite:
-        print("Invitation not found")
+        print(f"Error: Invitation '{invite_id}' does not exist")
         return not_found()
 
     if not invite_is_valid(invite, timestamp):
-        print("Invitation is not valid")
+        print("Error: Invitation is not valid")
         return not_found()
 
-    secret = get_secret(user_pool_id, invite["clientId"])
-    if not secret:
-        print("Secret not found")
-        return not_found()
-
+    client_id = get_client_id(
+        user_pool_id=user_pool_id,
+        invite_id=invite_id,
+        app_name=app_name,
+    )
     delete_invite(table_name, invite_id)
 
-    return ok(secret)
+    if not client_id:
+        print("Error getting client ID")
+        return not_found()
+
+
+    return ok(client_id)
 
 
 def get_invite(table_name, invite_id):
     print(f"Getting invite '{invite_id}' from table '{table_name}'...")
-    client = boto3.resource('dynamodb').Table(table_name)
-    response = client.get_item(Key={"id": invite_id})
+    dynamodb = boto3.resource('dynamodb').Table(table_name)
+    response = dynamodb.get_item(Key={"id": invite_id})
     print(response)
 
     if "Item" not in response:
@@ -54,8 +69,8 @@ def get_invite(table_name, invite_id):
 
 def delete_invite(table_name, invite_id):
     print(f"Deleting invite '{invite_id}'...")
-    client = boto3.resource('dynamodb').Table(table_name)
-    client.delete_item(Key={"id": invite_id})
+    dynamodb = boto3.resource('dynamodb').Table(table_name)
+    dynamodb.delete_item(Key={"id": invite_id})
 
 
 def invite_is_valid(invite, timestamp):
@@ -82,19 +97,50 @@ def invite_is_valid(invite, timestamp):
     return is_valid
 
 
-def get_secret(user_pool_id, client_id):
-    client = boto3.client('cognito-idp')
-    app_client = client.describe_user_pool_client(
-        UserPoolId=user_pool_id,
-        ClientId=client_id,
-    )
+def get_client_id(*, user_pool_id, invite_id, app_name):
+    print("Creating app client...")
+    cognito = boto3.client('cognito-idp')
+    suffix = invite_id.split("-")[0]
+    client_name = f"{app_name[:16]}-{suffix}"
+    args = {
+        "UserPoolId": user_pool_id,
+        "ClientName": client_name,
+        "GenerateSecret": False,
+        "ExplicitAuthFlows": [
+            'ALLOW_REFRESH_TOKEN_AUTH',
+            'ALLOW_USER_SRP_AUTH',
+        ],
+    }
+    response = cognito.create_user_pool_client(**args)
 
-    return app_client["UserPoolClient"]["ClientSecret"]
+    print(response)
+    try:
+        return response["UserPoolClient"]["ClientId"]
+    except Exception as e:
+        print(e)
+        raise RuntimeError(f"Invalid response from Cognito (args: {args})")
 
 
 def parse_url(event):
     invite_id, timestamp = event["pathParameters"]["params"].split('/')
-    return invite_id, int(timestamp)
+    try:
+        return (invite_id, int(timestamp))
+    except:
+        return (None, None)
+
+
+def get_name(event):
+    try:
+        return event["queryStringParameters"]["name"]
+    except:
+        return None
+
+
+def get_secret(event):
+    try:
+        return event["queryStringParameters"]["secret"]
+    except:
+        return None
 
 
 def error(e):
