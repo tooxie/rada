@@ -10,6 +10,10 @@ def handler(event, _):
     print("event:", event)
     print("input:", event.get("arguments", {}).get("input", {}))
 
+    region = os.getenv("AWS_REGION")
+    if not region:
+        return error(RuntimeError("Missing environment variable 'AWS_REGION'"))
+
     servers_table = os.getenv("SERVERS_TABLE_NAME")
     if not servers_table:
         return error(RuntimeError("Missing environment variable 'SERVERS_TABLE_NAME'"))
@@ -21,6 +25,10 @@ def handler(event, _):
     user_pool_id = os.getenv("COGNITO_USER_POOL_ID")
     if not user_pool_id:
         return error(RuntimeError("Missing environment variable 'COGNITO_USER_POOL_ID'"))
+
+    identity_pool_id = os.getenv("COGNITO_IDENTITY_POOL_ID")
+    if not identity_pool_id:
+        return error(RuntimeError("Missing environment variable 'COGNITO_IDENTITY_POOL_ID'"))
 
     server_id = get_server_id(event)
     if not server_id:
@@ -64,9 +72,12 @@ def handler(event, _):
             "id": server_id,
             "name": name,
             "note": note,
+            "region": region,
             "api_url": api_url,
             "idp_url": idp_url,
             "header_url": header_url,
+            "user_pool_id": user_pool_id,
+            "identity_pool_id": identity_pool_id,
             "client": {
                 "id": client_id,
                 "secret": secret,
@@ -113,9 +124,12 @@ def persist(table_name, data):
         "id": data["id"],
         "name": data["name"],
         "note": data["note"],
+        "region": data["region"],
         "apiUrl": data["api_url"],
         "idpUrl": data["idp_url"],
         "headerUrl": data["header_url"],
+        "userPoolId": data["user_pool_id"],
+        "identityPoolId": data["identity_pool_id"],
         "clientId": data["client"]["id"],
         "clientSecret": data["client"]["secret"],
         "timestamp": int(datetime.now().timestamp()),

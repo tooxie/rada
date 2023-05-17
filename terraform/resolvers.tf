@@ -466,6 +466,7 @@ module "register_server" {
   timeout = 6
 
   environment = {
+    COGNITO_IDENTITY_POOL_ID = aws_cognito_identity_pool.gawshi.id
     COGNITO_USER_POOL_ID = aws_cognito_user_pool.gawshi.id
     PUBLIC_URL = aws_api_gateway_stage.gawshi.invoke_url
     SERVER_INVITATIONS_TABLE_NAME = aws_dynamodb_table.server_invitations.name
