@@ -11,15 +11,12 @@ QR code. Also, the validity for a server invite is fixed to 1 hour.
 """
 from datetime import datetime
 import boto3
-import hashlib
 import json
 import os
-import random
-import string
 import uuid
 
 
-def handler(event, context):
+def handler(event, _):
     print("event:", event)
 
     table_name = os.getenv("SERVER_INVITATIONS_TABLE_NAME")
