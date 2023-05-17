@@ -18,6 +18,13 @@ resource "aws_cognito_user_pool" "gawshi" {
     case_sensitive = true
   }
 
+  account_recovery_setting {
+    recovery_mechanism {
+      name = "admin_only"
+      priority = 1
+    }
+  }
+
   # schema {
   #   name = "description"
   #   attribute_data_type = "String"
