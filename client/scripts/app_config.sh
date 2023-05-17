@@ -62,16 +62,21 @@ then
   exit 1
 fi
 
+prefix_url_with_https() {
+  URL=$1
+  [[ $URL = https://* ]] && echo $URL || echo "https://$URL"
+}
+
 CONFIG_FILE="./src/config.json"
 CONFIG="{
   \"region\": \"$REGION\",
   \"server\": {
     \"id\": \"$SERVER_ID\",
     \"name\": \"$SERVER_NAME\",
-    \"api\": \"$API_URL\"
+    \"api\": \"` prefix_url_with_https $API_URL`\"
   },
   \"idp\": {
-    \"url\": \"$IDP_URL\",
+    \"url\": \"`prefix_url_with_https $IDP_URL`\",
     \"clientId\": \"$CLIENT_ID\",
     \"identityPoolId\": \"$ID_POOL_ID\",
     \"userPoolId\": \"$USER_POOL_ID\",
