@@ -6,8 +6,7 @@ resource "null_resource" "install_deps" {
   provisioner "local-exec" {
     command = join(" ", [
       "cd ../client;",
-      "npm install --silent;",
-      "rm -f package-lock.json;",
+      "yarn install --silent",
     ])
   }
 }
@@ -41,14 +40,14 @@ resource "null_resource" "codegen_config" {
     when = destroy
     command = join(" ", [
       "cd ../client;",
-      "npm run codegen:destroy;",
+      "yarn run codegen:destroy",
     ])
   }
 
   provisioner "local-exec" {
     command = join(" ", [
       "cd ../client;",
-      "npm run codegen:config --",
+      "yarn run codegen:config --",
       "--api-id", aws_appsync_graphql_api.gawshi.id,
       "--region", var.region,
     ])
@@ -72,14 +71,14 @@ resource "null_resource" "app_config" {
     when = destroy
     command = join(" ", [
       "cd ../client;",
-      "npm run app:destroy;",
+      "yarn run app:destroy",
     ])
   }
 
   provisioner "local-exec" {
     command = join(" ", [
       "cd ../client;",
-      "npm run app:config --",
+      "yarn run app:config --",
       "--api-url", lookup(aws_appsync_graphql_api.gawshi.uris, "GRAPHQL"),
       "--client-id", aws_cognito_user_pool_client.gawshi.id,
       "--id-pool-id", aws_cognito_identity_pool.gawshi.id,
@@ -103,14 +102,14 @@ resource "null_resource" "root_user_config" {
     when = destroy
     command = join(" ", [
       "cd ../client;",
-      "npm run cognito:rootuser:destroy",
+      "yarn run cognito:rootuser:destroy",
     ])
   }
 
   provisioner "local-exec" {
     command = join(" ", [
       "cd ../client;",
-      "npm run cognito:rootuser:config --",
+      "yarn run cognito:rootuser:config --",
       "--username", aws_cognito_user.root.username,
       "--password", aws_cognito_user.root.password,
     ])
@@ -166,7 +165,7 @@ resource "null_resource" "gawshi_app_build" {
   provisioner "local-exec" {
     command = join(" ", [
       "cd ../client;",
-      "npm run build > /dev/null;",
+      "yarn run build > /dev/null",
     ])
   }
 
