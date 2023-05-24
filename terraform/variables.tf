@@ -19,4 +19,9 @@ variable "force_destroy_bucket" {
 
 variable "server_name" {
   type = string
+
+  validation {
+    condition = length(var.server_name) < 21
+    error_message = "The server name should not exceed 20 characters"
+  }
 }
