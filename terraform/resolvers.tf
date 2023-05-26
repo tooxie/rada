@@ -47,7 +47,7 @@ resource "aws_lambda_function" "create_album" {
   environment {
     variables = {
       DYNAMODB_ALBUMS_TABLE = aws_dynamodb_table.artists_albums.name
-      SERVER_ID = random_uuid.server_id.result
+      SERVER_ID = local.server_id
     }
   }
 }
@@ -104,7 +104,7 @@ resource "aws_lambda_function" "create_artist" {
   environment {
     variables = {
       DYNAMODB_ARTISTS_TABLE = aws_dynamodb_table.artists_albums.name
-      SERVER_ID = random_uuid.server_id.result
+      SERVER_ID = local.server_id
     }
   }
 }

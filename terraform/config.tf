@@ -62,7 +62,7 @@ resource "null_resource" "app_config" {
     id_pool_id = aws_cognito_identity_pool.gawshi.id
     idp_url = aws_cognito_user_pool.gawshi.endpoint
     region = var.region
-    server_id = random_uuid.server_id.result
+    server_id = local.server_id
     server_name = var.server_name,
     user_pool_id = aws_cognito_user_pool.gawshi.id
   }
@@ -84,7 +84,7 @@ resource "null_resource" "app_config" {
       "--id-pool-id", aws_cognito_identity_pool.gawshi.id,
       "--idp-url", aws_cognito_user_pool.gawshi.endpoint,
       "--region", var.region,
-      "--server-id", random_uuid.server_id.result,
+      "--server-id", local.server_id,
       "--server-name", var.server_name,
       "--user-pool-id", aws_cognito_user_pool.gawshi.id,
       "--cognito-admin-group-name", local.cognito_admin_group_name,
@@ -119,12 +119,13 @@ resource "null_resource" "root_user_config" {
 resource "null_resource" "shiva_config" {
   triggers = {
     appsync_url = lookup(aws_appsync_graphql_api.gawshi.uris, "GRAPHQL")
+    cognito_app_client = aws_cognito_user_pool_client.gawshi.id
+    cognito_username = aws_cognito_user.root.username
     region = aws_s3_bucket.gawshi_music.region
     s3_bucket_name = aws_s3_bucket.gawshi_music.bucket
     s3_bucket_url = aws_s3_bucket.gawshi_music.bucket_domain_name
-    cognito_username = aws_cognito_user.root.username
-    ssm_parameter_username = aws_ssm_parameter.root_username.name
     ssm_parameter_password = aws_ssm_parameter.root_password.name
+    ssm_parameter_username = aws_ssm_parameter.root_username.name
   }
 
   provisioner "local-exec" {
@@ -156,7 +157,7 @@ resource "null_resource" "gawshi_app_build" {
     region = var.region
     s3_app_bucket_url = aws_s3_bucket.gawshi_app.bucket_domain_name
     s3_music_bucket_url = aws_s3_bucket.gawshi_music.bucket_domain_name
-    server_id = random_uuid.server_id.result
+    server_id = local.server_id
     server_name = var.server_name,
     user_pool_id = aws_cognito_user_pool.gawshi.id
     user_pool_url = aws_cognito_user_pool.gawshi.id

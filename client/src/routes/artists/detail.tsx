@@ -59,7 +59,12 @@ const ArtistDetail: FunctionComponent<DetailProps> = ({ id, serverId }) => {
                 {!!album.year && <h3 class={style.year}>{album.year}</h3>}
                 {(album.artists || []).length > 1 && <h3 class={style.va}>V/A</h3>}
               </div>
-              <h2 class={style.albumname}>{album.name}</h2>
+              <h2 class={style.albumname}>
+                {album.name}
+                <div class={style.volumes}>
+                  {album.volumes > 1 ? ` (x${album.volumes})` : ""}
+                </div>
+              </h2>
             </Link>
           </div>
         ))}

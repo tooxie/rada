@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from decimal import Decimal
 import boto3
 import json
 import os
@@ -43,12 +44,15 @@ def get_album(table_name, album_id):
     if "Item" not in response:
         raise AlbumNotFoundError(f"Album '{album_id}' not found")
 
-    print(response["Item"])
-    if "year" in response["Item"]:
-        print("Converting year to int")
-        response["Item"]["year"] = int(response["Item"]["year"])
+    item = response["Item"]
+    for key in item:
+        if isinstance(item[key], Decimal):
+            if item[key] == 0:
+                item[key] = None
+            else:
+                item[key] = int(item[key])
 
-    return response["Item"]
+    return item
 
 
 def error(e):

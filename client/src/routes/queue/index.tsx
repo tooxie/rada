@@ -88,8 +88,9 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
     const getAlbumName = (track: Track): string => {
       if (!track.album) return "<no album>";
       if (!track.album?.name) return "<no title>";
+      const volume = track.album.volumes > 1 ? ` (disc ${track.volume})` : "";
 
-      return track.album.name;
+      return `${track.album.name} (${track.volume}/${track.album.volumes})`;
     };
     let artistChanged: boolean = true;
     let albumChanged: boolean = true;
@@ -100,7 +101,8 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
     // has no album".
     if (prevTrack !== undefined) {
       artistChanged = artistName !== getArtistName(prevTrack);
-      albumChanged = track.album?.id !== prevTrack?.album?.id;
+      const volumeChange = track.volume !== prevTrack?.volume;
+      albumChanged = volumeChange || track.album?.id !== prevTrack?.album?.id;
     }
     const isCurrentTrack = queue.getIndex() === index;
     const trackClasses = style.track + (isCurrentTrack ? ` ${style.current}` : "");

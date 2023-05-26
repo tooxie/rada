@@ -17,7 +17,6 @@ resource "aws_appsync_resolver" "list_albums" {
 
   request_template = templatefile("./resolvers/request/listbyentity.vm", {
     entity: "album",
-    server_id: random_uuid.server_id.result,
   })
   response_template = file("./resolvers/response/page.vm")
 }
@@ -60,4 +59,16 @@ resource "aws_appsync_resolver" "album_connection" {
       aws_appsync_function.batch_get_albums.function_id,
     ]
   }
+}
+
+resource "aws_appsync_resolver" "update_album" {
+  api_id = aws_appsync_graphql_api.gawshi.id
+  type = "Mutation"
+  field = "updateAlbum"
+  data_source = aws_appsync_datasource.gawshi_albums.name
+
+  request_template = templatefile("./resolvers/request/updateitem.vm", {
+    entity: "album",
+  })
+  response_template = file("./resolvers/response/connection.vm")
 }

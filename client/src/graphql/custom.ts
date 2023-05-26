@@ -22,6 +22,7 @@ export const getAlbumWithTracks = gql`
       name
       imageUrl
       year
+      volumes
       isVa
       artists {
         serverId
@@ -36,6 +37,8 @@ export const getAlbumWithTracks = gql`
         info
         lengthInSeconds
         ordinal
+        volume
+        side
         hash
         features
         artists {
@@ -49,6 +52,7 @@ export const getAlbumWithTracks = gql`
           name
           imageUrl
           isVa
+          volumes
         }
       }
     }
@@ -68,6 +72,7 @@ export const getArtist = gql`
         name
         imageUrl
         year
+        volumes
         artists {
           serverId
           id

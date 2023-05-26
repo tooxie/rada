@@ -2,12 +2,13 @@
 """Enricher and publisher of locally indexed music to Gawshi"s API.
 
 Usage:
-    process [-h] [-v] [-q]
+    process [-h] [-q] [-u] [-v]
 
 Options:
     -h, --help           Show this help message and exit
-    -v, --verbose        Show debugging messages about the progress.
     -q, --quiet          Suppress warnings.
+    -u, --update         Update existing items rather than ignoring them.
+    -v, --verbose        Show debugging messages about the progress.
 """
 import configparser
 import hashlib
@@ -30,6 +31,7 @@ from zeca.publisher import publish_album, publish_artist, publish_track
 from zeca.uploader import upload
 import models as m
 
+NULL_ID = "00000000-0000-0000-0000-000000000000"
 log = get_logger("process")
 config = None
 
@@ -110,29 +112,35 @@ def process_track(track, bucket_name, bucket_url):
         track.url = upload(track, bucket_name, bucket_url)
 
 
-def process(db, discogs, graphql, bucket_name, bucket_url):
+def process(*, db, discogs, graphql, bucket_name, bucket_url, update):
     for artist in db.query(m.Artist).all():
         log.info(f"[ARTIST] {artist.name if artist.name else '<no name>'}")
+        if artist.gql_id and not update:
+            continue
+
         db.add(artist)
 
         if discogs and not artist.discogs_id:
             enrich(discogs, artist)
 
-        if not artist.gql_id:
-            publish_artist(graphql, artist)
+        publish_artist(graphql, artist)
         db.commit()
 
     for album in db.query(m.Album).all():
         log.info(f"[ALBUM] {album.name if album.name else '<no name>'}")
-        db.add(album)
-        if discogs:
-            artist = album.artists[0] if len(album.artists) else None
-            enrich(discogs, artist, album)
-        publish_album(graphql, album, artists=album.artists)
-        db.commit()
+        if not album.gql_id or update:
+            db.add(album)
+            if discogs:
+                artist = album.artists[0] if len(album.artists) else None
+                enrich(discogs, artist, album)
+            publish_album(graphql, album, artists=album.artists)
+            db.commit()
 
         for track in album.tracks:
             log.info(f"[TRACK] {track.title if track.title else '<no title>'}")
+            if track.gql_id and not update:
+                continue
+
             db.add(track)
             process_track(track, bucket_name, bucket_url)
             publish_track(graphql, track, album=album)
@@ -140,10 +148,11 @@ def process(db, discogs, graphql, bucket_name, bucket_url):
 
             log.debug(f"[TRACK] URL: {track.url}")
 
-        log.debug(f"[ALBUM] {album.name if album.name else '<no name>'}")
-
-    for track in db.query(m.Track).filter(m.Track.gql_id.is_(None)):
+    for track in db.query(m.Track).filter(m.Track.album.is_(f"album:{NULL_ID}")):
         log.info(f"[TRACK] {track.title if track.title else '<no title>'}")
+        if track.gql_id and not update:
+            continue
+
         db.add(track)
         process_track(track, bucket_name, bucket_url)
         publish_track(graphql, track)
@@ -151,7 +160,7 @@ def process(db, discogs, graphql, bucket_name, bucket_url):
         log.debug(f"[TRACK] URL: {track.url}")
 
 
-def run(credentials, retries=0):
+def run(credentials, *, retries=0, update=False):
     if retries > 3:
         raise Exception("Too many retries")
 
@@ -171,7 +180,14 @@ def run(credentials, retries=0):
     bucket_url = config.get("gawshi", "bucket_url")
 
     try:
-        process(db, discogs, graphql, bucket_name, bucket_url)
+        process(
+            db=db,
+            discogs=discogs,
+            graphql=graphql,
+            bucket_name=bucket_name,
+            bucket_url=bucket_url,
+            update=update,
+        )
     except urllib.error.HTTPError as e:
         if e.code == 401:
             print("Retrying...")
@@ -200,7 +216,7 @@ def main():
     credentials = get_credentials()
 
     try:
-        run(credentials)
+        run(credentials, update=arguments["--update"])
     except KeyboardInterrupt:
         log.info("Keyboard interrupt received, exiting...")
         sys.exit(1)

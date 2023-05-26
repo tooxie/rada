@@ -321,7 +321,7 @@ class Indexer(object):
             if not album or meta.album != album.name:
                 album = self.get_album(meta.album, artist)
 
-            track.album = album.pk if album else NULL_ID
+            track.album = album.pk if album else f"album:{NULL_ID}"
             if artist:
                 track.artists.append(artist)
                 if album:

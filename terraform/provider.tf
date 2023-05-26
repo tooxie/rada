@@ -39,8 +39,9 @@ locals {
   mime_types = jsondecode(file("${path.module}/mime.json"))
   app_public_url_parameter_name = "GawshiAppPublicUrl-${local.suffix}"
   cognito_admin_group_name = "Gawshi-Admin-${local.suffix}"
+  server_id = "server:${random_uuid.server_id.result}"
 }
 
 output "server_id" {
-  value = random_uuid.server_id.result
+  value = local.server_id
 }

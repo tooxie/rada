@@ -16,6 +16,7 @@ export const createArtist = gql`
         name
         imageUrl
         year
+        volumes
         isVa
       }
     }
@@ -34,6 +35,7 @@ export const updateArtist = gql`
         name
         imageUrl
         year
+        volumes
         isVa
       }
     }
@@ -52,6 +54,7 @@ export const deleteArtist = gql`
         name
         imageUrl
         year
+        volumes
         isVa
       }
     }
@@ -70,6 +73,7 @@ export const deleteCascadeArtist = gql`
         name
         imageUrl
         year
+        volumes
         isVa
       }
     }
@@ -89,14 +93,18 @@ export const createAlbum = gql`
       name
       imageUrl
       year
+      volumes
       tracks {
         serverId
+        albumId
         id
         url
         title
         info
         lengthInSeconds
         ordinal
+        volume
+        side
         hash
         features
       }
@@ -118,14 +126,18 @@ export const updateAlbum = gql`
       name
       imageUrl
       year
+      volumes
       tracks {
         serverId
+        albumId
         id
         url
         title
         info
         lengthInSeconds
         ordinal
+        volume
+        side
         hash
         features
       }
@@ -147,14 +159,18 @@ export const deleteAlbum = gql`
       name
       imageUrl
       year
+      volumes
       tracks {
         serverId
+        albumId
         id
         url
         title
         info
         lengthInSeconds
         ordinal
+        volume
+        side
         hash
         features
       }
@@ -176,14 +192,18 @@ export const deleteCascadeAlbum = gql`
       name
       imageUrl
       year
+      volumes
       tracks {
         serverId
+        albumId
         id
         url
         title
         info
         lengthInSeconds
         ordinal
+        volume
+        side
         hash
         features
       }
@@ -195,6 +215,7 @@ export const createTrack = gql`
   mutation CreateTrack($input: CreateTrackInput!) {
     createTrack(input: $input) {
       serverId
+      albumId
       id
       album {
         serverId
@@ -202,6 +223,7 @@ export const createTrack = gql`
         name
         imageUrl
         year
+        volumes
         isVa
       }
       artists {
@@ -215,15 +237,18 @@ export const createTrack = gql`
       info
       lengthInSeconds
       ordinal
+      volume
+      side
       hash
       features
     }
   }
 `;
 export const updateTrack = gql`
-  mutation UpdateTrack($id: ID!, $input: UpdateTrackInput!) {
-    updateTrack(id: $id, input: $input) {
+  mutation UpdateTrack($albumId: ID!, $id: ID!, $input: UpdateTrackInput!) {
+    updateTrack(albumId: $albumId, id: $id, input: $input) {
       serverId
+      albumId
       id
       album {
         serverId
@@ -231,6 +256,7 @@ export const updateTrack = gql`
         name
         imageUrl
         year
+        volumes
         isVa
       }
       artists {
@@ -244,15 +270,18 @@ export const updateTrack = gql`
       info
       lengthInSeconds
       ordinal
+      volume
+      side
       hash
       features
     }
   }
 `;
 export const deleteTrack = gql`
-  mutation DeleteTrack($id: ID!) {
-    deleteTrack(id: $id) {
+  mutation DeleteTrack($albumId: ID!, $id: ID!) {
+    deleteTrack(albumId: $albumId, id: $id) {
       serverId
+      albumId
       id
       album {
         serverId
@@ -260,6 +289,7 @@ export const deleteTrack = gql`
         name
         imageUrl
         year
+        volumes
         isVa
       }
       artists {
@@ -273,6 +303,8 @@ export const deleteTrack = gql`
       info
       lengthInSeconds
       ordinal
+      volume
+      side
       hash
       features
     }

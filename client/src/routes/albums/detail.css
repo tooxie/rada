@@ -100,6 +100,23 @@
   color: gray;
 }
 
+.tracklist .disc {
+  margin: 0 1rem;
+}
+
+.tracklist .disc:not(:first-of-type) {
+  margin-top: 1rem;
+}
+
+.tracklist .disc .number {
+}
+
+.tracklist .disc .info {
+  font-size: 0.8rem;
+  color: #742e12;
+  margin-left: 1rem;
+}
+
 .nobreak {
   white-space: nowrap;
   display: flex;

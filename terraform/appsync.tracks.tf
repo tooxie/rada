@@ -26,7 +26,7 @@ resource "aws_appsync_resolver" "create_track" {
   data_source = aws_appsync_datasource.gawshi_tracks.name
 
   request_template = templatefile("./resolvers/request/puttrack.vm", {
-    server_id: random_uuid.server_id.result,
+    server_id: local.server_id,
   })
   response_template = file("./resolvers/response/getitem.vm")
 }
@@ -39,4 +39,16 @@ resource "aws_appsync_resolver" "album_tracks_connection" {
 
   request_template = file("./resolvers/request/trackconnection.vm")
   response_template = file("./resolvers/response/trackconnection.vm")
+}
+
+resource "aws_appsync_resolver" "update_track" {
+  api_id = aws_appsync_graphql_api.gawshi.id
+  type = "Mutation"
+  field = "updateTrack"
+  data_source = aws_appsync_datasource.gawshi_tracks.name
+
+  request_template = templatefile("./resolvers/request/updatetrack.vm", {
+    server_id: local.server_id,
+  })
+  response_template = file("./resolvers/response/connection.vm")
 }

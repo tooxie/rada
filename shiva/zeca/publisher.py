@@ -1,168 +1,219 @@
 #!/usr/bin/env python3
+import configparser
 import json
-import logging
-import logging.config
 import os
+import pathlib
 
 from logger import get_logger
 
 NULL_ID = "00000000-0000-0000-0000-000000000000"
-logger = get_logger("publisher")
-
-
-# def get_logger():
-#     # return logging.getLogger('process')
-#     log_conf = '../logging.conf'
-#     dirname = os.path.dirname(__file__)
-#     logging.config.fileConfig(os.path.join(dirname, log_conf))
-#
-#     return logging.getLogger('process')
+log = get_logger("publisher")
 
 
 def publish_artist(client, artist):
     if artist.gql_id:
-        return
+        update_artist(client, artist)
+    else:
+        create_artist(client, artist)
 
+
+def update_artist(client, artist):
+    log.debug(f"[ARTIST] Updating artist \"{artist.name}\"...")
     query = """
-mutation createArtist($name: String!, $image: AWSURL) {
-    createArtist(input: { name: $name, imageUrl: $image }) {
+mutation updateArtist(
+    $id: ID!,
+    $name: String!,
+    $image: AWSURL,
+) {
+    updateArtist(
+        id: $id,
+        input: {
+            name: $name,
+            imageUrl: $image,
+        }
+    ) {
         id
     }
 }"""
+
+    execute_artist_mutation(client, artist, query)
+
+
+def create_artist(client, artist):
+    log.debug(f"[ARTIST] Publishing \"{artist.name}\"...")
+    query = """
+mutation createArtist(
+    $name: String!,
+    $image: AWSURL,
+) {
+    createArtist(input: {
+        name: $name,
+        imageUrl: $image,
+    }) {
+        id
+    }
+}"""
+
+    execute_artist_mutation(client, artist, query)
+
+
+def execute_artist_mutation(client, artist, query):
     variables = {"name": artist.name}
+    if artist.gql_id:
+        variables.update({"id": artist.gql_id})
     if artist.image:
         variables.update({"image": artist.image})
     response = json.loads(client.execute(query, variables))
     if 'errors' in response:
         raise Exception(response["errors"][0]["message"])
 
-    item = response['data']['createArtist']
-    artist.gql_id = item['id']
-    logger.info("[ARTIST] [PUBLISHED] %s (%s)" % (artist.name, artist.gql_id))
-    # logger.info('[PUBLISH] Artist "%s" published with id "artist:%s"' % (
-    #     artist.name, artist.pk))
-
-
-# def get_albums_for_artist(client, artist):
-#     if not artist.gql_id:
-#         return []
-#
-#     query = """
-# query getArtist($artistId: ID!) {
-#     getArtist(id: $artistId) {
-#         id
-#         name
-#         albums {
-#             id
-#             name
-#         }
-#     }
-# }"""
-#     variables = {"artistId": artist.gql_id}
-#     print(f"Getting artist {artist.gql_id}")
-#     response = json.loads(client.execute(query, variables))
-#     if 'errors' in response:
-#         raise Exception(response["errors"][0]["message"])
-#
-#     print(response)
-#     data = response['data']['getArtist']
-#     if data and 'albums' in data and data['albums']:
-#         return data['albums']
-#
-#     logger.debug("No albums")
-#     return []
+    if "createArtist" in response["data"]:
+        item = response['data']['createArtist']
+        artist.gql_id = item['id']
+        log.info("[ARTIST] [PUBLISHED] %s (%s)" % (artist.name, artist.gql_id))
+    elif "updateArtist" in response["data"]:
+        log.info("[ARTIST] [UPDATE] %s (%s)" % (artist.name, artist.gql_id))
 
 
 def publish_album(client, album, artists):
     if album.gql_id:
-        logger.debug(f"[ALBUM] '{album.name}' publised already, ignoring")
-        return
+        update_album(client, album, artists)
+    else:
+        create_album(client, album, artists)
 
-    # logger.debug("Searching for album")
-    # for _album in get_albums_for_artist(client, artists[0]):
-    #     if _album['name'] == album.name:
-    #         logger.debug("found!")
-    #         album.gql_id = _album['id']
-    #         return
+def update_album(client, album, artists):
+    log.debug(f"[ALBUM] Updating album \"{album.name}\"...")
+    query = """
+mutation updateAlbum(
+    $id: ID!,
+    $name: String!,
+    $cover: AWSURL,
+    $year: Int,
+    $volumes: Int,
+) {
+    updateAlbum(
+        id: $id,
+        input: {
+            name: $name,
+            imageUrl: $cover,
+            year: $year,
+            volumes: $volumes,
+        }
+    ) {
+        id
+    }
+}"""
+    execute_album_mutation(client, album, artists, query)
 
+
+def create_album(client, album, artists):
+    log.debug(f"[ALBUM] Publishing \"{album.name}\"...")
     query = """
 mutation createAlbum(
     $artists: [ID!]!,
     $name: String!,
     $cover: AWSURL,
     $year: Int,
+    $volumes: Int!,
 ) {
     createAlbum(input: {
         artists: $artists,
         name: $name,
         imageUrl: $cover,
         year: $year,
+        volumes: $volumes,
     }) {
         id
     }
 }"""
+
+    execute_album_mutation(client, album, artists, query)
+
+
+def execute_album_mutation(client, album, artists, query):
     variables = {
         "artists": [artist.gql_id for artist in artists],
         "name": album.name,
     }
-    if album.year:
-        variables.update({"year": album.year})
-    if album.cover:
-        variables.update({"cover": album.cover})
-    print(variables)
-    response = json.loads(client.execute(query, variables))
-    if 'errors' in response:
-        raise Exception(response["errors"][0]["message"])
-    item = response["data"]['createAlbum']
-    album.gql_id = item['id']
-
-    logger.info('[PUBLISH] Album "%s" published with id "%s"' % (
-        album.name, album.gql_id))
-
-
-def get_tracks_for_album(client, album):
-    logger.debug("Getting tracks for %s" % album.name)
-    if not album.gql_id:
-        return []
-
-    query = """
-query getAlbum($albumId: ID!) {
-    getAlbum(id: $albumId) {
-        id
-        name
-        tracks {
-            id
-            title
-        }
-    }
-}"""
-    variables = {"albumId": album.gql_id}
+    if album.gql_id:
+        variables.update({"id": album.gql_id})
+    for attr in ["year", "cover", "volumes"]:
+        if hasattr(album, attr):
+            val = album.__getattribute__(attr)
+            variables.update({attr: val})
+    log.debug(query, variables)
     response = json.loads(client.execute(query, variables))
     if 'errors' in response:
         raise Exception(response["errors"][0]["message"])
 
-    data = response['data']['getAlbum']
-    if 'tracks' in data:
-        return data['tracks']
-
-    logger.debug("No tracks")
-    return []
-
-
-def not_none(x):
-    return x is not None
+    if "createAlbum" in response["data"]:
+        item = response["data"]['createAlbum']
+        album.gql_id = item['id']
+        log.info("[ALBUM] [PUBLISH] %s (%s)" % (album.name, album.gql_id))
+    elif "updateAlbum" in response["data"]:
+        log.info("[ALBUM] [UPDATE] %s (%s)" % (album.name, album.gql_id))
 
 
 def publish_track(client, track, album=None):
     if track.gql_id:
-        logger.debug("Track publised already, ignoring")
-        return
+        update_track(client, track, album)
+    else:
+        create_track(client, track, album)
 
-    album_id = f"album:{NULL_ID}"
-    if album and album.gql_id:
-        album_id = album.gql_id
 
-    artists = map(lambda a: a.gql_id, track.artists)
+def update_track(client, track, album=None):
+    log.debug("Track publised already, ignoring")
+    query = """
+mutation updateTrack(
+    $albumId: ID!,
+    $id: ID!,
+    $url: AWSURL,
+    $hash: String,
+    $title: String,
+    $length: Int,
+    $ordinal: Int,
+    $volume: Int,
+    $side: Int,
+    $artists: [ID!],
+) {
+    updateTrack(
+        albumId: $albumId,
+        id: $id,
+        input: {
+            url: $url,
+            hash: $hash,
+            title: $title,
+            lengthInSeconds: $length,
+            ordinal: $ordinal,
+            volume: $volume,
+            side: $side,
+            artists: $artists,
+        }
+    ) {
+        id
+        title
+    }
+}"""
+
+    execute_track_mutation(client, track, album, query)
+
+
+def expand(path: str) -> str:
+    return os.path.expandvars(os.path.expanduser(path))
+
+
+def get_music_dir():
+    dirname = os.path.dirname(__file__)
+    config_path = os.path.join(dirname, "../gawshi.conf")
+    config = configparser.ConfigParser()
+    config.read(config_path)
+    return expand(config.get('gawshi', 'music_dir'))
+
+
+def create_track(client, track, album=None):
+    music_dir = get_music_dir()
+    path = pathlib.Path(track.path).relative_to(music_dir)
+    log.debug(f"[TRACK] Publishing \"{path}\"...")
     query = """
 mutation createTrack(
     $albumId: ID!,
@@ -171,6 +222,8 @@ mutation createTrack(
     $title: String,
     $length: Int,
     $ordinal: Int,
+    $volume: Int!,
+    $side: Int!,
     $artists: [ID!],
 ) {
     createTrack(input: {
@@ -180,31 +233,49 @@ mutation createTrack(
         title: $title,
         lengthInSeconds: $length,
         ordinal: $ordinal,
+        volume: $volume,
+        side: $side,
         artists: $artists,
     }) {
         id
         title
     }
 }"""
+
+    execute_track_mutation(client, track, album, query)
+
+
+def execute_track_mutation(client, track, album, query):
+    artists = map(lambda a: a.gql_id, track.artists)
+    not_none = lambda a: a
     variables = {
-        "albumId": album_id,
+        "albumId": album.gql_id if album else f"album:{NULL_ID}",
         "url": track.url,
         "hash": track.hash,
         "title": track.title,
         "length": track.length,
         "ordinal": track.ordinal,
+        "volume": track.volume,
+        "side": track.side,
         "artists": list(filter(not_none, artists)),
     }
+    if track.gql_id:
+        variables.update({
+            "id": track.gql_id,
+        })
 
-    if (len(list(artists)) != len(list(filter(not_none, artists)))):
-        print(f"Track {track.id} has null artists", track.artists)
+    if len(list(filter(lambda a: a is None, artists))) > 0:
+        log.info(f"Track \"{track.id}\" has null artists", track.artists)
 
     response = json.loads(client.execute(query, variables))
     if 'errors' in response:
+        log.debug(query)
+        log.debug(variables)
         raise Exception(response["errors"][0]["message"])
 
-    item = response["data"]['createTrack']
-    track.gql_id = item['id']
-
-    logger.info('[PUBLISH] Track "%s" published with id "track:%s"' % (
-        track.title, track.pk))
+    if "createTrack" in response["data"]:
+        item = response["data"]['createTrack']
+        track.gql_id = item['id']
+        log.info("[TRACK] [PUBLISH] %s (%s)" % (track.title, track.gql_id))
+    elif "updateTrack" in response["data"]:
+        log.info("[TRACK] [UPDATE] %s (%s)" % (track.title, track.gql_id))

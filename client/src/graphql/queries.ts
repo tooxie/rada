@@ -17,14 +17,18 @@ export const getAlbum = gql`
       name
       imageUrl
       year
+      volumes
       tracks {
         serverId
+        albumId
         id
         url
         title
         info
         lengthInSeconds
         ordinal
+        volume
+        side
         hash
         features
       }
@@ -41,6 +45,7 @@ export const listAlbums = gql`
         name
         imageUrl
         year
+        volumes
         isVa
       }
     }
@@ -59,6 +64,7 @@ export const getArtist = gql`
         name
         imageUrl
         year
+        volumes
         isVa
       }
     }
@@ -89,6 +95,7 @@ export const listArtistsForAlbum = gql`
         name
         imageUrl
         year
+        volumes
         isVa
       }
     }
@@ -98,6 +105,7 @@ export const getTrack = gql`
   query GetTrack($albumId: ID!, $id: ID!) {
     getTrack(albumId: $albumId, id: $id) {
       serverId
+      albumId
       id
       album {
         serverId
@@ -105,6 +113,7 @@ export const getTrack = gql`
         name
         imageUrl
         year
+        volumes
         isVa
       }
       artists {
@@ -118,6 +127,8 @@ export const getTrack = gql`
       info
       lengthInSeconds
       ordinal
+      volume
+      side
       hash
       features
     }
@@ -128,12 +139,15 @@ export const listOrphanTracks = gql`
     listOrphanTracks {
       items {
         serverId
+        albumId
         id
         url
         title
         info
         lengthInSeconds
         ordinal
+        volume
+        side
         hash
         features
       }

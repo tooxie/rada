@@ -11,10 +11,10 @@ def main(args):
     config["gawshi"]["aws_region"] = args.region
     config["gawshi"]["bucket_name"] = args.bucket_name
     config["gawshi"]["bucket_url"] = args.bucket_url
-    config["gawshi"]["graphql_api_url"] = args.api_url
-    config["gawshi"]["ssm_username"] = args.ssm_parameter_username
-    config["gawshi"]["ssm_password"] = args.ssm_parameter_password
     config["gawshi"]["cognito_client_id"] = args.cognito_client_id
+    config["gawshi"]["graphql_api_url"] = args.api_url
+    config["gawshi"]["ssm_password"] = args.ssm_parameter_password
+    config["gawshi"]["ssm_username"] = args.ssm_parameter_username
 
     with open(CONFIG_PATH, "w") as f:
         config.write(f)

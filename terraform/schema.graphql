@@ -10,8 +10,8 @@ type Mutation {
   deleteCascadeAlbum(id: ID!): Album
 
   createTrack(input: CreateTrackInput!): Track
-  updateTrack(id: ID!, input: UpdateTrackInput!): Track
-  deleteTrack(id: ID!): Track
+  updateTrack(albumId: ID!, id: ID!, input: UpdateTrackInput!): Track
+  deleteTrack(albumId: ID!, id: ID!): Track
 
   registerServer(input: RegisterServerInput): Server
     @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
@@ -171,6 +171,7 @@ type Album {
   name: String
   imageUrl: AWSURL
   year: Int
+  volumes: Int!
   tracks: [Track!]
   isVa: Boolean
 }
@@ -184,12 +185,14 @@ input CreateAlbumInput {
   name: String!
   imageUrl: AWSURL
   year: Int
+  volumes: Int!
 }
 
 input UpdateAlbumInput {
   name: String
   imageUrl: AWSURL
   year: Int
+  volumes: Int
 }
 
 # --- Track
@@ -199,6 +202,7 @@ input TableTrackFilterInput {
 
 type Track {
   serverId: ID!
+  albumId: ID!
   id: ID!
   album: Album
   artists: [Artist!]
@@ -207,6 +211,8 @@ type Track {
   info: String
   lengthInSeconds: Int
   ordinal: Int
+  volume: Int!
+  side: Int!
   hash: String!
   features: [String!]
 }
@@ -221,18 +227,21 @@ input CreateTrackInput {
   title: String
   lengthInSeconds: Int
   ordinal: Int
+  volume: Int!
+  side: Int!
   artists: [ID!]
   hash: String!
 }
 
 input UpdateTrackInput {
-  albumId: ID
   title: String
   url: AWSURL
   lengthInSeconds: Int
   ordinal: Int
+  volume: Int
+  side: Int
   artists: [ID!]
-  hash: String!
+  hash: String
 }
 
 # --- Invite

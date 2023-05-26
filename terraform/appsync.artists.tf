@@ -17,7 +17,18 @@ resource "aws_appsync_resolver" "list_artists" {
 
   request_template = templatefile("./resolvers/request/listbyentity.vm", {
     entity: "artist",
-    server_id: random_uuid.server_id.result,
   })
   response_template = file("./resolvers/response/page.vm")
+}
+
+resource "aws_appsync_resolver" "update_artist" {
+  api_id = aws_appsync_graphql_api.gawshi.id
+  type = "Mutation"
+  field = "updateArtist"
+  data_source = aws_appsync_datasource.gawshi_artists.name
+
+  request_template = templatefile("./resolvers/request/updateitem.vm", {
+    entity: "artist",
+  })
+  response_template = file("./resolvers/response/connection.vm")
 }

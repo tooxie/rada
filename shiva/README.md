@@ -12,7 +12,9 @@ without the (flask) http layer.
 
 In a one-liner:
 ```
-python -m venv .venv && source .venv/bin/activate && pip install --upgrade pip -r dependencies.pip
+python -m venv .venv && \
+source .venv/bin/activate && \
+pip install --upgrade pip -r dependencies.pip
 ```
 
 ### Configuring the indexer

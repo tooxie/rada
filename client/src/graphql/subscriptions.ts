@@ -15,6 +15,7 @@ export const onCreateArtist = /* GraphQL */ `
         name
         imageUrl
         year
+        volumes
         isVa
       }
     }
@@ -33,6 +34,7 @@ export const onUpdateArtist = /* GraphQL */ `
         name
         imageUrl
         year
+        volumes
         isVa
       }
     }
@@ -51,6 +53,7 @@ export const onDeleteArtist = /* GraphQL */ `
         name
         imageUrl
         year
+        volumes
         isVa
       }
     }
@@ -70,14 +73,18 @@ export const onCreateAlbum = /* GraphQL */ `
       name
       imageUrl
       year
+      volumes
       tracks {
         serverId
+        albumId
         id
         url
         title
         info
         lengthInSeconds
         ordinal
+        volume
+        side
         hash
         features
       }
@@ -99,14 +106,18 @@ export const onUpdateAlbum = /* GraphQL */ `
       name
       imageUrl
       year
+      volumes
       tracks {
         serverId
+        albumId
         id
         url
         title
         info
         lengthInSeconds
         ordinal
+        volume
+        side
         hash
         features
       }
@@ -128,14 +139,18 @@ export const onDeleteAlbum = /* GraphQL */ `
       name
       imageUrl
       year
+      volumes
       tracks {
         serverId
+        albumId
         id
         url
         title
         info
         lengthInSeconds
         ordinal
+        volume
+        side
         hash
         features
       }
@@ -147,6 +162,7 @@ export const onCreateTrack = /* GraphQL */ `
   subscription OnCreateTrack($id: ID, $title: String) {
     onCreateTrack(id: $id, title: $title) {
       serverId
+      albumId
       id
       album {
         serverId
@@ -154,6 +170,7 @@ export const onCreateTrack = /* GraphQL */ `
         name
         imageUrl
         year
+        volumes
         isVa
       }
       artists {
@@ -167,6 +184,8 @@ export const onCreateTrack = /* GraphQL */ `
       info
       lengthInSeconds
       ordinal
+      volume
+      side
       hash
       features
     }
@@ -176,6 +195,7 @@ export const onUpdateTrack = /* GraphQL */ `
   subscription OnUpdateTrack($id: ID, $title: String) {
     onUpdateTrack(id: $id, title: $title) {
       serverId
+      albumId
       id
       album {
         serverId
@@ -183,6 +203,7 @@ export const onUpdateTrack = /* GraphQL */ `
         name
         imageUrl
         year
+        volumes
         isVa
       }
       artists {
@@ -196,6 +217,8 @@ export const onUpdateTrack = /* GraphQL */ `
       info
       lengthInSeconds
       ordinal
+      volume
+      side
       hash
       features
     }
@@ -205,6 +228,7 @@ export const onDeleteTrack = /* GraphQL */ `
   subscription OnDeleteTrack($id: ID, $title: String) {
     onDeleteTrack(id: $id, title: $title) {
       serverId
+      albumId
       id
       album {
         serverId
@@ -212,6 +236,7 @@ export const onDeleteTrack = /* GraphQL */ `
         name
         imageUrl
         year
+        volumes
         isVa
       }
       artists {
@@ -225,6 +250,8 @@ export const onDeleteTrack = /* GraphQL */ `
       info
       lengthInSeconds
       ordinal
+      volume
+      side
       hash
       features
     }
