@@ -30,14 +30,13 @@ import traceback
 
 from docopt import docopt
 from slugify import slugify
-from sqlalchemy import func, create_engine
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import NoResultFound
 
 import models as m
 from metadata import MetadataManagerReadError
 from cache import CacheManager
-# from lastfm import LastFM
 
 log_conf = './logging.conf'
 dirname = os.path.dirname(__file__)
@@ -101,12 +100,6 @@ class Indexer(object):
         for extension in self.allowed_extensions:
             self.count_by_extension[extension] = 0
 
-        # if self.use_lastfm:
-        #     self.lastfm = LastFM(
-        #         api_key=config['LASTFM_API_KEY'],
-        #         api_secret=config['LASTFM_API_SECRET'],
-        #         use_cache=(write_every > 1))
-
         if not len(self.media_dirs):
             logger.error('Remember to set the music_dir option, otherwise I '
                 "don't know where to look for.")
@@ -148,11 +141,6 @@ class Indexer(object):
 
         return artist
 
-    # def get_artist_image(self, name):
-    #     if self.use_lastfm:
-    #         return self.lastfm.get_artist_image(name)
-    #     return None
-
     def get_album(self, name, artist):
         name = name.strip() if isinstance(name, str) else None
         if not name or not artist:
@@ -176,18 +164,6 @@ class Indexer(object):
         self.cache.add_album(album, artist)
 
         return album
-
-    # def get_album_cover(self, album, artist):
-    #     if self.use_lastfm:
-    #         return self.lastfm.get_album_cover(album, artist)
-    #     return None
-
-    # def get_release_year(self, album, artist):
-    #     # if self.use_lastfm:
-    #     #     rdate = self.lastfm.get_release_date(album, artist)
-    #     #     return rdate.year if rdate else None
-
-    #     return self.get_metadata_reader().release_year
 
     def add_to_session(self, track):
         self.session.add(track)
@@ -223,8 +199,6 @@ class Indexer(object):
         if self.write_every > 1:
             logger.debug('Clearing cache')
             self.cache.clear()
-            # if self.use_lastfm:
-            #     self.lastfm.clear_cache()
 
         return True
 
@@ -402,14 +376,8 @@ def main():
     kwargs = {
         'hash_files': not arguments['--no-hash'],
         'reindex': arguments['--reindex'],
-        # 'use_lastfm': arguments['--lastfm'],
         'write_every': arguments['--write-every'],
     }
-
-    # if kwargs['use_lastfm'] and not config.get('LASTFM_API_KEY'):
-    #     sys.stderr.write('ERROR: You need a Last.FM API key if you set the '
-    #         '--lastfm flag.\n')
-    #     sys.exit(2)
 
     try:
         if kwargs['write_every'] is not None:
