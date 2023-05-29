@@ -98,7 +98,7 @@ resource "aws_iam_role_policy" "cognito_admin_user" {
 }
 
 resource "aws_cognito_user_group" "read_only_users" {
-  name = "Gawshi-ReadOnly-${local.suffix}"
+  name = "Gawshi-ReadOnly"
   user_pool_id = aws_cognito_user_pool.gawshi.id
   description = "Gawshi read-only users group"
   precedence = 11
@@ -197,6 +197,9 @@ resource "random_password" "root_user_password" {
   min_upper = 1
 }
 
+# While this suffix looks unnecessary because we won't have more than 1 root
+# user, it provides an extra layer of security. Without it an attacker would
+# know the root user's username.
 resource "random_string" "root_user_suffix" {
   length = 6
   special = false
