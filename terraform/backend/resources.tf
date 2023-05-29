@@ -5,17 +5,17 @@ provider "aws" {
 
 data "aws_caller_identity" "gawshi" {}
 
-resource "aws_iam_user" "gawshi" {
-  name = "Gawshi-${random_string.suffix.result}"
-}
-
-// --- S3
 resource "random_string" "suffix" {
   length = 6
   special = false
   upper = false
 }
 
+resource "aws_iam_user" "gawshi" {
+  name = "Gawshi-${random_string.suffix.result}"
+}
+
+// --- S3
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "gawshi-terraform-state-${random_string.suffix.result}"
 
