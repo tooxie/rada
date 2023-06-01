@@ -88,9 +88,12 @@ const Queue = ({ player, visible, onDismiss }: QueueProps) => {
     const getAlbumName = (track: Track): string => {
       if (!track.album) return "<no album>";
       if (!track.album?.name) return "<no title>";
-      const volume = track.album.volumes > 1 ? ` (disc ${track.volume})` : "";
+      let volume = "";
+      if (track.album.volumes > 1) {
+        volume = `(${track.volume}/${track.album.volumes})`;
+      }
 
-      return `${track.album.name} (${track.volume}/${track.album.volumes})`;
+      return `${track.album.name} ${volume}`;
     };
     let artistChanged: boolean = true;
     let albumChanged: boolean = true;
