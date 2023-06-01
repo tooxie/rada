@@ -31,7 +31,7 @@ const AlbumDetail = ({ id, trackId, serverId }: DetailProps) => {
     log.error(error);
     return <ErrorMsg error={error} margins={true} />;
   }
-  if (!loading && !album) return <p class={style.empty}>Album not found</p>;
+  if (!loading && !album) return <p class={style.f04}>Album not found</p>;
   if (!album) {
     return (
       <Fragment>
@@ -130,7 +130,7 @@ const AlbumDetail = ({ id, trackId, serverId }: DetailProps) => {
         </div>
       </div>
       <div class={style.tracklist}>
-        {trackList.length === 0 && "No tracks"}
+        {trackList.length === 0 && <p class={style.empty}>No tracks</p>}
         {trackList.map((track: Track, i: number) => (
           <Fragment>
             {print_disc_header(track, i)}

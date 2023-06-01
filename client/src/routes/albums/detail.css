@@ -1,4 +1,4 @@
-.empty {
+.f04 {
   padding: 4rem 1rem 0;
 }
 
@@ -39,6 +39,10 @@
 
 .tracklist {
   margin-top: .75rem;
+}
+
+.tracklist .empty {
+  margin: 0 1rem;
 }
 
 .tracklist .highlight {

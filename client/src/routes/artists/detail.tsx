@@ -27,7 +27,7 @@ const ArtistDetail: FunctionComponent<DetailProps> = ({ id, serverId }) => {
     log.error(error);
     return <ErrorMsg error={error} margins={true} />;
   }
-  if (!loading && !artist) return <p class={style.empty}>Artist not found</p>;
+  if (!loading && !artist) return <p class={style.f04}>Artist not found</p>;
   if (!_artist) {
     return (
       <Fragment>

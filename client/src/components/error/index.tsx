@@ -9,9 +9,11 @@ interface ErrorMsgProps {
 
 const ErrorMsg = ({ error, margins }: ErrorMsgProps) => (
   <Fragment>
-    <p class={margins ? style.margins : ""}>{error}</p>
-    <p class={style.retry}>
-      <button onClick={() => location.reload()}>Retry?</button>
+    <p class={margins ? style.margins : ""}>
+      {error}
+      <div class={style.retry}>
+        <button onClick={() => location.reload()}>Retry?</button>
+      </div>
     </p>
   </Fragment>
 );
