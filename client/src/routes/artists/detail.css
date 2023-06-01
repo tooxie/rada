@@ -43,11 +43,6 @@
   margin: 0;
 }
 
-.albums .album .albumname .volumes {
-  font-size: 0.8rem;
-  display: inline;
-}
-
 .albums .album .thumb {
   border: 1px solid #C0C0C0;
   background-position: center;
