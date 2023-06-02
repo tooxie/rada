@@ -215,6 +215,7 @@ type Track {
   side: Int!
   hash: String!
   features: [String!]
+  path: String!
 }
 
 type TrackConnection {
@@ -231,6 +232,7 @@ input CreateTrackInput {
   side: Int!
   artists: [ID!]
   hash: String!
+  path: String!
 }
 
 input UpdateTrackInput {
@@ -242,6 +244,7 @@ input UpdateTrackInput {
   side: Int
   artists: [ID!]
   hash: String
+  path: String
 }
 
 # --- Invite

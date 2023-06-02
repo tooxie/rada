@@ -1,4 +1,5 @@
 import { Fragment, h } from "preact";
+import { useState, useEffect } from "preact/hooks";
 
 import type { Artist, Track } from "../../graphql/api";
 import type { IPlayer } from "../../player/types";
@@ -23,6 +24,11 @@ const Tracks = ({ serverId }: ListProps) => {
   const { conf } = useConf();
   const player = usePlayer();
   const { loading, error, tracks } = useListTracks(serverId);
+  const [trackList, setTrackList] = useState<Track[]>([]);
+
+  useEffect(() => {
+    setTrackList([...tracks].sort(byPath));
+  }, [tracks]);
 
   if (loading) return <Spinner />;
   if (error) {
@@ -31,15 +37,15 @@ const Tracks = ({ serverId }: ListProps) => {
   }
   if (!tracks.length) return <div>No tracks</div>;
 
-  const filterFn = (track: Track, s: string): boolean => {
-    const title = (track.title || "").toLowerCase();
-    return title.includes(s.toLowerCase());
+  const filterFn = (track: Track, needle: string): boolean => {
+    const haystack = `${track.title} ${track.path}`;
+    return haystack.toLowerCase().includes(needle.toLowerCase());
   };
 
   return (
     <Fragment>
       <Search
-        input={tracks}
+        input={trackList}
         key="track-list"
         noResultsClass={style.empty}
         filter={filterFn}
@@ -76,15 +82,25 @@ const renderTrack = (player?: IPlayer | null) => (track: Track) => {
   const classes = [style.title, track.title ? "" : style.missing].join(" ");
 
   return (
-    <div class={style.track} onClick={getHandler(track)}>
-      <img src={icon} />
-      <div class={style.details}>
-        <div class={style.artists}>{renderArtists(track.artists || [])}</div>
-        <span class={classes}>{track.title || "<no title>"}</span>
-        <span class={style.length}>{toMinutes(track.lengthInSeconds)}</span>
+    <div onClick={getHandler(track)}>
+      <div class={style.track}>
+        <img src={icon} />
+        <div class={style.details}>
+          <div class={style.artists}>{renderArtists(track.artists || [])}</div>
+          <span class={classes}>{track.title || "<no title>"}</span>
+          <span class={style.length}>{toMinutes(track.lengthInSeconds)}</span>
+        </div>
       </div>
+      <div class={style.path}>{track.path}</div>
     </div>
   );
+};
+
+const byPath = (t1: Track, t2: Track): -1 | 0 | 1 => {
+  if (t1.path.toLowerCase() < t2.path.toLowerCase()) return -1;
+  if (t1.path.toLowerCase() > t2.path.toLowerCase()) return 1;
+
+  return 0;
 };
 
 export default Tracks;

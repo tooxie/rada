@@ -87,6 +87,7 @@ export const onCreateAlbum = /* GraphQL */ `
         side
         hash
         features
+        path
       }
       isVa
     }
@@ -120,6 +121,7 @@ export const onUpdateAlbum = /* GraphQL */ `
         side
         hash
         features
+        path
       }
       isVa
     }
@@ -153,6 +155,7 @@ export const onDeleteAlbum = /* GraphQL */ `
         side
         hash
         features
+        path
       }
       isVa
     }
@@ -188,6 +191,7 @@ export const onCreateTrack = /* GraphQL */ `
       side
       hash
       features
+      path
     }
   }
 `;
@@ -221,6 +225,7 @@ export const onUpdateTrack = /* GraphQL */ `
       side
       hash
       features
+      path
     }
   }
 `;
@@ -254,6 +259,7 @@ export const onDeleteTrack = /* GraphQL */ `
       side
       hash
       features
+      path
     }
   }
 `;

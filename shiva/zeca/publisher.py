@@ -175,6 +175,7 @@ mutation updateTrack(
     $volume: Int,
     $side: Int,
     $artists: [ID!],
+    $path: String,
 ) {
     updateTrack(
         albumId: $albumId,
@@ -188,6 +189,7 @@ mutation updateTrack(
             volume: $volume,
             side: $side,
             artists: $artists,
+            path: $path,
         }
     ) {
         id
@@ -225,6 +227,7 @@ mutation createTrack(
     $volume: Int!,
     $side: Int!,
     $artists: [ID!],
+    $path: String!,
 ) {
     createTrack(input: {
         albumId: $albumId,
@@ -236,6 +239,7 @@ mutation createTrack(
         volume: $volume,
         side: $side,
         artists: $artists,
+        path: $path,
     }) {
         id
         title
@@ -246,6 +250,8 @@ mutation createTrack(
 
 
 def execute_track_mutation(client, track, album, query):
+    music_dir = get_music_dir()
+    path = str(pathlib.Path(track.path).relative_to(music_dir))
     artists = map(lambda a: a.gql_id, track.artists)
     not_none = lambda a: a
     variables = {
@@ -258,6 +264,7 @@ def execute_track_mutation(client, track, album, query):
         "volume": track.volume,
         "side": track.side,
         "artists": list(filter(not_none, artists)),
+        "path": path,
     }
     if track.gql_id:
         variables.update({

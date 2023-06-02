@@ -31,6 +31,7 @@ export const getAlbum = gql`
         side
         hash
         features
+        path
       }
       isVa
     }
@@ -131,6 +132,7 @@ export const getTrack = gql`
       side
       hash
       features
+      path
     }
   }
 `;
@@ -150,6 +152,7 @@ export const listOrphanTracks = gql`
         side
         hash
         features
+        path
       }
     }
   }

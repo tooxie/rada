@@ -40,6 +40,7 @@ export type Track = {
   side: number;
   hash: string;
   features?: Array<string> | null;
+  path: string;
 };
 
 export type TableAlbumFilterInput = {
@@ -109,6 +110,7 @@ export type CreateTrackInput = {
   side: number;
   artists?: Array<string> | null;
   hash: string;
+  path: string;
 };
 
 export type UpdateTrackInput = {
@@ -120,6 +122,7 @@ export type UpdateTrackInput = {
   side?: number | null;
   artists?: Array<string> | null;
   hash?: string | null;
+  path?: string | null;
 };
 
 export type RegisterServerInput = {
@@ -523,6 +526,7 @@ export type CreateAlbumMutation = {
       side: number;
       hash: string;
       features?: Array<string> | null;
+      path: string;
     }> | null;
     isVa?: boolean | null;
   } | null;
@@ -563,6 +567,7 @@ export type UpdateAlbumMutation = {
       side: number;
       hash: string;
       features?: Array<string> | null;
+      path: string;
     }> | null;
     isVa?: boolean | null;
   } | null;
@@ -602,6 +607,7 @@ export type DeleteAlbumMutation = {
       side: number;
       hash: string;
       features?: Array<string> | null;
+      path: string;
     }> | null;
     isVa?: boolean | null;
   } | null;
@@ -641,6 +647,7 @@ export type DeleteCascadeAlbumMutation = {
       side: number;
       hash: string;
       features?: Array<string> | null;
+      path: string;
     }> | null;
     isVa?: boolean | null;
   } | null;
@@ -682,6 +689,7 @@ export type CreateTrackMutation = {
     side: number;
     hash: string;
     features?: Array<string> | null;
+    path: string;
   } | null;
 };
 
@@ -723,6 +731,7 @@ export type UpdateTrackMutation = {
     side: number;
     hash: string;
     features?: Array<string> | null;
+    path: string;
   } | null;
 };
 
@@ -763,6 +772,7 @@ export type DeleteTrackMutation = {
     side: number;
     hash: string;
     features?: Array<string> | null;
+    path: string;
   } | null;
 };
 
@@ -893,6 +903,7 @@ export type GetAlbumQuery = {
       side: number;
       hash: string;
       features?: Array<string> | null;
+      path: string;
     }> | null;
     isVa?: boolean | null;
   } | null;
@@ -1020,6 +1031,7 @@ export type GetTrackQuery = {
     side: number;
     hash: string;
     features?: Array<string> | null;
+    path: string;
   } | null;
 };
 
@@ -1040,6 +1052,7 @@ export type ListOrphanTracksQuery = {
       side: number;
       hash: string;
       features?: Array<string> | null;
+      path: string;
     }> | null;
   } | null;
 };
@@ -1223,6 +1236,7 @@ export type OnCreateAlbumSubscription = {
       side: number;
       hash: string;
       features?: Array<string> | null;
+      path: string;
     }> | null;
     isVa?: boolean | null;
   } | null;
@@ -1263,6 +1277,7 @@ export type OnUpdateAlbumSubscription = {
       side: number;
       hash: string;
       features?: Array<string> | null;
+      path: string;
     }> | null;
     isVa?: boolean | null;
   } | null;
@@ -1303,6 +1318,7 @@ export type OnDeleteAlbumSubscription = {
       side: number;
       hash: string;
       features?: Array<string> | null;
+      path: string;
     }> | null;
     isVa?: boolean | null;
   } | null;
@@ -1345,6 +1361,7 @@ export type OnCreateTrackSubscription = {
     side: number;
     hash: string;
     features?: Array<string> | null;
+    path: string;
   } | null;
 };
 
@@ -1385,6 +1402,7 @@ export type OnUpdateTrackSubscription = {
     side: number;
     hash: string;
     features?: Array<string> | null;
+    path: string;
   } | null;
 };
 
@@ -1425,5 +1443,6 @@ export type OnDeleteTrackSubscription = {
     side: number;
     hash: string;
     features?: Array<string> | null;
+    path: string;
   } | null;
 };

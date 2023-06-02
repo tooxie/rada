@@ -107,6 +107,7 @@ export const createAlbum = gql`
         side
         hash
         features
+        path
       }
       isVa
     }
@@ -140,6 +141,7 @@ export const updateAlbum = gql`
         side
         hash
         features
+        path
       }
       isVa
     }
@@ -173,6 +175,7 @@ export const deleteAlbum = gql`
         side
         hash
         features
+        path
       }
       isVa
     }
@@ -206,6 +209,7 @@ export const deleteCascadeAlbum = gql`
         side
         hash
         features
+        path
       }
       isVa
     }
@@ -241,6 +245,7 @@ export const createTrack = gql`
       side
       hash
       features
+      path
     }
   }
 `;
@@ -274,6 +279,7 @@ export const updateTrack = gql`
       side
       hash
       features
+      path
     }
   }
 `;
@@ -307,6 +313,7 @@ export const deleteTrack = gql`
       side
       hash
       features
+      path
     }
   }
 `;

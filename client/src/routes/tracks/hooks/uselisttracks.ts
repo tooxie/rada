@@ -15,6 +15,7 @@ const listTracks = gql`
         title
         lengthInSeconds
         url
+        path
         artists {
           id
           name

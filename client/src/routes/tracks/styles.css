@@ -38,3 +38,9 @@
   font-size: 0.8rem;
   margin-top: 1rem;
 }
+
+.path {
+  color: gray;
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+}
