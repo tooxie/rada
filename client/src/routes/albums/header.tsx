@@ -50,7 +50,7 @@ const AlbumHeader = (props: DetailProps) => {
   };
 
   if (!_album || _album.id !== props.id) _album = album;
-
+  const playable = Boolean((_album?.tracks || []).length > 0);
   backgroundImage = `url("${_album?.imageUrl || defaultBackground}")`;
 
   return (
@@ -61,7 +61,7 @@ const AlbumHeader = (props: DetailProps) => {
       onClick={clickHandler}
     >
       {!props.hideNav && <Navigation isDetail={true} />}
-      {_album && !props.hidePlayButton && (
+      {playable && !props.hidePlayButton && (
         <PlayAlbum albumId={props.id} serverId={props.serverId} />
       )}
       {props.children}

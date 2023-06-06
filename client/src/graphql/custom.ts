@@ -9,6 +9,9 @@ export const getAlbum = gql`
       imageUrl
       year
       isVa
+      tracks {
+        id
+      }
     }
   }
 `;
