@@ -18,6 +18,7 @@ import listIcon from "./mic.svg";
 import style from "./list.css";
 
 const log = new Logger(__filename);
+let _artists: Artist[] = [];
 
 const ArtistList = ({ serverId }: ListProps) => {
   const { conf } = useConf();
@@ -27,8 +28,11 @@ const ArtistList = ({ serverId }: ListProps) => {
     log.error(error);
     return <ErrorMsg error={error} />;
   }
-  if (loading) return <Spinner />;
-  if ((artists || []).length < 1) return <p>No Artists</p>;
+  if (_artists.length === 0) _artists = artists;
+  if (_artists.length === 0) {
+    if (loading) return <Spinner />;
+    else return <p>No Artists</p>;
+  }
 
   const filterFn = (artist: Artist, s: string): boolean => {
     const name = (artist.name || "").toLowerCase();
@@ -37,7 +41,7 @@ const ArtistList = ({ serverId }: ListProps) => {
 
   return (
     <Search
-      input={artists}
+      input={_artists}
       key="artist-list"
       noResultsClass={style.empty}
       filter={filterFn}

@@ -1,5 +1,4 @@
 import { Fragment, h } from "preact";
-import { useState, useEffect } from "preact/hooks";
 
 import type { Artist, Track } from "../../graphql/api";
 import type { IPlayer } from "../../player/types";
@@ -19,23 +18,22 @@ import style from "./styles.css";
 import icon from "./track.svg";
 
 const log = new Logger(__filename);
+let _tracks: Track[] = [];
 
 const Tracks = ({ serverId }: ListProps) => {
   const { conf } = useConf();
   const player = usePlayer();
   const { loading, error, tracks } = useListTracks(serverId);
-  const [trackList, setTrackList] = useState<Track[]>([]);
 
-  useEffect(() => {
-    setTrackList([...tracks].sort(byPath));
-  }, [tracks]);
-
-  if (loading) return <Spinner />;
   if (error) {
     log.error(error);
     return <ErrorMsg error={error} />;
   }
-  if (!tracks.length) return <div>No tracks</div>;
+  if (_tracks.length === 0) _tracks = [...tracks].sort(byPath);
+  if (_tracks.length === 0) {
+    if (loading) return <Spinner />;
+    else return <div>No tracks</div>;
+  }
 
   const filterFn = (track: Track, needle: string): boolean => {
     const haystack = `${track.title} ${track.path}`;
@@ -45,7 +43,7 @@ const Tracks = ({ serverId }: ListProps) => {
   return (
     <Fragment>
       <Search
-        input={trackList}
+        input={_tracks}
         key="track-list"
         noResultsClass={style.empty}
         filter={filterFn}

@@ -19,6 +19,7 @@ import useListAlbums from "./hooks/uselistalbums";
 
 const DEFAULT_ALBUM_COVER = "/assets/img/no-cover.jpeg";
 const log = new Logger(__filename);
+let _albums: Album[] = [];
 
 const AlbumList = ({ serverId }: ListProps) => {
   const { loading, error, albums } = useListAlbums(serverId);
@@ -32,12 +33,15 @@ const AlbumList = ({ serverId }: ListProps) => {
     log.error(error);
     return <ErrorMsg error={error} />;
   }
-  if (loading) return <Spinner />;
-  if (albums.length < 1) return <p>No Albums</p>;
+  if (_albums.length === 0) _albums = albums;
+  if (_albums.length === 0) {
+    if (loading) return <Spinner />;
+    else return <p>No Albums</p>;
+  }
 
   return (
     <Search
-      input={albums}
+      input={_albums}
       key="album-list"
       noResultsClass={style.empty}
       filter={filterFn}
