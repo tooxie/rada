@@ -13,7 +13,7 @@ type EmptyHeaderProps = Omit<DetailProps, "id" | "serverId">;
 
 const log = new Logger(__filename);
 
-const defaultBackground = "/assets/img/black.png";
+const defaultBackground = "/assets/img/gray.png";
 let backgroundImage = `url(${defaultBackground})`;
 let _album: Album | null = null;
 
