@@ -30,11 +30,16 @@ const Search = (props: SearchProps) => {
   const updateValue = (newValue: string) => {
     if (newValue === value) return;
 
-    const href = window.location.href.split("#")[0];
+    const href = window.location.origin + window.location.pathname;
     const s = encodeURI(newValue.trim());
+    const url = `${href}#s=${s}`;
 
-    window.location.href = s ? `${href}#s=${s}` : `${href}#`;
-    setValue(newValue);
+    if (window.location.hash) {
+      window.history.replaceState({}, "", url);
+      setValue(newValue);
+    } else {
+      window.location.href = url;
+    }
   };
   const filter = (items: any[]) => {
     const _value = value.trim();
@@ -62,6 +67,17 @@ const Search = (props: SearchProps) => {
   };
 
   log.debug(`Got ${props.input.length} items`);
+
+  const hashChange = () => {
+    const searchString = location.hash.substring(3);
+    console.log(`${location.hash} -> ${searchString}`);
+    setValue(searchString);
+  };
+
+  useEffect(() => {
+    window.addEventListener("hashchange", hashChange, false);
+    return () => window.removeEventListener("hashchange", hashChange, false);
+  }, []);
 
   useEffect(() => {
     const hash = window.location.hash;
