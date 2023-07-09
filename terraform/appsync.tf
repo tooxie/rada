@@ -15,6 +15,12 @@ resource "aws_appsync_graphql_api" "gawshi" {
     default_action = "ALLOW"
     user_pool_id = aws_cognito_user_pool.gawshi.id
   }
+
+  lifecycle {
+    ignore_changes = [
+      additional_authentication_provider,
+    ]
+  }
 }
 
 // --- Outputs
