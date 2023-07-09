@@ -18,6 +18,9 @@ resource "aws_appsync_graphql_api" "gawshi" {
 }
 
 // --- Outputs
-output "graphql_api_uris" {
-  value = aws_appsync_graphql_api.gawshi.uris
+output "graphql" {
+  value = {
+    endpoint = lookup(aws_appsync_graphql_api.gawshi.uris, "GRAPHQL"),
+    realtime = lookup(aws_appsync_graphql_api.gawshi.uris, "REALTIME"),
+  }
 }

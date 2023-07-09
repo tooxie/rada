@@ -60,10 +60,15 @@ resource "aws_s3_object" "gawshi_app_file" {
   content_type = lookup(local.mime_types, regex("\\.[^.]+$", each.key), null)
 }
 
-output "s3_music_bucket_url" {
-  value = aws_s3_bucket.gawshi_music.bucket_domain_name
-}
-
-output "s3_app_bucket_url" {
-  value = aws_s3_bucket.gawshi_app.bucket_domain_name
+output "s3_buckets" {
+  value = {
+    app = {
+      name = aws_s3_bucket.gawshi_app.id,
+      url = "https://${aws_s3_bucket.gawshi_app.bucket_domain_name}",
+    },
+    music = {
+      name = aws_s3_bucket.gawshi_music.id,
+      url = "https://${aws_s3_bucket.gawshi_music.bucket_domain_name}",
+    },
+  }
 }

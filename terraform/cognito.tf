@@ -234,6 +234,7 @@ resource "aws_ssm_parameter" "root_password" {
 output "cognito" {
   value = {
     root_user = aws_cognito_user.root.username
-    endpoint = aws_cognito_user_pool.gawshi.endpoint
+    endpoint = "https://${aws_cognito_user_pool.gawshi.endpoint}"
+    client_id = aws_cognito_user_pool_client.gawshi.id
   }
 }

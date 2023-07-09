@@ -181,13 +181,12 @@ resource "aws_api_gateway_integration_response" "get_client_id" {
 }
 
 // --- Outputs
-output "api_endpoint" {
-  value = aws_api_gateway_stage.gawshi.invoke_url
-}
-
-output "api_resources" {
+output "api_gateway" {
   value = {
-    claim_invite: "${aws_api_gateway_stage.gawshi.invoke_url}/${aws_api_gateway_resource.claim_invite_base_path.path_part}",
-    get_client_id: "${aws_api_gateway_stage.gawshi.invoke_url}/${aws_api_gateway_resource.get_client_id_base_path.path_part}",
+    endpoint = aws_api_gateway_stage.gawshi.invoke_url,
+    resources = {
+      claim_invite = "/${aws_api_gateway_resource.claim_invite_base_path.path_part}",
+      get_client_id = "/${aws_api_gateway_resource.get_client_id_base_path.path_part}",
+    },
   }
 }

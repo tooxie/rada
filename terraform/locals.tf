@@ -17,6 +17,6 @@ output "server_id" {
   value = local.server_id
 }
 
-output "resource_suffix" {
+output "suffix" {
   value = local.suffix
 }
