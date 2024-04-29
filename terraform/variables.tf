@@ -22,6 +22,6 @@ variable "server_name" {
 
   validation {
     condition = length(var.server_name) < 21
-    error_message = "The server name should not exceed 20 characters"
+    error_message = "The server name should not exceed 20 characters."
   }
 }
