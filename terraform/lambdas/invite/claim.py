@@ -32,9 +32,11 @@ def handler(event, context):
         if was_installed(event):
             mark_installed(client, iid, ts)
             password = create_user(iid, is_admin=invite.get("isAdmin", False))
+            param_name = os.environ["APP_PUBLIC_URL_PARAMETER_NAME"]
+            public_url = get_ssm_parameter(param_name)
             return ok({
                 "password": password,
-                "url": os.environ["APP_PUBLIC_URL"],
+                "url": public_url,
             })
         elif was_unsolicited(event):
             mark_unsolicited(client, iid, ts)
@@ -52,6 +54,11 @@ def handler(event, context):
     print("Loading template at " + tpl_path)
     with open(tpl_path) as f:
         return ok(f.read())
+
+
+def get_ssm_parameter(name):
+    client = boto3.client('ssm')
+    return client.get_parameter(Name=name)["Parameter"]["Value"]
 
 
 def was_installed(event):
@@ -138,7 +145,7 @@ def get_salt(event):
 
 
 def get_credentials(event):
-    username = event["pathParameters"]["params"].split('/')[0]
+    username = event["pathParameters"]["params"].split('/')[1]
     password = generate_password()
 
     return (username, password)

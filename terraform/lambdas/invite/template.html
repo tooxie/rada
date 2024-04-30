@@ -13,29 +13,40 @@
         <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
         <style>
+          * {
+            font-family: arial;
+          }
           @media (orientation: landscape) {
-              html {
-                  padding: 1rem;
-              }
-              html::before {
-                  content: "Page not found";
-              }
-              body {
-                  display: none;
-              }
+            html {
+              padding: 1rem;
+            }
+            html::before {
+              content: "Page not found";
+            }
+            body {
+              display: none;
+            }
           }
           #install {
-              min-height: 4rem;
+            min-height: 4rem;
           }
           #install button {
-              padding: 1rem 2rem;
-              font-weight: bold;
+            padding: 1rem 2rem;
+            font-weight: bold;
           }
           li {
-              margin-bottom: 1rem;
+            margin-bottom: 1rem;
           }
           p {
             word-break: break-word;
+          }
+          p.secret {
+            background-color: #ddd;
+            border: 1px solid #acab;
+            font-family: monospace;
+            line-break: anywhere;
+            overflow-wrap: break-word;
+            padding: 0.25rem 0.5rem;
           }
         </style>
 
@@ -47,14 +58,11 @@
           let secret;
 
           function goToApp() {
-            navigator.clipboard.writeText(secret).then(() => {
-              alert(`https://${appUrl}`);
-              window.location.href = `https://${appUrl}`;
-            });
+            window.location.href = `https://${appUrl}`;
           }
 
           function getUsername() {
-            return window.location.href.split('/')[4];
+            return window.location.href.split('/')[5];
           }
 
           function downloadCredentials() {
@@ -68,7 +76,9 @@
                   username: getUsername(),
                   password: response.password,
                 }));
-                document.getElementById('body').innerHTML = `Credentials downloaded!
+                document.getElementById('body').innerHTML = `
+                  <p>Copy the secret:</p>
+                  <p class="secret">${secret}</p>
                   <p><button id="goto" onClick=goToApp()>Go to app</button></p>`;
               });
           }
@@ -89,11 +99,14 @@
           Loading...
         </div>
         <p>
-            <i>Note:</i>
+            Note:
             <ul>
-                <li>This invitation can't be opened twice. Do <i>not</i> reload the page.</li>
+                <li>This invitation can't be opened twice. <i>Do not reload the page.</i></li>
                 <li> If you didn't request this invitation and want all your data deleted from our servers please <a id="unsolicited" href="#">click here</a>.</li>
             </ul>
+        </p>
+        <p style="display: none;">
+          <input type="text" id="secret" />
         </p>
     </body>
 </html>

@@ -38,6 +38,15 @@ resource "aws_iam_role_policy" "lambda_invites" {
     Statement = [
       {
         Action = [
+          "ssm:GetParameter",
+        ],
+        Effect = "Allow",
+        Resource = [
+          aws_ssm_parameter.app_public_url.arn,
+        ]
+      },
+      {
+        Action = [
           "dynamodb:*",
         ],
         Effect = "Allow",
