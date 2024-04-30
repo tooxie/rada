@@ -22,6 +22,9 @@ export default function (config, env, helpers, options) {
     babelConfig.plugins.push(["babel-plugin-graphql-tag", { strip: true }]);
     delete config.devtool; // Prevent sourcemaps from being generated in prod
 
+    var vConsoleWebpackPlugin = require("./webpack/vconsole-webpack-plugin").default;
+    config.plugins.push(new vConsoleWebpackPlugin());
+
     config.module.rules = config.module.rules.concat({
       test: /(\.js|\.json|\.ts|\.tsx)$/,
       enforce: "pre",
