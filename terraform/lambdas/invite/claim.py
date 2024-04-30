@@ -29,7 +29,7 @@ def handler(event, context):
         return not_found()
 
     if was_visited(invite):
-        if was_installed(event):
+        if installing(event):
             mark_installed(client, iid, ts)
             password = create_user(iid, is_admin=invite.get("isAdmin", False))
             param_name = os.environ["APP_PUBLIC_URL_PARAMETER_NAME"]
@@ -38,7 +38,7 @@ def handler(event, context):
                 "password": password,
                 "url": public_url,
             })
-        elif was_unsolicited(event):
+        elif reported_as_unsolicited(event):
             mark_unsolicited(client, iid, ts)
             return not_found()
         print(f"ERROR: Invite {iid} already claimed")
@@ -61,12 +61,12 @@ def get_ssm_parameter(name):
     return client.get_parameter(Name=name)["Parameter"]["Value"]
 
 
-def was_installed(event):
+def installing(event):
     qs = event.get("queryStringParameters")
     return 'installed' in qs
 
 
-def was_unsolicited(event):
+def reported_as_unsolicited(event):
     qs = event.get("queryStringParameters")
     return 'unsolicited' in qs
 
