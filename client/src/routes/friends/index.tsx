@@ -50,6 +50,10 @@ const InviteList = ({ serverId }: ListProps) => {
         note: note?.value || "",
         isAdmin: Boolean(adminCheck?.checked),
       });
+    } else {
+      // Unset the QR code as soon as the modal disappears, otherwise the
+      // spinner will show for a quarter of a second.
+      setTimeout(() => setQrCode(null), 250);
     }
   }, [showModal]);
 
