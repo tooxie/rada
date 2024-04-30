@@ -28,7 +28,7 @@ export default function (config, env, helpers, options) {
     config.module.rules = config.module.rules.concat({
       test: /(\.js|\.json|\.ts|\.tsx)$/,
       enforce: "pre",
-      exclude: /(node_modules|bower_components|\.spec\.js)/,
+      exclude: /(build|node_modules|bower_components|\.spec\.js)/,
       use: [{ loader: "webpack-strip-block" }],
     });
   }
