@@ -1,4 +1,4 @@
-.navigation {
+section.navigation {
   background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.6), transparent);
   color: white;
   display: flex;
@@ -7,28 +7,28 @@
   top: -10rem;
 }
 
-.navigation.collection {
+section.navigation.collection {
   position: relative;
 }
 
-.back,
-.search,
-.servers,
-.settings,
-.title {
+section.navigation .back,
+section.navigation .search,
+section.navigation .servers,
+section.navigation .settings,
+section.navigation .title {
   padding: 1rem 0.5rem 0.5rem;
   display: flex;
   align-items: center;
 }
 
-.back img,
-.search img,
-.servers img,
-.settings img {
+section.navigation .back > img,
+section.navigation .search > img,
+section.navigation .servers > img,
+section.navigation .settings > img {
   width: 1.3rem;
 }
 
-.title {
+section.navigation .title {
   display: block;
   flex-grow: 1;
   font-size: 1rem;
@@ -39,6 +39,6 @@
   white-space: nowrap;
 }
 
-.title a {
+section.navigation .title a {
   color: white;
 }

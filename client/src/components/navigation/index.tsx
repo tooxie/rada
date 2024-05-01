@@ -57,9 +57,11 @@ const Navigation = (props: NavigationProps) => {
           </div>
 
           <div class={style.search}>
-            <Link href="/search" onMouseDown={toggleSearch} onClick={noop}>
-              <img src={conf.searchEnabled ? searchOut : searchIn} />
-            </Link>
+            <img
+              src={conf.searchEnabled ? searchOut : searchIn}
+              onMouseDown={toggleSearch}
+              onClick={noop}
+            />
           </div>
 
           <div class={style.settings}>
