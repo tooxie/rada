@@ -1,5 +1,24 @@
+// It was informed in a recent article that just by knowing the name of a bucket
+// a malicious actor could make the owner incur in high costs without any way
+// for the victim to protect themselves. In an attempt to mitigate this risk we
+// generate a random string for each bucket we create. In theory the bucket name
+// is never exposed until valid credentials are provided, but just in case we
+// add another layer of security. For more information see:
+// https://medium.com/@maciej.pocwierz/how-an-empty-s3-bucket-can-make-your-aws-bill-explode-934a383cb8b1
+resource "random_string" "music_bucket_random_suffix" {
+  length = 16
+  special = false
+  upper = false
+}
+
+resource "random_string" "app_bucket_random_suffix" {
+  length = 16
+  special = false
+  upper = false
+}
+
 resource "aws_s3_bucket" "gawshi_music" {
-  bucket = "gawshi-music-${local.suffix}"
+  bucket = "gawshi-music-${local.suffix}-${random_string.music_bucket_random_suffix.result}"
   force_destroy = var.force_destroy_bucket
 }
 
@@ -13,7 +32,7 @@ resource "aws_s3_bucket_public_access_block" "gawshi_music" {
 }
 
 resource "aws_s3_bucket" "gawshi_app" {
-  bucket = "gawshi-app-${local.suffix}"
+  bucket = "gawshi-app-${local.suffix}-${random_string.app_bucket_random_suffix.result}"
   force_destroy = var.force_destroy_bucket
 }
 
