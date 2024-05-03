@@ -126,7 +126,7 @@ const AlbumDetail = ({ id, trackId, serverId }: DetailProps) => {
           {trackList.length > 0 &&
             `| ${album.volumes > 1 ? `${album.volumes} discs |` : ""} ${
               trackList.length
-            } tracks | ${duration}`}
+            } tracks (${duration})`}
         </div>
       </div>
       <div class={style.tracklist}>
