@@ -1,6 +1,6 @@
 section.list .artist,
 section.thumbnails .artist {
-  padding-top: 1rem;
+  padding-top: 0.5rem;
 }
 
 section.list .artist:first-of-type,
@@ -71,7 +71,7 @@ section.thumbnails .artist .thumb {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  border-radius: 2rem;
+  border-radius: 1.5rem;
   border: 1px solid #C0C0C0;
   height: 3rem;
   margin-right: 1rem;
@@ -81,7 +81,6 @@ section.thumbnails .artist .thumb {
 
 section.thumbnails .artist .name {
   align-items: center;
-  border-bottom: 1px solid #EEE;
   display: flex;
   min-height: 3rem;
   width: 100%;

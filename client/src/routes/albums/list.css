@@ -5,7 +5,7 @@
 
 section.list .album,
 section.thumbnails .album {
-  padding-top: 1rem;
+  padding-top: 0.5rem;
 }
 
 section.list .album:first-of-type,
