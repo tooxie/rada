@@ -15,11 +15,12 @@ interface UseReturn<T> {
 type ErrorNormalizer = (s: string) => string;
 
 const use = <T>(
+  name: string,
   fn: (c: Client) => Promise<any>,
   serverId?: ServerId,
   enFn?: ErrorNormalizer
 ): UseReturn<T> => {
-  log.debug(`use(server:${serverId})`);
+  log.debug(`[${name}] use(serverId="${serverId}")`);
 
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<T | null>(null);
@@ -30,29 +31,29 @@ const use = <T>(
     getClient(serverId)
       .then((client: Client) =>
         fn(client)
-          .then((data: T) => {
-            log.debug("use.useEffect.fn data:", data);
-            setData((data as any).data);
+          .then((result: T) => {
+            log.debug(`[${name}] use.useEffect.fn data:`, result);
+            setData((result as any).data);
             setLoading(false);
             if (error) setError(null);
           })
           .catch((error: Error) => {
-            log.error(error);
+            log.error(`[${name}] Error fetching data: ${error}`);
             setLoading(false);
             const msg = typeof error === "string" ? error : error.message;
             setError(normalizer(msg));
           })
       )
       .catch((error: Error | string) => {
-        log.error(`Error getting graphql client: ${error}`);
+        log.error(`[${name}] Error getting graphql client: ${error}`);
         setError(typeof error === "string" ? error : error.message);
         setLoading(false);
         setData(null);
       });
-  }, [fn]);
+  }, [name, fn, serverId]);
 
   const result = { loading, error, data };
-  log.debug("use.return:", result);
+  log.debug(`[${name}] use.return:`, result);
   return result;
 };
 

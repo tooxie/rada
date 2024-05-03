@@ -28,10 +28,10 @@ const useList = <Q, R, V = void>(
   const [refetching, setRefetching] = useState(false);
   const qName = getDocumentNodeName(query);
 
-  const exec = async (client: Client) => {
+  const exec = (client: Client) => {
     const options: QueryOptions = { query, variables };
 
-    log.debug(`uselist.${qName}(refetching==${refetching})`);
+    log.debug(`[${qName}] uselist.${qName}(refetching: ${refetching})`);
 
     let queryFn = client.query(options);
     if (refetching) {
@@ -47,16 +47,16 @@ const useList = <Q, R, V = void>(
   };
 
   const refetch = () => {
-    log.debug("Refetching...");
+    log.debug(`[${qName}] Refetching...`);
     setError(null);
     setItems([]);
     setLoading(true);
     setRefetching(true);
   };
 
-  log.debug(`useList(query:${qName}, variables:${JSON.stringify(variables)})`);
+  log.debug(`[${qName}] useList(query:${qName}, variables:${JSON.stringify(variables)})`);
 
-  const result = use<Q>(exec, serverId, normalizeMessage);
+  const result = use<Q>(qName, exec, serverId, normalizeMessage);
   if (result.data) {
     const key = Object.keys(result.data).find((key) => key.startsWith("list"));
     if (key) setItems(((result.data as any)[key].items || []) as R[]);
@@ -64,7 +64,7 @@ const useList = <Q, R, V = void>(
   setLoading(result.loading);
   setError(result.error);
 
-  log.debug("useList.return:", { loading, error, items });
+  log.debug(`[${qName}] useList.return:`, { loading, error, items });
   return { loading, error, items, refetch };
 };
 

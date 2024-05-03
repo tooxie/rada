@@ -3,10 +3,13 @@ import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 
 import { getAccessToken } from "../utils/auth";
+import Logger from "../logger";
 
 export type Client = ApolloClient<NormalizedCacheObject>;
 
-const getClient = async (uri: string, name: string): Promise<Client> => {
+const log = new Logger(__filename);
+const getClient = (uri: string, name: string): Client => {
+  log.debug(`getClient(uri:${uri}, name:${name}`);
   const httpLink = createHttpLink({ uri });
   const authLink = setContext((_, { headers }) => ({
     headers: {

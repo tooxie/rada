@@ -16,7 +16,7 @@ interface UseListArtistsReturn extends UseListReturnType {
 }
 
 const useListArtists = (serverId: ServerId): UseListArtistsReturn => {
-  log.debug("[artists/hooks/uselistartists.ts] useListArtists");
+  log.debug(`useListArtists("${serverId}")`);
   const { loading, error, items, refetch } = useList<
     ListArtistsQuery,
     Artist,

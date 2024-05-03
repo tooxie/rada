@@ -23,7 +23,7 @@ const useMutation = <T, V = {}>(mutation: Mutation): R<T> => {
 
   const mutator = (variables?: V) => {
     setLoading(true);
-    getClient().then(async (client) => {
+    getClient().then((client) => {
       log.debug("useMutation.variables", variables);
       client
         .mutate({
