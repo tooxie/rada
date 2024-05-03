@@ -1,4 +1,5 @@
 import { h, Fragment } from "preact";
+import { Link } from "preact-router/match";
 
 import Options, { Title } from "../../components/options";
 import Spinner from "../../components/spinner";
@@ -14,10 +15,17 @@ import folder from "./folder.svg";
 const Servers = () => {
   const { loading, error, servers } = useListServers();
   const { conf, setConf } = useConf();
+
+  // FIXME: We used to `selectServer` by doing a full reload, calling
+  // FIXME: `window.location.href`. This is obviously problematic but we did it
+  // FIXME: for a reason: Once we call `setConf` the app won't re-render
+  // FIXME: properly, the only way to force a render and update the app with
+  // FIXME: the information of the new server was to reload the page. This is
+  // FIXME: not ideal, mainly because playback will be affected and that's
+  // FIXME: unacceptable. We need to fix that.
   const selectServer = (server: typeof Server) => {
     conf.currentServer = server;
     setConf(conf);
-    window.location.href = `/server/${server.id}/artists`;
   };
   const resetServer = () => selectServer(Server);
 
@@ -32,14 +40,20 @@ const Servers = () => {
         <Fragment>
           <div>
             {servers.map((server) => (
-              <div class={style.server} onClick={() => selectServer(server)}>
+              <Link
+                href={`/server/${server.id}/artists`}
+                class={style.server}
+                onClick={() => selectServer(server)}
+              >
                 <img src={folder} /> {server.name} ({server.id.split("-")[0]})
-              </div>
+              </Link>
             ))}
           </div>
 
           <div class={style.mine}>
-            <button onClick={resetServer}>+ Go to my server</button>
+            <Link href="/" onClick={resetServer}>
+              + Go to my server
+            </Link>
           </div>
         </Fragment>
       ) : (
