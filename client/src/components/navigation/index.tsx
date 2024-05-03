@@ -39,11 +39,9 @@ const Navigation = (props: NavigationProps) => {
         <Fragment />
       ) : (
         <Fragment>
-          <div class={style.back}>
-            <BackLink>
-              <img src={back} />
-            </BackLink>
-          </div>
+          <BackLink class={style.back}>
+            <img src={back} />
+          </BackLink>
 
           <div class={style.title}>
             <Link href={`/server/${appState.serverId}/artists`}>
