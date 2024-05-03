@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { Link } from "preact-router/match";
 
-import useAppState from "../../state/hooks/useappstate";
+import useConf from "../../conf/hooks/useconf";
 
 import style from "./style.css";
 
@@ -38,8 +38,8 @@ const AdminItem = ({ href, name, admin }: AdminItemProps) => (
 );
 
 const ServerItem = ({ href, name }: ServerItemProps) => {
-  const { appState } = useAppState();
-  const serverPath = appState.serverId ? `/server/${appState.serverId}` : "";
+  const { conf } = useConf();
+  const serverPath = conf.currentServer.id ? `/server/${conf.currentServer.id}` : "";
 
   return <Item href={`${serverPath}${href}`} name={name} />;
 };

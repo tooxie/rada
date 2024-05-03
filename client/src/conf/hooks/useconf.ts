@@ -1,4 +1,4 @@
-import { useState } from "preact/hooks";
+import { useState, useCallback } from "preact/hooks";
 
 import type { Conf, ConfHook } from "../types";
 
@@ -10,12 +10,15 @@ const log = new Logger(__filename);
 
 const useConf = (): ConfHook => {
   const [conf, setConf] = useState<Conf>(getDefaultConf());
-  const customSetter = (newConf: Conf) => {
-    const serializedConf = JSON.stringify(newConf);
-    log.warn(`localStorage.setItem("GawshiConf", ${serializedConf})`);
-    localStorage.setItem("GawshiConf", serializedConf);
-    setConf({ ...newConf });
-  };
+  const customSetter = useCallback(
+    (newConf: Conf) => {
+      const serializedConf = JSON.stringify(newConf);
+      log.warn(`localStorage.setItem("GawshiConf", ${serializedConf})`);
+      localStorage.setItem("GawshiConf", serializedConf);
+      setConf({ ...newConf });
+    },
+    [conf]
+  );
 
   return { conf, setConf: customSetter };
 };
