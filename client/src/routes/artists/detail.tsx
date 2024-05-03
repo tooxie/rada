@@ -11,6 +11,7 @@ import { toHref } from "../../utils/id";
 
 import style from "./detail.css";
 import useGetArtist from "./hooks/usegetartist";
+import ArtistOptions from "./artistoptions";
 
 const DEFAULT_ALBUM_COVER = "/assets/img/no-cover.jpeg";
 const log = new Logger(__filename);
@@ -48,6 +49,7 @@ const ArtistDetail: FunctionComponent<DetailProps> = ({ id, serverId }) => {
     <div key={`detail-${id}`}>
       <div class={style.name}>
         <h1>{_artist.name}</h1>
+        <ArtistOptions />
       </div>
       <div class={style.albums}>
         {albums.length === 0 && <p>No albums</p>}

@@ -17,6 +17,8 @@ import { toHref } from "../../utils/id";
 import useGetAlbum from "./hooks/usegetalbum";
 import { byVolume, hasUrl } from "./utils/tracks";
 import style from "./detail.css";
+import AlbumOptions from "./albumoptions";
+import TrackOptions from "./trackoptions";
 
 const log = new Logger(__filename);
 
@@ -109,6 +111,7 @@ const AlbumDetail = ({ id, trackId, serverId }: DetailProps) => {
             {album.name ? album.name : <span class={style.missing}>{"<no title>"}</span>}
           </h1>
         </div>
+        <AlbumOptions />
       </div>
       <div class={style.details}>
         <div class={noArtist ? style.missing : isVa ? style.va : style.artist}>
@@ -164,6 +167,7 @@ const AlbumDetail = ({ id, trackId, serverId }: DetailProps) => {
                   </div>
                 </div>
               </div>
+              <TrackOptions />
             </div>
           </Fragment>
         ))}
