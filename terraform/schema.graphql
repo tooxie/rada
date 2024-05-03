@@ -42,7 +42,6 @@ type Query {
   listOrphanTracks: TrackConnection
 
   listServers: ServerConnection
-    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
 
   listServerInvites: ServerInviteConnection
     @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
