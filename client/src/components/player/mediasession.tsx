@@ -1,4 +1,4 @@
-import { h } from "preact";
+import { h, FunctionComponent } from "preact";
 import { memo } from "preact/compat";
 import { useEffect } from "preact/hooks";
 
@@ -11,7 +11,7 @@ interface Artwork {
   type?: string | null;
 }
 
-interface MediaSessionProps {
+interface Props {
   title?: string | null;
   artist?: string | null;
   album?: string | null;
@@ -27,7 +27,7 @@ interface MediaSessionProps {
   onNextTrack?: (ev: MediaSessionActionDetails) => void;
 }
 
-const MediaSession = (props: MediaSessionProps) => {
+const MediaSession: FunctionComponent<Props> = (props) => {
   const { mediaSession } = navigator;
 
   useEffect(() => {

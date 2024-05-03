@@ -1,4 +1,4 @@
-import { h, Fragment, ComponentChildren } from "preact";
+import { h, FunctionComponent, Fragment, ComponentChildren } from "preact";
 import { useState } from "preact/hooks";
 
 import Modal from "../modal";
@@ -7,13 +7,13 @@ import Title from "../modal/title";
 import style from "./style.css";
 import dots from "./dots.svg";
 
-interface OptionsProps {
+interface Props {
   icon?: string;
   title?: ComponentChildren;
   children: ComponentChildren;
 }
 
-const Options = ({ title, icon, children }: OptionsProps) => {
+const Options: FunctionComponent<Props> = ({ title, icon, children }) => {
   const [visible, setVisible] = useState(false);
   const toggle = () => setVisible(!visible);
 

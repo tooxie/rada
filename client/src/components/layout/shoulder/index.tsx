@@ -1,4 +1,4 @@
-import { h, ComponentChild } from "preact";
+import { h, FunctionComponent, ComponentChild } from "preact";
 
 import style from "./style.css";
 
@@ -8,7 +8,7 @@ interface ShoulderProps {
   noPadding?: boolean;
 }
 
-const Shoulder = (props: ShoulderProps) => {
+const Shoulder: FunctionComponent<ShoulderProps> = (props) => {
   const classes = [
     style.shoulder,
     props.detail ? style.detail : style.collection,

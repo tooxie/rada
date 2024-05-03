@@ -1,4 +1,4 @@
-import { h } from "preact";
+import { h, FunctionComponent } from "preact";
 
 import { DetailProps } from "../../components/layout/types";
 import Navigation from "../../components/navigation";
@@ -17,12 +17,12 @@ const defaultBackground = "/assets/img/gray.png";
 let backgroundImage = `url(${defaultBackground})`;
 let _album: Album | null = null;
 
-const Header = (props: DetailProps) => {
+const Header: FunctionComponent<DetailProps> = (props) => {
   if (props.serverId && props.id) return AlbumHeader(props);
   else return EmptyHeader(props);
 };
 
-const EmptyHeader = (props: EmptyHeaderProps) => {
+const EmptyHeader: FunctionComponent<EmptyHeaderProps> = (props) => {
   const clickHandler = (ev: Event) => {
     ev.stopPropagation();
     if (props.onClick) props.onClick(ev);
@@ -41,7 +41,7 @@ const EmptyHeader = (props: EmptyHeaderProps) => {
   );
 };
 
-const AlbumHeader = (props: DetailProps) => {
+const AlbumHeader: FunctionComponent<DetailProps> = (props) => {
   log.debug(`Albums.Header("${props.serverId}", "${props.id}")`);
   const { album } = useGetAlbum(props.serverId, props.id);
   const clickHandler = (ev: Event) => {

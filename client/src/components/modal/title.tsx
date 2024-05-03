@@ -1,4 +1,4 @@
-import { h, ComponentChildren } from "preact";
+import { h, FunctionComponent, ComponentChildren } from "preact";
 
 import style from "./title.css";
 
@@ -7,7 +7,7 @@ interface TitleProps {
   class?: string;
 }
 
-const Title = (props: TitleProps) => {
+const Title: FunctionComponent<TitleProps> = (props) => {
   const classes = [style.title, props.class || ""];
   return <div class={classes.join(" ")}>{props.children}</div>;
 };

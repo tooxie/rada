@@ -1,4 +1,4 @@
-import { h } from "preact";
+import { h, FunctionComponent } from "preact";
 
 import useAppState from "../../state/hooks/useappstate";
 import useConf from "../../conf/hooks/useconf";
@@ -7,12 +7,12 @@ import Navigation from "../navigation";
 import Menu from "../menu";
 import style from "./style.css";
 
-interface HeaderProps {
+interface Props {
   hideControls?: boolean;
   isDetail?: boolean;
 }
 
-const Header = (props: HeaderProps) => {
+const Header: FunctionComponent<Props> = (props) => {
   const { appState } = useAppState();
   const { conf } = useConf();
 

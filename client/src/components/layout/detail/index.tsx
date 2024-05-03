@@ -17,7 +17,7 @@ const Detail = (
   log.debug(`Detail component for ${entity}`);
   const Header = HeaderComponent || DefaultHeader;
 
-  return (props: DetailProps) => {
+  return ((props) => {
     log.debug(`${entity}Detail("${props.id}", "${props.serverId}")`);
     const player = usePlayer();
     if (!player) return null;
@@ -32,7 +32,7 @@ const Detail = (
         </Shoulder>
       </Fragment>
     );
-  };
+  }) as FunctionComponent<DetailProps>;
 };
 
 export default Detail;

@@ -1,4 +1,4 @@
-import { h, Fragment } from "preact";
+import { h, FunctionComponent, Fragment } from "preact";
 import { useEffect, useState } from "preact/hooks";
 
 import useAppState from "../../state/hooks/useappstate";
@@ -11,7 +11,7 @@ import searchIcon from "./search.svg";
 
 const log = new Logger(__filename);
 
-interface SearchProps {
+interface Props {
   input: any[];
   class?: string;
   noResultsClass?: string;
@@ -20,7 +20,7 @@ interface SearchProps {
   children: (result: any[]) => JSX.Element | JSX.Element[] | string;
 }
 
-const Search = (props: SearchProps) => {
+const Search: FunctionComponent<Props> = (props) => {
   log.debug(`Search.render()`);
   const { conf, setConf } = useConf();
   const { appState } = useAppState();

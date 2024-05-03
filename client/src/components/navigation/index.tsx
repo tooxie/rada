@@ -1,4 +1,4 @@
-import { h, Fragment } from "preact";
+import { h, FunctionComponent, Fragment } from "preact";
 import { Link } from "preact-router/match";
 
 import BackLink from "../backlink";
@@ -17,7 +17,7 @@ interface NavigationProps {
   isDetail?: boolean;
 }
 
-const Navigation = (props: NavigationProps) => {
+const Navigation: FunctionComponent<NavigationProps> = (props) => {
   const { appState } = useAppState();
   const { conf, setConf } = useConf();
   const noop = (ev: Event) => {

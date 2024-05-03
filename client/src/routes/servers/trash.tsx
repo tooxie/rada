@@ -1,4 +1,4 @@
-import { h } from "preact";
+import { h, FunctionComponent } from "preact";
 import { useEffect } from "preact/hooks";
 
 import type { Server, ServerInvite } from "../../graphql/api";
@@ -28,7 +28,7 @@ type TrashProps = TrashServerProps | TrashInviteProps;
 const log = new Logger(__filename);
 const cutId = (id?: string) => (id ? id.split("-")[0] : "");
 
-const Trash = (props: TrashProps) => {
+const Trash: FunctionComponent<TrashProps> = (props) => {
   if (props.invite) {
     return <TrashInvite invite={props.invite} onDelete={props.onDelete} />;
   }
@@ -39,7 +39,7 @@ const Trash = (props: TrashProps) => {
   return <div />;
 };
 
-const TrashInvite = (props: TrashInviteProps) => {
+const TrashInvite: FunctionComponent<TrashInviteProps> = (props) => {
   const [deleteInvite, { loading, error, invite }] = useDeleteInvite();
 
   if (error) log.error(error);
@@ -60,7 +60,7 @@ const TrashInvite = (props: TrashInviteProps) => {
   return <img src={trash} class={classes.join(" ")} onClick={handler} />;
 };
 
-const TrashServer = (props: TrashServerProps) => {
+const TrashServer: FunctionComponent<TrashServerProps> = (props) => {
   const [deleteServer, { loading, error, server }] = useDeleteServer();
 
   if (error) log.error(error);

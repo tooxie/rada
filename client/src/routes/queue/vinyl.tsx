@@ -1,4 +1,4 @@
-import { h } from "preact";
+import { h, FunctionComponent } from "preact";
 import { useRef } from "preact/hooks";
 // import { useEffect, useLayoutEffect, useRef, useState } from "preact/hooks";
 
@@ -24,7 +24,7 @@ interface ProgressProps {
 // type ElementWidth = `${number}px`;
 // type ElementPosition = { top: `${number}px`; left: `${number}px` };
 
-const Progress = (props: ProgressProps) => {
+const Progress: FunctionComponent<ProgressProps> = (props) => {
   // const [armWidth, setArmWidth] = useState<ElementWidth>();
   // const [armPos, setArmPos] = useState<ElementPosition>();
   // const [armRot, setArmRot] = useState<number>(-14);

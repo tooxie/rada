@@ -1,4 +1,4 @@
-import { h } from "preact";
+import { h, FunctionComponent } from "preact";
 
 import icon from "./clear.svg";
 import style from "./clear.css";
@@ -7,7 +7,7 @@ interface Props {
   onClick: () => void;
 }
 
-const Clear = (props: Props) => {
+const Clear: FunctionComponent<Props> = (props) => {
   return (
     <div class={style.icon} onClick={props.onClick}>
       <img src={icon} />
