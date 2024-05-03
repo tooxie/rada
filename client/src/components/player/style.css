@@ -40,7 +40,7 @@
   color: white;
   display: flex;
   height: 100%;
-  padding-left: 1rem;
+  padding: 0 1rem;
   width: 100%;
 }
 
@@ -78,7 +78,7 @@
 }
 
 .controls {
-  min-width: 5rem;
+  min-width: 3rem; /* This `min-width` accounts for tracks of up to 10 hours */
   text-align: center;
 }
 
