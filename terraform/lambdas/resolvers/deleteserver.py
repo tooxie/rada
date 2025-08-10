@@ -37,7 +37,7 @@ def handler(event, context):
     # except Exception as e:
     #     print(e)
 
-    delete_identity_provider(user_pool_id, server_id)
+    delete_identity_provider(user_pool_id, server_id[:30])
 
     return json.dumps(server)
 

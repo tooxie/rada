@@ -7,6 +7,10 @@ import useMutation, { Executing } from "../../../hooks/usemutation";
 
 const log = new Logger(__filename);
 
+interface DeleteServerInviteVariables {
+  id: string;
+}
+
 interface Creating<T> extends Omit<Executing<T>, "data"> {
   invite: ServerInvite | null;
 }
@@ -15,7 +19,9 @@ type HookReturn<T> = [Function, Creating<T>];
 const useDeleteInvite = (): HookReturn<DeleteServerInviteMutation> => {
   const [invite, setInvite] = useState<ServerInvite | null>(null);
   const [mutator, { loading, error, data }] =
-    useMutation<DeleteServerInviteMutation>(deleteServerInvite);
+    useMutation<DeleteServerInviteMutation, DeleteServerInviteVariables>(
+      deleteServerInvite
+    );
 
   if (data?.deleteServerInvite) {
     setInvite(data.deleteServerInvite);

@@ -10,51 +10,60 @@ import Logger from "../../logger";
 interface ClientMapEntry {
   uri: string;
   name: string;
+  id: string;
   client?: Client;
 }
 
 const log = new Logger(__filename);
-let clientMap: { [key: string]: ClientMapEntry } = {};
 
-const getClientForServer = (serverId: ServerId): Client => {
-  log.debug(`getClientForServer("${serverId}");`);
-  if (!(serverId in clientMap)) {
-    throw Error(`Unrecognized server "${serverId}"`);
-  }
+let serverMap: { [key: string]: ClientMapEntry } = {};
+let client: Client | null = null;
+let currentServerId: ServerId | null = null;
 
-  const server = clientMap[serverId];
-  if (server.client) {
-    return server.client;
-  }
-
-  return buildClient(server.uri, server.name);
+// Initialize home server in the map
+serverMap[home.id] = {
+  name: home.name,
+  uri: home.api,
+  id: home.id,
 };
 
 const getClient = async (serverId?: ServerId): Promise<Client> => {
-  log.debug(`getClient(serverId="${serverId}")`);
-  const server = clientMap[serverId || home.id];
-  if (server && server.client) {
-    log.debug("Client found in cache, resolving...");
-    return server.client;
+  // Always use home server if no serverId provided
+  if (!serverId) {
+    log.debug("No serverId, using home client");
+    currentServerId = home.id;
+    client = buildClient(home.api, home.name, home.id);
+    return client;
   }
 
-  log.debug("No client found, creating...");
-  await buildServerMap();
-  log.debug(`Resolving client for "${serverId || home.id}"...`);
-  const client = getClientForServer(serverId || home.id);
-  log.debug(serverId, client);
+  // If server changed, we need a new client
+  if (serverId !== currentServerId) {
+    log.debug(`Server changed from ${currentServerId} to ${serverId}, creating new client`);
+
+    // Build server map if we don't have this server yet
+    if (!(serverId in serverMap)) {
+      const homeClient = buildClient(home.api, home.name, home.id);
+      await buildServerMap(homeClient);
+    }
+
+    const server = serverMap[serverId];
+    if (!server) {
+      throw Error(`Server "${serverId}" not found in server map`);
+    }
+
+    currentServerId = serverId;
+    // Always create a new client for different servers
+    client = buildClient(server.uri, server.name, server.id);
+  }
+
+  if (!client) {
+    throw Error(`No client found for server "${currentServerId}"`);
+  }
+
   return client;
 };
 
-const buildServerMap = async (): Promise<void> => {
-  const client = buildClient(home.api, home.name);
-  log.debug(`Saving default client: ${home.id} -> ${home.api}`);
-  clientMap[home.id] = {
-    client,
-    name: home.name,
-    uri: home.api,
-  };
-
+const buildServerMap = async (client: Client): Promise<void> => {
   log.debug("Fetching list of servers...");
   const { data } = await client.query({ query: listServers });
   const servers = (data as ListServersQuery).listServers?.items || [];
@@ -63,14 +72,14 @@ const buildServerMap = async (): Promise<void> => {
     log.debug("Saving servers...");
     servers.map((server) => {
       log.debug(`Saving server: ${server.id} -> ${server.apiUrl}`);
-      clientMap[server.id] = {
+      serverMap[server.id] = {
         uri: server.apiUrl,
         name: server.name,
-        client: buildClient(server.apiUrl, server.name),
+        id: server.id,
       };
     });
     log.debug("Done building server map");
-    log.debug(clientMap);
+    log.debug(serverMap);
   }
 };
 

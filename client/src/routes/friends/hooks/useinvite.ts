@@ -16,7 +16,7 @@ const useCreateInvite = (): HookReturn<CreateInviteMutation> => {
   log.debug("useCreateInvite()");
   const [claimUrl, setClaimUrl] = useState<string | null>(null);
   const [mutator, { loading, error, data }] =
-    useMutation<CreateInviteMutation, CreateInviteInput>(createInvite);
+    useMutation<CreateInviteMutation, { input: CreateInviteInput }>(createInvite);
 
   if (data?.createInvite) {
     log.debug("useCreateInvite.data", data);

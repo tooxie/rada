@@ -9,7 +9,7 @@ export const is_invite_expired = (invite: ServerInvite) => {
   return diff_in_seconds > ONE_HOUR_IN_SECONDS;
 };
 
-export const cutId = (id: string) => id.split("-")[0];
+export const cutId = (id: string): string => id.split("-")[0];
 export const tsToDate = (tsInSeconds: number) => {
   const d = new Date(tsInSeconds * 1000);
   const date = `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;

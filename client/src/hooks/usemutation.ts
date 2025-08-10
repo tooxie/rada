@@ -1,5 +1,5 @@
 import { useState } from "preact/hooks";
-import type { DocumentNode } from "@apollo/client";
+import type { DocumentNode, OperationVariables } from "@apollo/client";
 
 import Logger from "../logger";
 
@@ -13,9 +13,10 @@ export interface Executing<T> {
   error: string | null;
   data: T | null;
 }
-type R<T> = [Function, Executing<T>];
+type MutationFunction<V> = (variables?: V) => void;
+type R<T, V> = [MutationFunction<V>, Executing<T>];
 
-const useMutation = <T, V = {}>(mutation: Mutation): R<T> => {
+const useMutation = <T, V extends OperationVariables = Record<string, never>>(mutation: Mutation): R<T, V> => {
   log.debug("useMutation()");
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(false);
@@ -26,7 +27,7 @@ const useMutation = <T, V = {}>(mutation: Mutation): R<T> => {
     getClient().then((client) => {
       log.debug("useMutation.variables", variables);
       client
-        .mutate({
+        .mutate<T, V>({
           mutation,
           variables,
         })
@@ -34,7 +35,7 @@ const useMutation = <T, V = {}>(mutation: Mutation): R<T> => {
           log.debug("useMutation.data", data);
           log.debug(data);
           setLoading(false);
-          setData(data);
+          setData(data ?? null);
         })
         .catch((e: Error) => {
           log.error("useMutation.error", e);

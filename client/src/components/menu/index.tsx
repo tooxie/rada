@@ -1,7 +1,8 @@
 import { h } from "preact";
 import { Link } from "preact-router/match";
 
-import useConf from "../../conf/hooks/useconf";
+import useConf from "../../hooks/useconf";
+import { server as home } from "../../config.json";
 
 import style from "./style.css";
 
@@ -45,6 +46,7 @@ const ServerItem = ({ href, name }: ServerItemProps) => {
 };
 
 const Menu = ({ hideControls, isAdmin }: MenuProps) => {
+  const { conf } = useConf();
   if (hideControls) return null;
 
   return (
@@ -53,8 +55,8 @@ const Menu = ({ hideControls, isAdmin }: MenuProps) => {
       <ServerItem href="/albums" name="Albums" />
       <ServerItem href="/tracks" name="Tracks" />
 
-      <AdminItem href="/friends" name="Friends" admin={isAdmin} />
-      <AdminItem href="/servers" name="Servers" admin={isAdmin} />
+      <AdminItem href="/friends" name="Friends" admin={isAdmin && conf.currentServer.id === home.id} />
+      <AdminItem href="/servers" name="Servers" admin={isAdmin && conf.currentServer.id === home.id} />
     </nav>
   );
 };

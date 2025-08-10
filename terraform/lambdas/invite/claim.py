@@ -170,24 +170,54 @@ def create_user(username, *, is_admin):
     client = boto3.client('cognito-idp', region_name=region)
     password = generate_password()
 
-    client.admin_create_user(
-        UserPoolId=user_pool_id,
-        Username=username,
-    )
-    client.admin_set_user_password(
-        UserPoolId=user_pool_id,
-        Username=username,
-        Password=password,
-        Permanent=True,
-    )
+    print(f"Creating user {username} in pool {user_pool_id}")
+    try:
+        create_response = client.admin_create_user(
+            UserPoolId=user_pool_id,
+            Username=username,
+        )
+        print("User creation response:", create_response)
+    except Exception as e:
+        print("Error creating user:", e)
+        raise
+
+    print(f"Setting password for user {username}")
+    try:
+        password_response = client.admin_set_user_password(
+            UserPoolId=user_pool_id,
+            Username=username,
+            Password=password,
+            Permanent=True,
+        )
+        print("Password set response:", password_response)
+    except Exception as e:
+        print("Error setting password:", e)
+        raise
 
     if is_admin:
         admin_group_name = os.environ["COGNITO_ADMIN_GROUP_NAME"]
-        client.admin_add_user_to_group(
+        print(f"Adding user {username} to admin group {admin_group_name}")
+        try:
+            group_response = client.admin_add_user_to_group(
+                UserPoolId=user_pool_id,
+                Username=username,
+                GroupName=admin_group_name,
+            )
+            print("Add to group response:", group_response)
+        except Exception as e:
+            print("Error adding to admin group:", e)
+            raise
+
+    # Verify the user's status
+    try:
+        user_info = client.admin_get_user(
             UserPoolId=user_pool_id,
-            Username=username,
-            GroupName=admin_group_name,
+            Username=username
         )
+        print("Final user status:", user_info)
+    except Exception as e:
+        print("Error getting user info:", e)
+        raise
 
     return password
 

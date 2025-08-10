@@ -1,4 +1,6 @@
 import { FunctionComponent, h } from "preact";
+import { useEffect, useRef, useState, useMemo } from "preact/hooks";
+import { memo } from "preact/compat";
 
 import { DetailProps } from "../../components/layout/types";
 import Navigation from "../../components/navigation";
@@ -9,25 +11,33 @@ import style from "./header.css";
 
 const log = new Logger(__filename);
 
-let currentArtist: string | null = null;
 const defaultBackground = "/assets/img/black.png";
-let backgroundImage = `url(${defaultBackground})`;
 
-const Header: FunctionComponent<DetailProps> = ({ id, serverId }) => {
+const Header: FunctionComponent<DetailProps> = memo(({ id, serverId }) => {
   log.debug(`artists.Header("${id}", "${serverId}")`);
   const { artist } = useGetArtist(serverId, id);
+  const prevIdRef = useRef<string | null>(null);
+  const [backgroundImage, setBackgroundImage] = useState(`url(${defaultBackground})`);
 
-  if (currentArtist != id) backgroundImage = `url(${defaultBackground})`;
-  if (artist) backgroundImage = `url("${artist?.imageUrl || defaultBackground}")`;
-  currentArtist = id;
+  useEffect(() => {
+    if (prevIdRef.current !== id) {
+      setBackgroundImage(`url(${defaultBackground})`);
+      prevIdRef.current = id;
+    }
+    if (artist?.imageUrl) {
+      setBackgroundImage(`url("${artist.imageUrl}")`);
+    }
+  }, [id, artist?.imageUrl]);
+
+  const headerStyle = useMemo(() => ({ backgroundImage }), [backgroundImage]);
 
   return (
     <div class={style.gradient} key="header-gradient">
-      <header key="header" class={style.header} style={{ backgroundImage }}>
+      <header key="header" class={style.header} style={headerStyle}>
         <Navigation isDetail={true} />
       </header>
     </div>
   );
-};
+});
 
 export default Header;

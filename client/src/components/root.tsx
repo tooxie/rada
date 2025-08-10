@@ -1,4 +1,5 @@
 import { h, Fragment } from "preact";
+import { useCallback } from "preact/hooks";
 import StatusAlert from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
 
@@ -15,12 +16,12 @@ import Player from "./player";
 
 import style from "./app.css";
 
-const Root = () => {
+const PlayerSurface = () => {
   const { player } = usePlayer();
   const { appState, dispatch, actions } = useAppState();
 
-  const openQueue = () => dispatch(actions.OpenQueue);
-  const closeQueue = () => dispatch(actions.CloseQueue);
+  const openQueue = useCallback(() => dispatch(actions.OpenQueue), [dispatch, actions]);
+  const closeQueue = useCallback(() => dispatch(actions.CloseQueue), [dispatch, actions]);
 
   if (!player) {
     return (
@@ -34,13 +35,19 @@ const Root = () => {
   }
 
   return (
+    <PlayerCtx.Provider value={player}>
+      <Router />
+      <Player onClick={openQueue} />
+      <Queue player={player} visible={appState.isQueueOpen} onDismiss={closeQueue} />
+    </PlayerCtx.Provider>
+  );
+};
+
+const Root = () => {
+  return (
     <div id="preact_root" key="preact_root" class={style.root}>
       <StatusAlert />
-      <PlayerCtx.Provider value={player}>
-        <Router />
-        <Player onClick={openQueue} />
-        <Queue player={player} visible={appState.isQueueOpen} onDismiss={closeQueue} />
-      </PlayerCtx.Provider>
+      <PlayerSurface />
     </div>
   );
 };

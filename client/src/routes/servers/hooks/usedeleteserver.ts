@@ -7,6 +7,10 @@ import useMutation, { Executing } from "../../../hooks/usemutation";
 
 const log = new Logger(__filename);
 
+interface DeleteServerVariables {
+  id: string;
+}
+
 interface Creating<T> extends Omit<Executing<T>, "data"> {
   server: Server | null;
 }
@@ -16,7 +20,7 @@ const useDeleteServer = (): HookReturn<DeleteServerMutation> => {
   log.debug(`useDeleteServer()`);
   const [server, setServer] = useState<Server | null>(null);
   const [mutator, { loading, error, data }] =
-    useMutation<DeleteServerMutation>(deleteServer);
+    useMutation<DeleteServerMutation, DeleteServerVariables>(deleteServer);
 
   if (data?.deleteServer) {
     setServer(data.deleteServer);

@@ -1,4 +1,5 @@
 import { h, FunctionComponent } from "preact";
+import { useEffect, useRef, useState } from "preact/hooks";
 
 import { DetailProps } from "../../components/layout/types";
 import Navigation from "../../components/navigation";
@@ -14,8 +15,6 @@ type EmptyHeaderProps = Omit<DetailProps, "id" | "serverId">;
 const log = new Logger(__filename);
 
 const defaultBackground = "/assets/img/gray.png";
-let backgroundImage = `url(${defaultBackground})`;
-let _album: Album | null = null;
 
 const Header: FunctionComponent<DetailProps> = (props) => {
   if (props.serverId && props.id) return AlbumHeader(props);
@@ -44,20 +43,20 @@ const EmptyHeader: FunctionComponent<EmptyHeaderProps> = (props) => {
 const AlbumHeader: FunctionComponent<DetailProps> = (props) => {
   log.debug(`Albums.Header("${props.serverId}", "${props.id}")`);
   const { album } = useGetAlbum(props.serverId, props.id);
+  const [playable, setPlayable] = useState(false);
+
   const clickHandler = (ev: Event) => {
     ev.stopPropagation();
     if (props.onClick) props.onClick(ev);
   };
 
-  if (!_album || _album.id !== props.id) _album = album;
-  const playable = Boolean((_album?.tracks || []).length > 0);
-  backgroundImage = `url("${_album?.imageUrl || defaultBackground}")`;
+  useEffect(() => setPlayable(Boolean((album?.tracks || []).length > 0)), [album]);
 
   return (
     <header
       key="header"
       class={style.header}
-      style={{ backgroundImage }}
+      style={{backgroundImage: `url("${album?.imageUrl || defaultBackground}")`}}
       onClick={clickHandler}
     >
       {!props.hideNav && <Navigation isDetail={true} />}

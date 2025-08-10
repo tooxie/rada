@@ -19,6 +19,8 @@
   margin: 0.5rem 0;
 }
 
+.invite .status,
+.invite .ts,
 .server .id,
 .server .ts {
   display: block;
@@ -34,16 +36,19 @@
   text-align: center;
 }
 
-.pending .server .id {
+.invite .status,
+.server .id {
   color: gray;
 }
 
+.invite,
 .server {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
+.invite .trash,
 .server .trash {
   width: 2.5rem;
   padding: 0.5rem;

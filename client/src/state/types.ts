@@ -1,11 +1,11 @@
 import type { Reducer } from "preact/hooks";
 
 export interface AppState {
-  isAdmin: boolean;
-  isSafari: boolean;
-  isQueueOpen: boolean;
-  serverId: string;
-  showServers: boolean;
+  isAdmin: boolean;  // Whether to show the "friends" and "servers" tabs
+  isSafari: boolean;  // Useful for some Safari-specific hacks
+  isQueueOpen: boolean;  // Whether the player is open
+  homeServerId: string;  // The ID of the home server
+  showServers: boolean;  // Whether to show the servers icon in the navigation
 }
 
 export interface AppStateHook {

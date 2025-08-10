@@ -20,7 +20,6 @@ type HookReturn<T> = [Function, Creating<T>];
 const useCreateServerInvite = (): HookReturn<Invite> => {
   log.debug("useCreateServerInvite()");
   const [invite, setInvite] = useState<Invite | null>(null);
-
   const [mutator, { loading, error, data }] =
     useMutation<CreateServerInviteMutation>(createServerInvite);
 

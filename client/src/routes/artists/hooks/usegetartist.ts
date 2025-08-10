@@ -1,9 +1,12 @@
+import { useMemo } from "preact/hooks";
+
 import { Artist } from "../../../graphql/api";
 import useGet from "../../../hooks/useget";
 import { GetArtistQueryVariables } from "../../../graphql/api";
 import { getArtist } from "../../../graphql/custom";
 import { toDbId } from "../../../utils/id";
 import { ArtistId, ServerId } from "../../../types";
+
 import Logger from "../../../logger";
 
 const log = new Logger(__filename);
@@ -28,10 +31,10 @@ export const useGetArtist = (
 
   const NOT_FOUND = `Artist '${id}' not found`;
   if (error === NOT_FOUND) {
-    return { loading, error: null, artist: null };
+    return useMemo(() => ({ loading, error: null, artist: null }), [loading]);
   }
 
-  const result = { loading, error, artist };
+  const result = useMemo(() => ({ loading, error, artist }), [loading, error, artist]);
   log.debug("useGetArtist.return:", result);
   return result;
 };

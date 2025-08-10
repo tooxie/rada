@@ -71,6 +71,7 @@ def handler(event, _):
             server_name=server_name,
             secret=secret,
         )
+        print("Got client_id:", client_id)
     except Exception as e:
         return error(e)
 
@@ -89,10 +90,11 @@ def handler(event, _):
         "client_id": client_id,
     })
 
+    entity_id = server_id.split(":")[1]
     create_identity_provider(
         client_id=client_id,
         idp_url=idp_url,
-        idp_name=server_id,
+        idp_name=entity_id[:30],
         user_pool_id=user_pool_id,
     )
 
@@ -114,16 +116,16 @@ def create_identity_provider(*,
     cognito = boto3.client('cognito-idp')
     args = {
         "UserPoolId": user_pool_id,
-        "ProviderName": idp_name,
+        "ProviderName": idp_name[:32],
         "ProviderType": "OIDC",
         "ProviderDetails": {
             "client_id": client_id,
             "oidc_issuer": idp_url,
-            "authorize_scopes": "openid",
+            "authorize_scopes": "openid groups",
             "attributes_request_method": "GET",
         },
     }
-    print("Creating IDP:", args)
+    print("Calling `cognito.create_identity_provider` with:", args)
     idp = cognito.create_identity_provider(**args)
     print(idp)
 
@@ -211,7 +213,7 @@ def slugify(s):
     return SLUGIFY_RE.sub('', s)
 
 
-def get_client_id(*, url, invite_id, ts, server_name, secret):
+def get_client_id(max_retries=3, *, url, invite_id, ts, server_name, secret):
     print("Getting client ID...")
     params = {
         "name": slugify(server_name),
@@ -226,6 +228,10 @@ def get_client_id(*, url, invite_id, ts, server_name, secret):
     print(f"Got {resp.status} from {client_id_url}")
 
     if resp.status != 200:
+        if max_retries > 0:
+            return get_client_id(max_retries - 1, url=url, invite_id=invite_id, ts=ts, server_name=server_name, secret=secret)
+
+        print("Max retries reached")
         raise RuntimeError(f"Server replied with {resp.status}")
 
     return resp.data.decode("utf-8")

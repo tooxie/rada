@@ -27,6 +27,7 @@ const ServerAdd = () => {
   const backgroundImage = `url(${result?.server.headerUrl || DEFAULT_HEADER})`;
 
   useEffect(() => {
+    console.log("V2");
     const detected = (result: QrScanner.ScanResult) => {
       log.debug(`${result.data} (${typeof result.data})`);
 
@@ -40,7 +41,31 @@ const ServerAdd = () => {
 
     if (ref.current) {
       setScanner(
-        new QrScanner(ref.current, detected, { returnDetailedScanResult: true })
+        new QrScanner(ref.current, detected, {
+          returnDetailedScanResult: true,
+          preferredCamera: "environment",
+          highlightScanRegion: true,
+          highlightCodeOutline: true,
+          maxScansPerSecond: 5,
+          calculateScanRegion: (video: HTMLVideoElement) => {
+            const smallestDimension = Math.min(video.videoWidth, video.videoHeight);
+            const scanRegionSize = Math.round(smallestDimension * 0.6);
+
+            return {
+              x: Math.round((video.videoWidth - scanRegionSize) / 2),
+              y: Math.round((video.videoHeight - scanRegionSize) / 2),
+              width: scanRegionSize,
+              height: scanRegionSize,
+            };
+          },
+          constraints: {
+            video: {
+              facingMode: "environment",
+              focusMode: "continuous",
+              advanced: [{ focusMode: "continuous" }]
+            }
+          }
+        } as any)
       );
     }
   }, [ref]);
@@ -73,7 +98,7 @@ const ServerAdd = () => {
 
   if (qrError) return <ErrorMsg error={qrError} />;
 
-  const confirmServer = () => registerServer(result);
+  const confirmServer = () => registerServer({ input: result });
 
   return (
     <Fragment>

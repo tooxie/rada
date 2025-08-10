@@ -60,8 +60,10 @@ resource "aws_iam_role_policy" "lambda_invites" {
       },
       {
         Action = [
+          "cognito-idp:AdminAddUserToGroup",
           "cognito-idp:AdminConfirmSignUp",
           "cognito-idp:AdminCreateUser",
+          "cognito-idp:AdminGetUser",
           "cognito-idp:AdminSetUserPassword",
           "cognito-idp:CreateUserPoolClient",
           "cognito-idp:DescribeUserPoolClient",

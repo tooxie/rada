@@ -105,7 +105,7 @@ const Auth = ({ onLogin, onFailedAuth }: AuthProps) => {
 
     log.debug("Authenticating against cognito");
     setLoading(true);
-    authenticate(credentials, conf.config)
+    authenticate(credentials)
       .then((response) => {
         log.debug("Logged in");
         storeAccessToken(response.token);

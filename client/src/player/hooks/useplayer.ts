@@ -1,4 +1,4 @@
-import { useState, useEffect } from "preact/hooks";
+import { useState, useEffect, useCallback } from "preact/hooks";
 import { StatusAlertService } from "react-status-alert";
 
 import type { Track } from "../../graphql/api";
@@ -49,7 +49,7 @@ class Queue implements IQueue {
     return q.getTrack(index);
   }
   getCurrentTrack(): Track | null {
-    log.debug("q.getCurrentTrack()");
+    log.debug("Queue.getCurrentTrack():", q.getCurrentTrack());
     return q.getCurrentTrack();
   }
   getDuration() {
@@ -59,6 +59,7 @@ class Queue implements IQueue {
     return this.getTracks().reduce(sumLength, 0);
   }
   append(tracks: Track[]) {
+    log.debug("Queue.append()");
     q.append(tracks);
   }
   next() {
@@ -78,22 +79,9 @@ const usePlayer = () => {
   const [player, setPlayer] = useState<IPlayer>();
   const [audio, setAudio] = useState<HTMLAudioElement>();
   const [queue, setQueue] = useState<Queue>();
-  const [track, setTrack] = useState<Track>();
-
-  const [_, setX] = useState(0);
-  const forceRender = (x?: number) => setX(x || Math.random() * 100);
 
   let state: States;
   let errored = false;
-
-  if (player) {
-    const currentTrack = player.getCurrentTrack();
-    if (currentTrack) {
-      if (!track || currentTrack.id !== track.id) {
-        setTrack(currentTrack);
-      }
-    }
-  }
 
   if (player) {
     if (loading) {
@@ -119,7 +107,7 @@ const usePlayer = () => {
 
   useEffect(() => {
     if (audio && queue) {
-      setPlayer({
+      const createPlayer = () => ({
         audio: audio,
         queue: queue,
         state: States.Idle,
@@ -139,7 +127,6 @@ const usePlayer = () => {
           log.debug("player.clearQueue()");
           this.stop();
           this.queue.clear();
-          forceRender();
           if (!options?.silent) {
             StatusAlertService.showInfo("Queue cleared");
           }
@@ -147,7 +134,6 @@ const usePlayer = () => {
         replaceQueue(tracks) {
           this.clearQueue({ silent: true });
           this.appendTracks(tracks);
-          forceRender();
         },
         getTrackAt(index: number) {
           return this.queue.getTrackAt(index);
@@ -263,7 +249,6 @@ const usePlayer = () => {
           const msg = `${l} track${l === 1 ? "" : "s"} added to queue`;
 
           this.queue.append(tracks);
-          forceRender();
           StatusAlertService.showInfo(msg, { removeAllBeforeShow: false });
         },
         removeTrackAt(index: number) {
@@ -271,7 +256,6 @@ const usePlayer = () => {
           const trackIsPlaying = this.isPlaying() && this.queue.getIndex() === index;
           if (trackIsPlaying) this.stop();
           this.queue.removeAt(index);
-          forceRender();
           StatusAlertService.showInfo("Track removed");
         },
         removeAlbum(startingAt: number) {
@@ -286,6 +270,8 @@ const usePlayer = () => {
           StatusAlertService.showInfo("Album removed");
         },
       } as IPlayer);
+
+      setPlayer(createPlayer());
     }
   }, [audio, queue]);
 
@@ -329,9 +315,7 @@ const usePlayer = () => {
         setPlaying(false);
         setLoading(false);
 
-        // Don't ask me why I need to do this, but otherwise it won't update
-        // the UI after the last track finishes *sigh*
-        forceRender();
+        // No need to force render - state updates will trigger re-render
       } else {
         player.skipNext();
       }
@@ -469,7 +453,7 @@ const usePlayer = () => {
       (ev: MediaSessionActionDetails) => {
         log.debug("EV:", ev);
         player.seekBy((ev.seekOffset || 10) * -1);
-        forceRender();
+        // No need to force render for seek operations
       }
     );
     navigator.mediaSession.setActionHandler(
@@ -477,13 +461,13 @@ const usePlayer = () => {
       (ev: MediaSessionActionDetails) => {
         log.debug("EV:", ev);
         player.seekBy(ev.seekOffset || 10);
-        forceRender();
+        // No need to force render for seek operations
       }
     );
     navigator.mediaSession.setActionHandler("seekto", (ev: MediaSessionActionDetails) => {
       log.debug("EV:", ev);
       if (ev.seekTime !== null && ev.seekTime !== undefined) player.seekTo(ev.seekTime);
-      forceRender();
+      // No need to force render for seek operations
     });
 
     return () => {

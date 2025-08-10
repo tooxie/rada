@@ -16,7 +16,12 @@ export const getAlbum = gql`
   }
 `;
 
-// FIXME: This query is highly redundant, can (and should be) optimized.
+// I understand that this query is extremely inefficient, but it's necessary
+// until the player gets refactored. Why? Because the player stores the tracks
+// in LocalStorage, not as an album but as a list of tracks. Therefore each
+// track has to have an album and an artist associated with it. In the future
+// we should make the player smarter, so that it can store an album object and
+// query the rest of the data. But for now, this is what we have ¯\_(ツ)_/¯
 export const getAlbumWithTracks = gql`
   query GetAlbumWithTracks($id: ID!) {
     getAlbum(id: $id) {
@@ -76,10 +81,7 @@ export const getArtist = gql`
         imageUrl
         year
         volumes
-        artists {
-          serverId
-          id
-        }
+        isVa
       }
     }
   }

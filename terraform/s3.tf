@@ -18,7 +18,7 @@ resource "random_string" "app_bucket_random_suffix" {
 }
 
 resource "aws_s3_bucket" "gawshi_music" {
-  bucket = "gawshi-music-${local.suffix}-${random_string.music_bucket_random_suffix.result}"
+  bucket = "gawshi-music-${local.suffix}"
   force_destroy = var.force_destroy_bucket
 }
 
@@ -32,7 +32,7 @@ resource "aws_s3_bucket_public_access_block" "gawshi_music" {
 }
 
 resource "aws_s3_bucket" "gawshi_app" {
-  bucket = "gawshi-app-${local.suffix}-${random_string.app_bucket_random_suffix.result}"
+  bucket = "gawshi-app-${local.suffix}"
   force_destroy = var.force_destroy_bucket
 }
 

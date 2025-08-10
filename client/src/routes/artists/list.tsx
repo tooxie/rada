@@ -18,9 +18,9 @@ import listIcon from "./mic.svg";
 import style from "./list.css";
 
 const log = new Logger(__filename);
-let _artists: Artist[] = [];
 
 const ArtistList = ({ serverId }: ListProps) => {
+  log.debug("ArtistList component!");
   const { conf } = useConf();
   const { loading, error, artists } = useListArtists(serverId);
 
@@ -28,10 +28,9 @@ const ArtistList = ({ serverId }: ListProps) => {
     log.error(error);
     return <ErrorMsg error={error} />;
   }
-  if (_artists.length === 0) _artists = artists;
-  if (_artists.length === 0) {
-    if (loading) return <Spinner />;
-    else return <p>No Artists</p>;
+  if (loading) return <Spinner />;
+  if (artists.length === 0) {
+    return <p>No Artists</p>;
   }
 
   const filterFn = (artist: Artist, s: string): boolean => {
@@ -41,8 +40,8 @@ const ArtistList = ({ serverId }: ListProps) => {
 
   return (
     <Search
-      input={_artists}
-      key="artist-list"
+      input={artists}
+      key={`artist-list-${serverId}`}
       noResultsClass={style.empty}
       filter={filterFn}
       enabled={conf.searchEnabled}

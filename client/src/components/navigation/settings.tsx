@@ -111,6 +111,14 @@ const Settings = () => {
               Append only that track
             </option>
           </select>
+          {/* What to do by default when a track is selected?
+            - Append from that track on
+            - Append only that track
+            - Replace the playlist with the selection
+            - Append to the playlist
+            - Start playing the selection
+            - Ask for confirmation first
+          */}
         </div>
       </Action>
     </Options>

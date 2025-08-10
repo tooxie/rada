@@ -1,4 +1,5 @@
 import { Fragment, FunctionComponent, h } from "preact";
+import { memo, useMemo } from "preact/compat";
 
 import DefaultHeader from "../../header";
 import Shoulder from "../shoulder";
@@ -14,15 +15,16 @@ const Detail = (
   HeaderComponent: FunctionComponent<DetailProps>,
   entity: "album" | "artist"
 ) => {
-  log.debug(`Detail component for ${entity}`);
-  const Header = HeaderComponent || DefaultHeader;
+  log.debug("Detail component rendering:", Component.name);
+  const Header = useMemo(() => HeaderComponent || DefaultHeader, [HeaderComponent]);
 
-  return ((props) => {
+  const DetailComponent = memo((props: DetailProps) => {
     log.debug(`${entity}Detail("${props.id}", "${props.serverId}")`);
     const player = usePlayer();
     if (!player) return null;
 
     const id = `${entity}:${props.id}`;
+    log.debug(`Detail component for ${entity} with id ${props.id} -> ${id}`);
 
     return (
       <Fragment>
@@ -32,7 +34,9 @@ const Detail = (
         </Shoulder>
       </Fragment>
     );
-  }) as FunctionComponent<DetailProps>;
+  });
+
+  return DetailComponent;
 };
 
 export default Detail;

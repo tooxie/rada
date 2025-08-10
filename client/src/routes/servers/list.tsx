@@ -123,11 +123,15 @@ const Servers = () => {
               <ErrorMsg error={pending.error} />
             ) : (
               [...pending.invites].sort(inviteCmp).map((invite) => (
-                <div class={style.server}>
+                <div class={style.invite}>
                   <div class={style.col}>
-                    <span>{is_invite_expired(invite) ? "Expired" : "Pending"}</span>
+                    {/* TODO: Ask the user for a name for the invite before creating it. This will
+                    be useful to differentiate between the invitations the user issues and the
+                    invitations that the user accepts.
+                    */}
+                    <span>{cutId(invite.id)}</span>
                     <span class={style.ts}>{tsToDate(invite.timestamp)}</span>
-                    <span class={style.id}>{cutId(invite.id)}</span>
+                    <span class={style.status}>{is_invite_expired(invite) ? "Expired" : "Pending"}</span>
                   </div>
                   <div class={style.col}>
                     <Trash invite={invite} onDelete={refetchPending} />

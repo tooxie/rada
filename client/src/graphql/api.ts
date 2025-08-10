@@ -264,6 +264,10 @@ export type GetAlbumOnlyQuery = {
     imageUrl?: string | null;
     year?: number | null;
     isVa?: boolean | null;
+    tracks?: Array<{
+      __typename: "Track";
+      id: string;
+    }> | null;
   } | null;
 };
 

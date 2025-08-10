@@ -1,5 +1,5 @@
 import { Fragment, h } from "preact";
-import { useEffect } from "preact/hooks";
+import { useEffect, useMemo, useCallback } from "preact/hooks";
 import { Link } from "preact-router";
 
 import type { DetailProps } from "../../components/layout/types";
@@ -29,12 +29,88 @@ const AlbumDetail = ({ id, trackId, serverId }: DetailProps) => {
 
   useEffect(() => window.scrollTo(0, 0), []);
 
+  const trackList = useMemo(() =>
+    ((album?.tracks || []) as Track[]).filter(hasUrl).sort(byVolume),
+    [album?.tracks]
+  );
+
+  const { durationInSeconds, isVa, noArtist } = useMemo(() => ({
+    durationInSeconds: trackList.reduce((total, track) => total + (track.lengthInSeconds || 0), 0),
+    isVa: album?.isVa,
+    noArtist: (album?.artists || []).length === 0
+  }), [album?.artists, trackList]);
+
+  const getTracks = useCallback((i: number) =>
+    (i == 0 ? trackList : trackList.slice(i)),
+    [trackList]
+  );
+
+  const append = useCallback((i: number) => {
+    if (trackList.length <= i) return;
+    switch (conf.trackSelection) {
+      case TrackSelectionTypes.AppendOne:
+        player?.appendTracks([trackList[i]]);
+        break;
+      case TrackSelectionTypes.AppendFrom:
+        player?.appendTracks(getTracks(i));
+        break;
+    }
+  }, [trackList, conf.trackSelection, player, getTracks]);
+
+  const shouldHighlight = useCallback((id: string): Boolean =>
+    `track:${trackId}` === id,
+    [trackId]
+  );
+
+  const count_tracks_for_disc = useCallback((volume: number): number =>
+    trackList.reduce((x, track) => (track.volume === volume ? ++x : x), 0),
+    [trackList]
+  );
+
+  const get_disc_length = useCallback((volume: number): number =>
+    trackList.reduce((length, track) => {
+      if (track.volume === volume) {
+        return length + (track.lengthInSeconds || 0);
+      }
+      return length;
+    }, 0),
+    [trackList]
+  );
+
+  const print_disc_header = useCallback((track: Track, i: number) => {
+    if (!album || album.volumes == 1) return;
+    const disc_changed = i == 0 || track.volume !== trackList[i - 1].volume;
+    if (!disc_changed) return;
+
+    return (
+      <div class={style.disc}>
+        <div class={style.number}>Disc {track.volume}</div>
+        <div class={style.info}>
+          {count_tracks_for_disc(track.volume)} tracks |{" "}
+          {toMinutes(get_disc_length(track.volume))}
+        </div>
+      </div>
+    );
+  }, [album?.volumes, trackList, count_tracks_for_disc, get_disc_length]);
+
+  const getTrackArtists = useCallback((track: Track) =>
+    (track.artists || []).map(artist => artist.name).join(", "),
+    []
+  );
+
+  const renderAlbumArtists = useCallback(() => {
+    if (isVa) return "V/A";
+    if (noArtist) return "<no artist>";
+    return (album?.artists || []).map((artist: Artist) => (
+      <Link href={toHref(artist)} key={artist.id}>{artist.name}</Link>
+    ));
+  }, [album?.artists, isVa, noArtist]);
+
   if (error) {
     log.error(error);
     return <ErrorMsg error={error} margins={true} />;
   }
-  if (!loading && !album) return <p class={style.f04}>Album not found</p>;
-  if (!album) {
+  if (loading) {
     return (
       <Fragment>
         <div class={style.header}>
@@ -48,80 +124,24 @@ const AlbumDetail = ({ id, trackId, serverId }: DetailProps) => {
       </Fragment>
     );
   }
-  if (!album.artists) album.artists = [];
+  if (!album) return <p class={style.f04}>Album not found</p>;
 
-  const trackList = ((album.tracks || []) as Track[]).filter(hasUrl).sort(byVolume);
-  const getTracks = (i: number) => (i == 0 ? trackList : trackList.slice(i));
-  const append = (i: number) => {
-    if (trackList.length <= i) return;
-
-    switch (conf.trackSelection) {
-      case TrackSelectionTypes.AppendOne:
-        player?.appendTracks([trackList[i]]);
-        break;
-      case TrackSelectionTypes.AppendFrom:
-        player?.appendTracks(getTracks(i));
-        break;
-    }
-  };
-  const isVa = (album.artists || []).length > 1;
-  const durationInSeconds = trackList.reduce((total, track) => {
-    return total + (track.lengthInSeconds || 0);
-  }, 0);
   const duration = toMinutes(durationInSeconds);
   log.debug(`Duration: ${durationInSeconds}s (${duration})`);
-  const shouldHighlight = (id: string): Boolean => `track:${trackId}` === id;
-  const noArtist = album.artists.length === 0;
-
-  const count_tracks_for_disc = (volume: number): number => {
-    return trackList.reduce((x, track) => (track.volume === volume ? ++x : x), 0);
-  };
-  const get_disc_length = (volume: number): number => {
-    return trackList.reduce((length, track) => {
-      if (track.volume === volume) {
-        return length + (track.lengthInSeconds || 0);
-      } else {
-        return length;
-      }
-    }, 0);
-  };
-
-  const print_disc_header = (track: Track, i: number) => {
-    if (album.volumes == 1) return;
-
-    const disc_changed = i == 0 || track.volume !== trackList[i - 1].volume;
-    if (!disc_changed) return;
-
-    return (
-      <div class={style.disc}>
-        <div class={style.number}>Disc {track.volume}</div>
-        <div class={style.info}>
-          {count_tracks_for_disc(track.volume)} tracks |{" "}
-          {toMinutes(get_disc_length(track.volume))}
-        </div>
-      </div>
-    );
-  };
 
   return (
-    <Fragment>
-      <div class={style.header}>
+    <Fragment key={`album-detail-${id}`}>
+      <div class={style.header} key={`album-detail-header-${id}`}>
         <div class={style.name}>
           <h1>
             {album.name ? album.name : <span class={style.missing}>{"<no title>"}</span>}
           </h1>
         </div>
-        <AlbumOptions />
+        {/* Not Implemented: <AlbumOptions /> */}
       </div>
-      <div class={style.details}>
-        <div class={noArtist ? style.missing : isVa ? style.va : style.artist}>
-          {noArtist
-            ? "<no artist>"
-            : isVa
-            ? "V/A"
-            : album.artists.map((artist: Artist) => (
-                <Link href={toHref(artist)}>{artist.name}</Link>
-              ))}
+      <div class={style.details} key={`album-detail-contents-${id}`}>
+        <div class={noArtist || isVa ? style.missing : style.artist}>
+          {renderAlbumArtists()}
           &nbsp;
         </div>
         <div>
@@ -132,13 +152,12 @@ const AlbumDetail = ({ id, trackId, serverId }: DetailProps) => {
             } tracks (${duration})`}
         </div>
       </div>
-      <div class={style.tracklist}>
+      <div class={style.tracklist} key={`album-detail-tracklist-${id}`}>
         {trackList.length === 0 && <p class={style.empty}>No tracks</p>}
         {trackList.map((track: Track, i: number) => (
-          <Fragment>
+          <Fragment key={track.id}>
             {print_disc_header(track, i)}
             <div
-              key={track.id}
               class={`${style.track} ${shouldHighlight(track.id) ? style.highlight : ""}`}
             >
               <div class={style.ordinal}>{track.ordinal || " "}</div>
@@ -161,13 +180,13 @@ const AlbumDetail = ({ id, trackId, serverId }: DetailProps) => {
                     {toMinutes(track.lengthInSeconds)}
                     {isVa ? (
                       <span class={style.artists}>
-                        {(track.artists || []).map((artist) => artist.name).join(", ")}
+                        {getTrackArtists(track)}
                       </span>
                     ) : null}
                   </div>
                 </div>
               </div>
-              <TrackOptions />
+              {/* Not Implemented: <TrackOptions key={track.id} /> */}
             </div>
           </Fragment>
         ))}

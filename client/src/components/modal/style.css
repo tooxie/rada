@@ -13,7 +13,7 @@
   top: 0;
   width: 100%;
   z-index: 1000;
-  transition: opacity 0.25s linear;
+  transition: opacity 0.15s linear;
   opacity: 0;
 }
 

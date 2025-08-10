@@ -17,7 +17,7 @@ const useConf = (): ConfHook => {
       localStorage.setItem("GawshiConf", serializedConf);
       setConf({ ...newConf });
     },
-    [conf]
+    []
   );
 
   return { conf, setConf: customSetter };

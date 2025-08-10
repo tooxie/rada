@@ -4,7 +4,7 @@ import { AppState, AppStateHook, Action } from "./types";
 import config from "../config.json";
 
 const defaultAppState: AppState = {
-  serverId: config.server.id,
+  homeServerId: config.server.id,
   isAdmin: false,
   isSafari: /^((?!chrome|android).)*safari/i.test(navigator.userAgent),
   isQueueOpen: false,

@@ -189,7 +189,6 @@ resource "aws_cognito_identity_pool_roles_attachment" "main" {
 resource "random_password" "root_user_password" {
   length = 32
   lower = true
-  numeric = true
   special = false
   upper = true
   min_lower = 1

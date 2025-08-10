@@ -33,7 +33,6 @@ const reducer: AppStateReducer = (state: AppState, action: Action): AppState => 
     case Action.UnsetShowServers:
       state.showServers = false;
       break;
-
     default:
       throw new Error(`Unrecognized action "${action}"`);
   }

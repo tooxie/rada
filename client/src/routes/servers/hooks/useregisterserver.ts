@@ -2,7 +2,7 @@ import { useState } from "preact/hooks";
 
 import {
   RegisterServerMutation,
-  RegisterServerMutationVariables,
+  RegisterServerInput,
   Server,
 } from "../../../graphql/api";
 import { registerServer } from "../../../graphql/mutations";
@@ -20,17 +20,17 @@ const useRegisterServer = (): HookReturn<RegisterServerMutation> => {
   log.debug(`useRegisterServer()`);
   const [server, setServer] = useState<Server | null>(null);
   const [mutator, { loading, error, data }] =
-    useMutation<RegisterServerMutation>(registerServer);
+    useMutation<RegisterServerMutation, RegisterServerInput>(registerServer);
 
   if (data?.registerServer) {
     setServer(data.registerServer);
   }
 
   return [
-    (input: RegisterServerMutationVariables) => {
+    (input: RegisterServerInput) => {
       log.debug("registerServer.input", input);
       setServer(null);
-      mutator({ input });
+      mutator(input);
     },
     { loading, error, server },
   ];

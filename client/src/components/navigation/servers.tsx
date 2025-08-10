@@ -1,33 +1,51 @@
 import { h, Fragment } from "preact";
-import { Link } from "preact-router/match";
+import { route } from "preact-router";
 
 import Options, { Title } from "../../components/options";
 import Spinner from "../../components/spinner";
 import ErrorMsg from "../../components/error";
 import useListServers from "../../routes/servers/hooks/uselist";
-import useConf from "../../conf/hooks/useconf";
-import { Server } from "../../conf/defaults";
+import useConf from "../../hooks/useconf";
+import { Server as defaultServer } from "../../conf/defaults";
+import Logger from "../../logger";
+import config from "../../config.json";
 
 import icon from "./servers.svg";
 import style from "./servers.css";
 import folder from "./folder.svg";
+import home from "./home.svg";
+
+const log = new Logger(__filename);
 
 const Servers = () => {
   const { loading, error, servers } = useListServers();
   const { conf, setConf } = useConf();
 
-  // FIXME: We used to `selectServer` by doing a full reload, calling
-  // FIXME: `window.location.href`. This is obviously problematic but we did it
-  // FIXME: for a reason: Once we call `setConf` the app won't re-render
-  // FIXME: properly, the only way to force a render and update the app with
-  // FIXME: the information of the new server was to reload the page. This is
-  // FIXME: not ideal, mainly because playback will be affected and that's
-  // FIXME: unacceptable. We need to fix that.
-  const selectServer = (server: typeof Server) => {
-    conf.currentServer = server;
+  const selectServer = (server?: typeof defaultServer) => {
+    conf.currentServer = server || defaultServer;
+    log.debug(`Switching to server: ${conf.currentServer.name} (${conf.currentServer.id})`);
     setConf(conf);
   };
-  const resetServer = () => selectServer(Server);
+
+  const getPath = () => {
+    const parts = window.location.pathname.split("/");
+    return parts[parts.length - 1];
+  };
+
+  // Little hack to ensure we refresh only if we are on one of the main tabs.
+  // If we are looking, for example, at an artist, we don't want to refresh
+  // the page or navigate the user away.
+  const routeIfNeeded = (server?: typeof defaultServer) => {
+    const serverId = server?.id || defaultServer.id;
+    const path = getPath();
+    if (["artists", "albums", "tracks"].includes(path)) {
+      log.debug(`routeIfNeeded: routing to -> "/server/${serverId}/${path}"`);
+      route(`/server/${serverId}/${path}`);
+    } else if (["friends", "servers"].includes(path)) {
+      log.debug(`routeIfNeeded: routing to -> "/server/${serverId}/artists"`);
+      route(`/server/${serverId}/artists`);
+    }
+  };
 
   return (
     <Options icon={icon}>
@@ -39,21 +57,32 @@ const Servers = () => {
       ) : servers.length > 0 ? (
         <Fragment>
           <div>
-            {servers.map((server) => (
-              <Link
-                href={`/server/${server.id}/artists`}
-                class={style.server}
-                onClick={() => selectServer(server)}
-              >
-                <img src={folder} /> {server.name} ({server.id.split("-")[0]})
-              </Link>
-            ))}
+            <div
+              role="button"
+              tabIndex={0}
+              class={style.server}
+              onClick={(e) => {
+                selectServer();  // reset to default server
+                routeIfNeeded();
+              }}
+            >
+              <img src={home} /> {config.server.name} ({config.server.id.split("-")[0].split(":")[1]})
+            </div>
           </div>
-
-          <div class={style.mine}>
-            <Link href="/" onClick={resetServer}>
-              + Go to my server
-            </Link>
+          <div>
+            {servers.map((server) => (
+              <div
+                role="button"
+                tabIndex={0}
+                class={style.server}
+                onClick={(e) => {
+                  selectServer(server);
+                  routeIfNeeded(server);
+                }}
+              >
+                <img src={folder} /> {server.name} ({server.id.split("-")[0].split(":")[1]})
+              </div>
+            ))}
           </div>
         </Fragment>
       ) : (

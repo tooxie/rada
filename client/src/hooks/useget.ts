@@ -1,5 +1,10 @@
-import { useState } from "preact/hooks";
-import { DocumentNode, QueryOptions, TypedDocumentNode } from "@apollo/client";
+import { useState, useEffect, useMemo } from "preact/hooks";
+import {
+  DocumentNode,
+  QueryOptions,
+  TypedDocumentNode,
+  OperationVariables,
+} from "@apollo/client";
 
 import type { Client } from "../graphql/client";
 import Logger from "../logger";
@@ -17,15 +22,15 @@ interface UseGetReturn<T> extends UseReturnType {
   item: T | null;
 }
 
-const useGet = <T, V>(query: Q, serverId: ServerId, pk: V): UseGetReturn<T> => {
+const useGet = <T, V extends OperationVariables>(
+  query: Q,
+  serverId: ServerId,
+  pk: V
+): UseGetReturn<T> => {
   const qName = getDocumentNodeName(query);
-
-  log.debug(`[${qName}] useGet(pk:${JSON.stringify(pk)})`);
   const key = (query.definitions[0] as any).selectionSet.selections[0].name.value;
 
-  const [loading, setLoading] = useState(true);
-  const [item, setItem] = useState<T | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  log.debug(`[${qName}] useGet(pk:${JSON.stringify(pk)})`);
 
   const exec = (client: Client) => {
     const options: QueryOptions = { query, variables: pk };
@@ -33,12 +38,17 @@ const useGet = <T, V>(query: Q, serverId: ServerId, pk: V): UseGetReturn<T> => {
   };
 
   const result = use<T>(qName, exec, serverId);
-  if (result.data) setItem((result.data as any)[key] as T);
-  setError(result.error);
-  setLoading(result.loading);
 
-  log.debug(`[${qName}] useGet.return:`, { loading, item, error });
-  return { loading, item, error };
+  const item = useMemo(() => {
+    if (!result.data) return null;
+    return (result.data as any)[key] as T;
+  }, [result.data, key]);
+
+  return useMemo(() => {
+    const returnValue = { loading: result.loading, error: result.error, item };
+    log.debug(`[${qName}] useGet.return:`, returnValue);
+    return returnValue;
+  }, [result.loading, result.error, item, qName]);
 };
 
 export default useGet;

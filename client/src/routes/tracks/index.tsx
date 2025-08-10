@@ -18,7 +18,6 @@ import style from "./styles.css";
 import icon from "./track.svg";
 
 const log = new Logger(__filename);
-let _tracks: Track[] = [];
 
 const Tracks = ({ serverId }: ListProps) => {
   const { conf } = useConf();
@@ -29,12 +28,12 @@ const Tracks = ({ serverId }: ListProps) => {
     log.error(error);
     return <ErrorMsg error={error} />;
   }
-  if (_tracks.length === 0) _tracks = [...tracks].sort(byPath);
-  if (_tracks.length === 0) {
+  if (tracks.length === 0) {
     if (loading) return <Spinner />;
     else return <div>No tracks</div>;
   }
 
+  const sortedTracks = [...tracks].sort(byPath);
   const filterFn = (track: Track, needle: string): boolean => {
     const haystack = `${track.title} ${track.path}`;
     return haystack.toLowerCase().includes(needle.toLowerCase());
@@ -43,7 +42,7 @@ const Tracks = ({ serverId }: ListProps) => {
   return (
     <Fragment>
       <Search
-        input={_tracks}
+        input={sortedTracks}
         key="track-list"
         noResultsClass={style.empty}
         filter={filterFn}

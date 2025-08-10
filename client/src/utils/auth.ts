@@ -3,22 +3,31 @@ import {
   CognitoUserPool,
   CognitoUser,
   AuthenticationDetails,
+  CognitoRefreshToken,
 } from "amazon-cognito-identity-js";
 import * as AWS from "aws-sdk/global";
 
 import Logger from "../logger";
-import type Config from "../config.json";
+import config from "../config.json";
 
 const log = new Logger(__filename);
 
 interface AuthResponse {
   token: string;
   groups: string[];
+  refreshToken?: string;
 }
 
+const storeRefreshToken = (token: string) => {
+  return sessionStorage.setItem("awsRefreshToken", token);
+};
+
+const getRefreshToken = (): string | null => {
+  return sessionStorage.getItem("awsRefreshToken");
+};
+
 const authenticate = (
-  credentials: Credentials,
-  config: typeof Config
+  credentials: Credentials
 ): Promise<AuthResponse> => {
   log.debug(`Authenticating as ${credentials.username}`);
 
@@ -48,7 +57,9 @@ const authenticate = (
         log.debug("Authentication successful");
         const loginData = {};
         const key = config.idp.url;
-        (loginData as any)[key] = result.getIdToken().getJwtToken();
+        const idToken = result.getIdToken().getJwtToken();
+        const refreshToken = result.getRefreshToken().getToken();
+        (loginData as any)[key] = idToken;
         AWS.config.update({ region: config.region });
         AWS.config.credentials = new AWS.CognitoIdentityCredentials({
           IdentityPoolId: config.idp.identityPoolId,
@@ -61,8 +72,9 @@ const authenticate = (
           } else {
             log.debug("Resolving...");
             resolve({
-              token: result.getAccessToken().getJwtToken(),
+              token: idToken,
               groups: result.getIdToken().payload["cognito:groups"] || [],
+              refreshToken,
             });
           }
         });
@@ -117,6 +129,47 @@ const clearCredentials = () => {
   localStorage.removeItem("GawshiPassword");
 };
 
+const refreshToken = async (): Promise<string> => {
+  log.debug("Refreshing token");
+  const refreshTokenStr = getRefreshToken();
+  if (!refreshTokenStr) {
+    // If no refresh token, fall back to full re-auth
+    const credentials = fetchCredentials();
+    const response = await authenticate(credentials);
+    storeRefreshToken(response.refreshToken!);
+    storeAccessToken(response.token);
+    return response.token;
+  }
+
+  return new Promise((resolve, reject) => {
+    const poolData = {
+      UserPoolId: config.idp.userPoolId,
+      ClientId: config.idp.clientId,
+    };
+    const pool = new CognitoUserPool(poolData);
+    const userData = {
+      Username: "dummy", // Required by the SDK but not used
+      Pool: pool,
+    };
+    const user = new CognitoUser(userData);
+    const refreshToken = new CognitoRefreshToken({ RefreshToken: refreshTokenStr });
+
+    user.refreshSession(refreshToken, (err, session) => {
+      if (err) {
+        log.error("Failed to refresh token:", err);
+        reject(err);
+        return;
+      }
+
+      const idToken = session.getIdToken().getJwtToken();
+      const newRefreshToken = session.getRefreshToken().getToken();
+      storeRefreshToken(newRefreshToken);
+      storeAccessToken(idToken);
+      resolve(idToken);
+    });
+  });
+};
+
 export {
   Credentials,
   authenticate,
@@ -125,4 +178,5 @@ export {
   clearCredentials,
   fetchCredentials,
   storeCredentials,
+  refreshToken,
 };

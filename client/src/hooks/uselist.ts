@@ -1,5 +1,11 @@
-import { useState } from "preact/hooks";
-import type { DocumentNode, TypedDocumentNode, QueryOptions } from "@apollo/client";
+import { useState, useCallback } from "preact/hooks";
+import type {
+  DocumentNode,
+  TypedDocumentNode,
+  QueryOptions,
+  OperationVariables,
+  FetchPolicy,
+} from "@apollo/client";
 
 import type { Client } from "../graphql/client";
 import type { ServerId } from "../types";
@@ -17,7 +23,7 @@ interface UseListReturn<R> extends UseReturnType {
 
 const log = new Logger(__filename);
 
-const useList = <Q, R, V = void>(
+const useList = <Q, R, V extends OperationVariables = OperationVariables>(
   query: Query,
   serverId: ServerId,
   variables?: V
@@ -28,15 +34,17 @@ const useList = <Q, R, V = void>(
   const [refetching, setRefetching] = useState(false);
   const qName = getDocumentNodeName(query);
 
-  const exec = (client: Client) => {
-    const options: QueryOptions = { query, variables };
+  const exec = useCallback((client: Client) => {
+    const options: QueryOptions = {
+      query,
+      variables,
+      fetchPolicy: refetching ? "network-only" : "cache-first"
+    };
 
-    log.debug(`[${qName}] uselist.${qName}(refetching: ${refetching})`);
+    log.debug(`[${qName}] uselist.${qName}(refetching: ${refetching}, fetchPolicy: ${options.fetchPolicy})`);
 
     let queryFn = client.query(options);
     if (refetching) {
-      options["fetchPolicy"] = "network-only";
-      queryFn = client.query(options);
       queryFn.then((data) => {
         setRefetching(false);
         return data;
@@ -44,15 +52,15 @@ const useList = <Q, R, V = void>(
     }
 
     return queryFn;
-  };
+  }, [query, variables, refetching, qName]);
 
-  const refetch = () => {
+  const refetch = useCallback(() => {
     log.debug(`[${qName}] Refetching...`);
     setError(null);
     setItems([]);
     setLoading(true);
     setRefetching(true);
-  };
+  }, [qName]);
 
   log.debug(`[${qName}] useList(query:${qName}, variables:${JSON.stringify(variables)})`);
 

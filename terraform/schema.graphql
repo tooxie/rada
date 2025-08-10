@@ -1,17 +1,28 @@
 type Mutation {
   createArtist(input: CreateArtistInput!): Artist
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
   updateArtist(id: ID!, input: UpdateArtistInput!): Artist
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
   deleteArtist(id: ID!): Artist
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
   deleteCascadeArtist(id: ID!): Artist
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
 
   createAlbum(input: CreateAlbumInput!): Album
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
   updateAlbum(id: ID!, input: UpdateAlbumInput!): Album
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
   deleteAlbum(id: ID!): Album
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
   deleteCascadeAlbum(id: ID!): Album
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
 
   createTrack(input: CreateTrackInput!): Track
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
   updateTrack(albumId: ID!, id: ID!, input: UpdateTrackInput!): Track
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
   deleteTrack(albumId: ID!, id: ID!): Track
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
 
   registerServer(input: RegisterServerInput): Server
     @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
@@ -32,20 +43,33 @@ type Mutation {
 
 type Query {
   getAlbum(id: ID!): Album
+		@aws_oidc
+    @aws_cognito_user_pools
   listAlbums(filter: TableAlbumFilterInput): AlbumConnection
+		@aws_oidc
+    @aws_cognito_user_pools
 
   getArtist(id: ID!): Artist
+		@aws_oidc
+    @aws_cognito_user_pools
   listArtists(filter: TableArtistFilterInput): ArtistConnection
+		@aws_oidc
+    @aws_cognito_user_pools
   listArtistsForAlbum(id: ID!): [Artist!]
+		@aws_oidc
+    @aws_cognito_user_pools
 
   getTrack(albumId: ID!, id: ID!): Track
+		@aws_oidc
+    @aws_cognito_user_pools
   listOrphanTracks: TrackConnection
+		@aws_oidc
+    @aws_cognito_user_pools
 
   listServers: ServerConnection
-
+    @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
   listServerInvites: ServerInviteConnection
     @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
-
   getInvite(id: ID!): Invite
     @aws_auth(cognito_groups: ["${COGNITO_ADMIN_GROUP_NAME}"])
   listInvites(filter: TableInviteFilterInput): InviteConnection
@@ -135,7 +159,7 @@ input TableArtistFilterInput {
   name: TableStringFilterInput
 }
 
-type Artist {
+type Artist @aws_oidc @aws_cognito_user_pools {
   serverId: ID!
   id: ID!
   name: String
@@ -143,7 +167,7 @@ type Artist {
   albums: [Album!]
 }
 
-type ArtistConnection {
+type ArtistConnection @aws_oidc @aws_cognito_user_pools {
   items: [Artist!]
 }
 
@@ -163,7 +187,7 @@ input TableAlbumFilterInput {
   name: TableStringFilterInput
 }
 
-type Album {
+type Album @aws_oidc @aws_cognito_user_pools {
   serverId: ID!
   id: ID!
   artists: [Artist!]
@@ -175,7 +199,7 @@ type Album {
   isVa: Boolean
 }
 
-type AlbumConnection {
+type AlbumConnection @aws_oidc @aws_cognito_user_pools {
   items: [Album!]
 }
 
@@ -199,7 +223,7 @@ input TableTrackFilterInput {
   albumId: TableStringFilterInput
 }
 
-type Track {
+type Track @aws_oidc @aws_cognito_user_pools {
   serverId: ID!
   albumId: ID!
   id: ID!
@@ -217,7 +241,7 @@ type Track {
   path: String!
 }
 
-type TrackConnection {
+type TrackConnection @aws_oidc @aws_cognito_user_pools {
   items: [Track!]
 }
 
