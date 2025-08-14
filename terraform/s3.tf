@@ -68,6 +68,24 @@ data "aws_iam_policy_document" "gawshi_app" {
   }
 }
 
+# TODO: How can we display a QR code with the URL in the outputs? And should we?
+# resource "null_resource" "gawshi_app_qr_code" {
+#   provisioner "local-exec" {
+#     command = "cd ../client; yarn qrcode"
+#   }
+#
+#   depends_on = [
+#     aws_s3_bucket.gawshi_app,
+#   ]
+# }
+
+# TODO: Do not deploy through the aws_s3_object hack, instead write a deploy
+# TODO: script and call that instead.
+# resource "null_resource" "gawshi_app_build" {
+#   provisioner "local-exec" {
+#     command = "cd ../client; yarn deploy"
+#   }
+# }
 resource "aws_s3_object" "gawshi_app_file" {
   for_each = fileset(var.website_root, "**")
 
