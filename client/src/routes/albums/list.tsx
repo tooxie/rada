@@ -2,7 +2,7 @@ import { h, Fragment } from "preact";
 import { Link } from "preact-router";
 
 import type { ListProps } from "../../components/layout/types";
-import type { Album } from "../../graphql/api";
+import type { Album, Artist } from "../../graphql/api";
 
 import ErrorMsg from "../../components/error";
 import Logger from "../../logger";
@@ -145,6 +145,56 @@ const renderAsThumbnails = (albums: Album[]) => (
 const renderName = (album: Album): JSX.Element => {
   const classes = [style.name, album.name ? "" : style.missing].join(" ");
   return <div class={classes}>{album.name || "<no title>"}</div>;
+};
+
+const compareAlbumNames = (album1: Album, album2: Album): -1 | 0 | 1 => {
+  const byAlbumName = (album1: Album, album2: Album): -1 | 0 | 1 => {
+    const name1 = (album1.name || "").toLowerCase();
+    const name2 = (album2.name || "").toLowerCase();
+
+    if (!name1 && name2) return -1;
+    if (name1 && !name2) return 1;
+    if (name1 < name2) return -1;
+    if (name1 > name2) return 1;
+
+    return 0;
+  };
+  const getArtist = (a: Album): Artist | undefined => (a.artists || []).find((a) => !!a);
+  const getName = (a?: Artist): string => (a ? a.name || "" : "");
+  const byArtistName = (album1: Album, album2: Album): -1 | 0 | 1 => {
+    const artist1 = getName(getArtist(album1)).toLowerCase();
+    const artist2 = getName(getArtist(album2)).toLowerCase();
+
+    if (artist1 < artist2) return -1;
+    if (artist1 > artist2) return 1;
+
+    return 0;
+  };
+  const byArtistCount = (album1: Album, album2: Album): -1 | 0 | 1 => {
+    const l1 = (album1?.artists || []).length;
+    const l2 = (album2?.artists || []).length;
+
+    // If either of the albums is a V/A
+    if (l1 > 1 && l2 === 1) return -1;
+    if (l1 === 1 && l2 > 1) return 1;
+
+    // Albums with no artists
+    if (l1 === 0 && l2 > 0) return -1;
+    if (l1 > 0 && l2 === 0) return 1;
+
+    return 0;
+  };
+
+  let result: -1 | 0 | 1;
+
+  result = byArtistCount(album1, album2);
+  if (result !== 0) return result;
+  result = byArtistName(album1, album2);
+  if (result !== 0) return result;
+  result = byAlbumName(album1, album2);
+  if (result !== 0) return result;
+
+  return 0;
 };
 
 export default AlbumList;
