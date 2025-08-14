@@ -19,7 +19,7 @@ resource "null_resource" "codegen_exec" {
   provisioner "local-exec" {
     command = join(" ", [
       "cd ../client;",
-      "npm run codegen;",
+      "yarn run codegen;",
     ])
   }
 

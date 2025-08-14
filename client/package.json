@@ -17,6 +17,8 @@
     "codegen:destroy": ". ./scripts/codegen_destroy.sh",
     "cognito:rootuser:config": ". ./scripts/rootuser_config.sh",
     "cognito:rootuser:destroy": ". ./scripts/rootuser_destroy.sh",
+    "cognito:userpool:config": ". ./scripts/userpool_config.sh",
+    "cognito:userpool:destroy": ". ./scripts/userpool_destroy.sh",
     "dev": "preact watch --https",
     "format": "prettier --write '*.{json,js}' 'src/**/*.{js,json,ts,tsx}'",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
