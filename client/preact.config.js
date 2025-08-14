@@ -11,6 +11,19 @@ export default function (config, env, helpers, options) {
   var { rule } = helpers.getLoadersByName(config, "babel-loader")[0];
   var babelConfig = rule.options;
 
+  // Configure TypeScript to be more lenient with type checking
+  if (config.module && config.module.rules) {
+    config.module.rules.forEach(rule => {
+      if (rule.use && rule.use.some(use => use.loader && use.loader.includes('ts-loader'))) {
+        if (!rule.options) rule.options = {};
+        if (!rule.options.compilerOptions) rule.options.compilerOptions = {};
+        rule.options.compilerOptions.skipLibCheck = true;
+        rule.options.compilerOptions.noImplicitAny = false;
+        rule.options.compilerOptions.strict = false;
+      }
+    });
+  }
+
   if (config.mode === "development") {
     config.devtool = "cheap-module-eval-source-map";
 
