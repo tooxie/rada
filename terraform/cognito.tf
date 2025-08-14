@@ -98,7 +98,7 @@ resource "aws_iam_role_policy" "cognito_admin_user" {
 }
 
 resource "aws_cognito_user_group" "read_only_users" {
-  name = "Gawshi-ReadOnly"
+  name = "Gawshi-ReadOnly-${local.suffix}"
   user_pool_id = aws_cognito_user_pool.gawshi.id
   description = "Gawshi read-only users group"
   precedence = 11
@@ -183,6 +183,34 @@ resource "aws_cognito_identity_pool_roles_attachment" "main" {
 
   roles = {
     "authenticated" = aws_iam_role.cognito_read_only_user.arn
+  }
+}
+
+resource "null_resource" "user_pool_config" {
+  triggers = {
+    region = var.region
+    app_client_id = aws_cognito_user_pool_client.gawshi.id
+    user_pool_id = aws_cognito_user_pool.gawshi.id
+    identity_pool_id = aws_cognito_identity_pool.gawshi.id
+  }
+
+  provisioner "local-exec" {
+    when = destroy
+    command = join(" ", [
+      "cd ../client;",
+      "npm run cognito:userpool:destroy",
+    ])
+  }
+
+  provisioner "local-exec" {
+    command = join(" ", [
+      "cd ../client;",
+      "npm run cognito:userpool:config --",
+      "--region", var.region,
+      "--client-id", aws_cognito_user_pool_client.gawshi.id,
+      "--user-pool-id", aws_cognito_user_pool.gawshi.id,
+      "--identity-pool-id", aws_cognito_identity_pool.gawshi.id,
+    ])
   }
 }
 
