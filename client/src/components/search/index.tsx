@@ -11,13 +11,12 @@ import searchIcon from "./search.svg";
 
 const log = new Logger(__filename);
 
-interface Props {
+interface Props extends Omit<h.JSX.HTMLAttributes<HTMLDivElement>, 'children'> {
   input: any[];
-  class?: string;
+  filter: (item: any, s: string) => boolean;
   noResultsClass?: string;
   enabled: boolean;
-  filter: (item: any, s: string) => boolean;
-  children: (result: any[]) => JSX.Element | JSX.Element[] | string;
+  children: (result: any[]) => h.JSX.Element | h.JSX.Element[] | string | null;
 }
 
 const Search: FunctionComponent<Props> = (props) => {
