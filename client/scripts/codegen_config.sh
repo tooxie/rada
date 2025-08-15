@@ -29,6 +29,7 @@ AMPLIFY_CONFIG="projects:
       - src/graphql/**/*.ts
     excludes:
       - ./amplify/**
+      - ./src/graphql/client.ts
     extensions:
       amplify:
         codeGenTarget: typescript
