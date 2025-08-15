@@ -71,7 +71,7 @@ data "aws_iam_policy_document" "gawshi_app" {
 # TODO: How can we display a QR code with the URL in the outputs? And should we?
 # resource "null_resource" "gawshi_app_qr_code" {
 #   provisioner "local-exec" {
-#     command = "cd ../client; yarn qrcode"
+#     command = "cd ../client; npm qrcode"
 #   }
 #
 #   depends_on = [
@@ -83,7 +83,7 @@ data "aws_iam_policy_document" "gawshi_app" {
 # TODO: script and call that instead.
 # resource "null_resource" "gawshi_app_build" {
 #   provisioner "local-exec" {
-#     command = "cd ../client; yarn deploy"
+#     command = "cd ../client; npm deploy"
 #   }
 # }
 resource "aws_s3_object" "gawshi_app_file" {

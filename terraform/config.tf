@@ -6,7 +6,7 @@ resource "null_resource" "install_deps" {
   provisioner "local-exec" {
     command = join(" ", [
       "cd ../client;",
-      "yarn install --silent",
+      "npm install --silent",
     ])
   }
 }
@@ -19,7 +19,7 @@ resource "null_resource" "codegen_exec" {
   provisioner "local-exec" {
     command = join(" ", [
       "cd ../client;",
-      "yarn run codegen;",
+      "npm run codegen;",
     ])
   }
 
@@ -40,14 +40,14 @@ resource "null_resource" "codegen_config" {
     when = destroy
     command = join(" ", [
       "cd ../client;",
-      "yarn run codegen:destroy",
+      "npm run codegen:destroy",
     ])
   }
 
   provisioner "local-exec" {
     command = join(" ", [
       "cd ../client;",
-      "yarn run codegen:config --",
+      "npm run codegen:config --",
       "--api-id", aws_appsync_graphql_api.gawshi.id,
       "--region", var.region,
     ])
@@ -71,14 +71,14 @@ resource "null_resource" "app_config" {
     when = destroy
     command = join(" ", [
       "cd ../client;",
-      "yarn run app:destroy",
+      "npm run app:destroy",
     ])
   }
 
   provisioner "local-exec" {
     command = join(" ", [
       "cd ../client;",
-      "yarn run app:config --",
+      "npm run app:config --",
       "--api-url", lookup(aws_appsync_graphql_api.gawshi.uris, "GRAPHQL"),
       "--client-id", aws_cognito_user_pool_client.gawshi.id,
       "--id-pool-id", aws_cognito_identity_pool.gawshi.id,
@@ -102,14 +102,14 @@ resource "null_resource" "root_user_config" {
     when = destroy
     command = join(" ", [
       "cd ../client;",
-      "yarn run cognito:rootuser:destroy",
+      "npm run cognito:rootuser:destroy",
     ])
   }
 
   provisioner "local-exec" {
     command = join(" ", [
       "cd ../client;",
-      "yarn run cognito:rootuser:config --",
+      "npm run cognito:rootuser:config --",
       "--username", aws_cognito_user.root.username,
       "--password", aws_cognito_user.root.password,
     ])
@@ -166,7 +166,7 @@ resource "null_resource" "gawshi_app_build" {
   provisioner "local-exec" {
     command = join(" ", [
       "cd ../client;",
-      "yarn run build > /dev/null",
+      "npm run build > /dev/null",
     ])
   }
 
@@ -179,7 +179,7 @@ resource "null_resource" "gawshi_app_build" {
 # TODO: How can we display a QR code with the URL in the outputs? And should we?
 # resource "null_resource" "gawshi_app_qr_code" {
 #   provisioner "local-exec" {
-#     command = "cd ../client; yarn qrcode"
+#     command = "cd ../client; npm qrcode"
 #   }
 #
 #   depends_on = [
@@ -191,6 +191,6 @@ resource "null_resource" "gawshi_app_build" {
 # TODO: script and call that instead.
 # resource "null_resource" "gawshi_app_build" {
 #   provisioner "local-exec" {
-#     command = "cd ../client; yarn deploy"
+#     command = "cd ../client; npm deploy"
 #   }
 # }
