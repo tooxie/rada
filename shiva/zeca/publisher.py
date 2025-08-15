@@ -209,7 +209,13 @@ def get_music_dir():
     config_path = os.path.join(dirname, "../gawshi.conf")
     config = configparser.ConfigParser()
     config.read(config_path)
-    return expand(config.get('gawshi', 'music_dir'))
+
+    old_cwd = os.getcwd()
+    os.chdir(os.path.join(os.path.dirname(__file__), ".."))
+    music_dir = os.path.abspath(config.get('gawshi', 'music_dir'))
+    os.chdir(old_cwd)
+
+    return music_dir
 
 
 def create_track(client, track, album=None):
@@ -261,8 +267,8 @@ def execute_track_mutation(client, track, album, query):
         "title": track.title,
         "length": track.length,
         "ordinal": track.ordinal,
-        "volume": track.volume,
-        "side": track.side,
+        "volume": track.volume or 0,
+        "side": track.side or 0,
         "artists": list(filter(not_none, artists)),
         "path": path,
     }

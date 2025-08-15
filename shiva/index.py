@@ -359,6 +359,26 @@ class Indexer(object):
         self.final_time = time()
 
 
+def get_music_dir():
+    """This utility will make sure that we resolve the correct directory for
+    the music. It's possible for the user to set a relative directory, which
+    should be relative to the location of the config file, in this case the
+    `shiva/` directory. The database, however, will be relative to the root
+    directory, i.e. `gawshi/`.
+
+    That's why this utility will momentarily switch the cwd to `shiva/` to
+    properly resolve the music dir path and then reset it to whatever it was
+    before.
+    """
+
+    old_cwd = os.getcwd()
+    os.chdir(os.path.dirname(__file__))
+    music_dir = os.path.abspath(config.get('gawshi', 'music_dir'))
+    os.chdir(old_cwd)
+
+    return music_dir
+
+
 def main():
     arguments = docopt(__doc__)
     set_config()
@@ -388,6 +408,17 @@ def main():
             '<int>, got "%s" <%s>. instead' % error_values)
         sys.exit(3)
 
+    print(f'Database: %s' % config.get('gawshi', 'db_url'))
+    music_dir = get_music_dir()
+    print('Music dir: %s' % music_dir)
+    if config.get('gawshi', 'discogs_token'):
+        print('Discogs token: ***************')
+
+    # Force script to `cd` to the root of the project, otherwise sqlalchemy
+    # will not find the DB.
+    dirname = os.path.dirname(__file__)
+    os.chdir(os.path.join(dirname, ".."))
+
     # Generate database
     engine = create_engine(
         config.get('gawshi', 'db_url'),
@@ -395,12 +426,16 @@ def main():
     session = Session(engine)
     kwargs['engine'] = engine
     kwargs['session'] = session
-    kwargs['media_dirs'] = [config.get('gawshi', 'music_dir')]
+    kwargs['media_dirs'] = [music_dir]
     global q
     q = session.query
-    m.Base.metadata.create_all(engine)
+    try:
+        m.Base.metadata.create_all(engine)
+    except Exception as e:
+        logger.error(e)
+        logger.error(f'Error using DB: %s' % db_url)
+        sys.exit(1)
 
-    print(kwargs)
     indexer = Indexer(**kwargs)
     indexer.run()
     # Every track will be added to the session but they will be written down to
