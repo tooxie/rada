@@ -21,13 +21,6 @@ resource "aws_appsync_graphql_api" "gawshi" {
       additional_authentication_provider,
     ]
   }
-
-  provisioner "local-exec" {
-    command = join(" ", [
-      "cd ../client;",
-      "npm run codegen",
-    ])
-  }
 }
 
 // --- Outputs

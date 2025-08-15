@@ -10,7 +10,6 @@ export type Client = ApolloClient<NormalizedCacheObject>;
 
 const log = new Logger(__filename);
 
-let lastServerId: string | null = null;
 const getClient = (uri: string, name: string, serverId: string): Client => {
   log.debug(`Getting client: name=${name}, uri=${uri}, serverId=${serverId}`);
   const httpLink = createHttpLink({ uri });
